@@ -23,14 +23,14 @@ void Field::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QRect dirtyRect = event->rect();
-    uchar* arr = image->bits();
-    QRgb* pixels = reinterpret_cast<QRgb*>(arr);
 
-    drawLine(QPoint(-10,-10), QPoint(400, 300));
-    drawLine(QPoint(0,300), QPoint(400, 0));
-    drawLine(QPoint(0,0), QPoint(300, 400));
-    drawLine(QPoint(300,0), QPoint(0, 400));
+//    drawLine(QPoint(-10,-10), QPoint(400, 300));
+//    drawLine(QPoint(0,300), QPoint(400, 0));
+//    drawLine(QPoint(0,0), QPoint(300, 400));
+//    drawLine(QPoint(300,0), QPoint(0, 400));
 
+    drawGrid();
+//    fillCell(0,0, cellColor);
 
     painter.drawImage(dirtyRect, *image, dirtyRect);
 }
@@ -49,7 +49,7 @@ void Field::drawLine(QPoint point1, QPoint point2)
 
 void Field::clippingLine(QPoint *point1, QPoint *point2)
 {
-
+    //unsafe
 }
 
 void Field::drawLineX(QPoint point1, QPoint point2)
@@ -112,6 +112,115 @@ void Field::drawLineY(QPoint point1, QPoint point2)
             x += sign;
         }
     }
+}
+
+uint Field::getCellWidth() const
+{
+    return cellWidth;
+}
+
+void Field::setCellWidth(const uint &value)
+{
+    cellWidth = value;
+}
+
+void Field::drawHexagon(uint x, uint y)
+{
+    if (x > cellWidth || y > cellHeight){
+        return;
+    }
+
+    int rsin30 = cellSize/2;
+    int rcos30 = cellSize*sqrt(3)/2;
+
+    int y0 = y * (2 * cellSize - rsin30);
+    int x0 = 0;
+    if (y & 0u == 0){
+        x0 = 2 * x * rcos30 + rcos30;
+    } else {
+         x0 = 2 * x * rcos30;
+    }
+
+    QPoint point1 = QPoint(x0,              y0 + rsin30);
+    QPoint point2 = QPoint(x0 + rcos30,     y0 );
+    QPoint point3 = QPoint(x0 + 2*rcos30,   y0 + rsin30);
+    QPoint point4 = QPoint(x0 + 2*rcos30,   y0 + 2*cellSize - rsin30);
+    QPoint point5 = QPoint(x0 + rcos30,     y0 + 2*cellSize);
+    QPoint point6 = QPoint(x0,              y0 + 2*cellSize - rsin30);
+
+    drawLine(point1, point2);
+    drawLine(point2, point3);
+    drawLine(point1, point6);
+    drawLine(point3, point4);
+    drawLine(point6, point5);
+    drawLine(point5, point4);
+}
+
+void Field::drawGrid()
+{
+    for(uint i = 0; i < cellHeight; i++){
+        for(uint j = 0; j < cellWidth - i%2; j++){
+            drawHexagon(j, i);
+            fillCell(j,i, cellColor);
+        }
+    }
+}
+
+void Field::fillCell(uint x, uint y, QRgb color)
+{
+    if (x > cellWidth || y > cellHeight){
+        return;
+    }
+
+    QRgb* pixels = reinterpret_cast<QRgb*>(image->bits());
+    int width = image->bytesPerLine() / sizeof(QRgb);
+
+    int rsin30 = cellSize/2;
+    int rcos30 = cellSize*sqrt(3)/2;
+
+    int y0 = y * (2 * cellSize - rsin30);
+    int y1 = y0 + 2 * cellSize;
+    int x0 = 0;
+    if (y & 0u == 0){
+        x0 = 2 * x * rcos30 + 2*rcos30;
+    } else {
+         x0 = 2 * x * rcos30 + rcos30;
+    }
+
+    for(int i = y0; i < y1; i++){
+        for(int j = x0; j < x0 + rcos30; j++){
+            if (pixels[i * width + j] == lineColor){
+                break;
+            }
+            pixels[i * width + j] = color;
+        }
+        for(int j = x0; j > x0 - rcos30; j--){
+            if (pixels[i * width + j] == lineColor){
+                break;
+            }
+            pixels[i * width + j] = color;
+        }
+    }
+}
+
+uint Field::getCellHeight() const
+{
+    return cellHeight;
+}
+
+void Field::setCellHeight(const uint &value)
+{
+    cellHeight = value;
+}
+
+uint Field::getCellSize() const
+{
+    return cellSize;
+}
+
+void Field::setCellSize(const uint &value)
+{
+    cellSize = value;
 }
 
 
