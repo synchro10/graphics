@@ -6,6 +6,8 @@
 
 QT       += core gui
 
+CONFIG += c++11
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = life
@@ -13,6 +15,8 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        view.cpp
+        view.cpp \
+    field.cpp
 
-HEADERS  += view.h
+HEADERS  += view.h \
+    field.h

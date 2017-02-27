@@ -2,6 +2,7 @@
 #define VIEW_H
 
 #include <QMainWindow>
+#include "field.h"
 
 class View : public QMainWindow
 {
@@ -10,6 +11,8 @@ class View : public QMainWindow
 public:
     View(QWidget *parent = 0);
     ~View();
+private:
+    Field* field;
 };
 
 #endif // VIEW_H
