@@ -11,6 +11,9 @@ class View : public QMainWindow
 public:
     View(QWidget *parent = 0);
     ~View();
+    Field *getField() const;
+    void setField(Field *value);
+
 private:
     Field* field;
 };

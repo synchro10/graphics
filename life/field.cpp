@@ -72,7 +72,7 @@ void Field::drawLineX(QPoint point1, QPoint point2)
     int y = point1.y();
     int x = point1.x();
 
-    for(int i = 0; i < dx; i++){
+    for(int i = 0; i <= dx; i++){
         pixels[x + y*width] = lineColor;
         x++;
         error += dy;
@@ -103,7 +103,7 @@ void Field::drawLineY(QPoint point1, QPoint point2)
     int x = point1.x();
     int y = point1.y();
 
-    for(int i = 0; i < dy; i++){
+    for(int i = 0; i <= dy; i++){
         pixels[x + y*width] = lineColor;
         y++;
         error += dx;
@@ -114,19 +114,19 @@ void Field::drawLineY(QPoint point1, QPoint point2)
     }
 }
 
-uint Field::getCellWidth() const
+uint Field::getGridWidth() const
 {
-    return cellWidth;
+    return gridWidth;
 }
 
-void Field::setCellWidth(const uint &value)
+void Field::setGridWidth(const uint &value)
 {
-    cellWidth = value;
+    gridWidth = value;
 }
 
 void Field::drawHexagon(uint x, uint y)
 {
-    if (x > cellWidth || y > cellHeight){
+    if (x > gridWidth || y > gridHeight){
         return;
     }
 
@@ -158,8 +158,8 @@ void Field::drawHexagon(uint x, uint y)
 
 void Field::drawGrid()
 {
-    for(uint i = 0; i < cellHeight; i++){
-        for(uint j = 0; j < cellWidth - i%2; j++){
+    for(uint i = 0; i < gridHeight; i++){
+        for(uint j = 0; j < gridWidth - i%2; j++){
             drawHexagon(j, i);
             fillCell(j,i, cellColor);
         }
@@ -168,7 +168,7 @@ void Field::drawGrid()
 
 void Field::fillCell(uint x, uint y, QRgb color)
 {
-    if (x > cellWidth || y > cellHeight){
+    if (x > gridWidth || y > gridHeight){
         return;
     }
 
@@ -181,7 +181,7 @@ void Field::fillCell(uint x, uint y, QRgb color)
     int y0 = y * (2 * cellSize - rsin30);
     int y1 = y0 + 2 * cellSize;
     int x0 = 0;
-    if (y & 0u == 0){
+    if (y & 0u == 0u){
         x0 = 2 * x * rcos30 + 2*rcos30;
     } else {
          x0 = 2 * x * rcos30 + rcos30;
@@ -203,14 +203,14 @@ void Field::fillCell(uint x, uint y, QRgb color)
     }
 }
 
-uint Field::getCellHeight() const
+uint Field::getGridHeight() const
 {
-    return cellHeight;
+    return gridHeight;
 }
 
-void Field::setCellHeight(const uint &value)
+void Field::setGridHeight(const uint &value)
 {
-    cellHeight = value;
+    gridHeight = value;
 }
 
 uint Field::getCellSize() const

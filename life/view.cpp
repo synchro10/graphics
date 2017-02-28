@@ -5,10 +5,20 @@ View::View(QWidget *parent)
 {
     field = new Field(this);
     setCentralWidget(field);
-    resize(500, 500);
+    resize(800, 600);
 }
 
 View::~View()
 {
 
+}
+
+Field *View::getField() const
+{
+    return field;
+}
+
+void View::setField(Field *value)
+{
+    field = value;
 }

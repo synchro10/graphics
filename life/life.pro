@@ -16,7 +16,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         view.cpp \
-    field.cpp
+    field.cpp \
+    model.cpp \
+    controller.cpp
 
 HEADERS  += view.h \
-    field.h
+    field.h \
+    model.h \
+    controller.h
