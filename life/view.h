@@ -2,6 +2,8 @@
 #define VIEW_H
 
 #include <QMainWindow>
+#include <QScrollArea>
+#include <memory>
 #include "field.h"
 
 class View : public QMainWindow
@@ -12,10 +14,11 @@ public:
     View(QWidget *parent = 0);
     ~View();
     Field *getField() const;
-    void setField(Field *value);
 
 private:
-    Field* field;
+    std::unique_ptr<Field> field;
+
+    QScrollArea *scroll;
 };
 
 #endif // VIEW_H

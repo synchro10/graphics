@@ -11,6 +11,8 @@ Field::Field(QWidget *parent) : QWidget(parent)
     fontColor = qRgb(255,255,255);
     image = new QImage(DEFAULT_WIDTH, DEFAULT_HEIGHT, QImage::Format_RGB32);
     image->fill(fontColor);
+
+    resize(QSize(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 }
 
 Field::~Field(){
@@ -24,13 +26,7 @@ void Field::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     QRect dirtyRect = event->rect();
 
-//    drawLine(QPoint(-10,-10), QPoint(400, 300));
-//    drawLine(QPoint(0,300), QPoint(400, 0));
-//    drawLine(QPoint(0,0), QPoint(300, 400));
-//    drawLine(QPoint(300,0), QPoint(0, 400));
-
     drawGrid();
-//    fillCell(0,0, cellColor);
 
     painter.drawImage(dirtyRect, *image, dirtyRect);
 }
@@ -159,12 +155,20 @@ void Field::drawHexagon(uint x, uint y)
 void Field::drawGrid()
 {
     for(uint i = 0; i < gridHeight; i++){
-        for(uint j = 0; j < gridWidth - i%2; j++){
+        uint width = gridWidth - i%2;
+        for(uint j = 0; j < width; j++){
             drawHexagon(j, i);
-            fillCell(j,i, cellColor);
+            if (field != nullptr){
+                if ((*field)[i][j]){
+                    fillCell(j,i,cellColor);
+                } else {
+                    fillCell(j,i,fontColor);
+                }
+            }
         }
     }
 }
+
 
 void Field::fillCell(uint x, uint y, QRgb color)
 {
@@ -201,6 +205,11 @@ void Field::fillCell(uint x, uint y, QRgb color)
             pixels[i * width + j] = color;
         }
     }
+}
+
+void Field::setField(std::vector<std::vector<bool> > *_field)
+{
+    field = _field;
 }
 
 uint Field::getGridHeight() const

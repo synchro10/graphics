@@ -20,10 +20,7 @@ public:
     bool changeRules(uint, uint, uint, uint, uint, uint);
 
     uint getGridWidth() const;
-    void setGridWidth(const uint &value);
-
     uint getGridHeight() const;
-    void setGridHeight(const uint &value);
 
     uint LIVE_BEGIN = 20;
     uint LIVE_END = 33;
@@ -32,11 +29,13 @@ public:
     uint FST_IMPACT = 10;
     uint SND_IMPACT = 3;
 
+    std::vector<std::vector<bool> >& getCurrentState();
+
 private:
     uint gridWidth = 5;
     uint gridHeight = 5;
-    std::vector<std::vector<bool>> currentState;
-    std::vector<std::vector<bool>> nextState;
+    std::vector<std::vector<bool> > currentState;
+    std::vector<std::vector<bool> > nextState;
     std::vector<std::vector<uint>> impact;
 
     //[0][] for even line, [1][] for odd line

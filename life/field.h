@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QPoint>
 #include <QWidget>
+#include <vector>
 
 class Field : public QWidget
 {
@@ -28,6 +29,7 @@ public:
     void drawHexagon(uint x, uint y);
     void drawGrid();
     void fillCell(uint x, uint y, QRgb color);
+    void setField(std::vector<std::vector<bool> >*);
 
 signals:
 
@@ -45,9 +47,11 @@ private:
     QImage* image = nullptr;
     static const int DEFAULT_WIDTH = 800;
     static const int DEFAULT_HEIGHT = 600;
+
+    std::vector<std::vector<bool> >* field;
     uint gridWidth = 5;
     uint gridHeight = 5;
-    uint cellSize = 50;
+    uint cellSize = 10;
 };
 
 #endif // FIELD_H

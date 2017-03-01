@@ -1,10 +1,12 @@
 #include "model.h"
 #include <assert.h>
 #include <QPoint>
+#include <vector>
+#include <iostream>
 
 Model::Model()
 {
-
+    resize(gridWidth, gridHeight);
 }
 
 Model::Model(uint width, uint height)
@@ -12,17 +14,7 @@ Model::Model(uint width, uint height)
     assert(width*height != 0);
     gridWidth = width;
     gridHeight = height;
-    for(uint i = 0; i < gridHeight; i++){
-        int width = gridWidth - i%2;
-        currentState[i] = std::vector<bool>(width);
-        nextState[i] = std::vector<bool>(width);
-        impact[i] = std::vector<uint>(width);
-        for(int j = 0; j < width; j++){
-            currentState[i][j] = false;
-            nextState[i][j] = false;
-            impact[i][j] = 0;
-        }
-    }
+    resize(gridWidth, gridHeight);
 }
 
 Model::~Model()
@@ -76,21 +68,50 @@ void Model::countNextState()
             }
 
             impact[y][x] = FST_IMPACT * nearCount + SND_IMPACT * farCount;
-
+            nextState[y][x] = currentState[y][x];
             if (currentState[y][x]){
                 if (!(LIVE_BEGIN <= impact[y][x] && impact[y][x] <= LIVE_END))
-                    currentState[y][x] = false;
+                    nextState[y][x] = false;
             } else {
                 if (BIRTH_BEGIN <= impact[y][x] && impact[y][x] <= BIRTH_END)
-                    currentState[y][x] = true;
+                    nextState[y][x] = true;
             }
         }
     }
+    changeState();
 }
 
 void Model::changeState()
 {
-    std::swap(currentState, nextState);
+    currentState.swap(nextState);
+}
+
+void Model::resize(uint x, uint y)
+{
+    //todo copy
+    gridHeight = y;
+    gridWidth = x;
+
+    currentState.resize(gridHeight);
+    nextState.resize(gridHeight);
+    impact.resize(gridHeight);
+    for(uint i = 0; i < gridHeight; i++){
+        int width = gridWidth - i%2;
+        currentState[i] = std::vector<bool>(width);
+        nextState[i] = std::vector<bool>(width);
+        impact[i] = std::vector<uint>(width);
+        for(int j = 0; j < width; j++){
+            currentState[i][j] = false;
+            nextState[i][j] = false;
+            impact[i][j] = 0;
+        }
+    }
+
+}
+
+bool Model::changeRules(uint, uint, uint, uint, uint, uint)
+{
+    //todo check and set
 }
 
 uint Model::getGridWidth() const
@@ -98,18 +119,14 @@ uint Model::getGridWidth() const
     return gridWidth;
 }
 
-void Model::setGridWidth(const uint &value)
-{
-    gridWidth = value;
-}
 
 uint Model::getGridHeight() const
 {
     return gridHeight;
 }
 
-void Model::setGridHeight(const uint &value)
+std::vector<std::vector<bool> >& Model::getCurrentState()
 {
-    gridHeight = value;
+    return currentState;
 }
 
