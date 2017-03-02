@@ -17,14 +17,14 @@ Controller::~Controller()
 
 }
 
-void Controller::startGame(uint width, uint height)
+void Controller::startGame(uint width, uint height, int cellSize)
 {
     model->resize(width, height);
-    field->setGridHeight(height);
-    field->setGridWidth(width);
+    field->changeParam(width, height, cellSize);
 
     //todo
 
+    //tmp demonstration
     model->aliveCell(10,12);
     model->aliveCell(11,12);
     model->aliveCell(12,10);

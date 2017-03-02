@@ -17,6 +17,7 @@ public:
     void paintEvent(QPaintEvent *event) override;
     void drawLine(QPoint point1, QPoint point2);
 
+    void changeParam(uint width, uint height, uint cell);
     uint getCellSize() const;
     void setCellSize(const uint &value);
 
@@ -30,6 +31,8 @@ public:
     void drawGrid();
     void fillCell(uint x, uint y, QRgb color);
     void setField(std::vector<std::vector<bool> >*);
+
+    void mousePressEvent(QMouseEvent *e) override;
 
 signals:
 
@@ -45,13 +48,13 @@ private:
     QRgb cellColor;
     QRgb fontColor;
     QImage* image = nullptr;
-    static const int DEFAULT_WIDTH = 800;
-    static const int DEFAULT_HEIGHT = 600;
+    static const int DEFAULT_WIDTH = 1300;
+    static const int DEFAULT_HEIGHT = 700;
 
     std::vector<std::vector<bool> >* field;
     uint gridWidth = 5;
     uint gridHeight = 5;
-    uint cellSize = 10;
+    uint cellSize = 100;
 };
 
 #endif // FIELD_H

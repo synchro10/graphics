@@ -15,7 +15,7 @@ public:
     explicit Controller(QObject *parent = 0);
     ~Controller();
 
-    void startGame(uint width, uint height);
+    void startGame(uint width, uint height, int cellSize);
 
 signals:
 

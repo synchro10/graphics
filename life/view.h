@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QScrollArea>
+#include <QPushButton>
+#include <QHBoxLayout>
 #include <memory>
 #include "field.h"
 

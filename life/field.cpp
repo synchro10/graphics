@@ -43,6 +43,24 @@ void Field::drawLine(QPoint point1, QPoint point2)
     }
 }
 
+void Field::changeParam(uint width, uint height, uint cell)
+{
+    if (width*height*cell == 0){
+        return;
+    }
+    setGridWidth(width);
+    setGridHeight(height);
+    setCellSize(cell);
+
+    int x = (cell*sqrt(3)) * (width);
+    int y  = (3*cell/2) * (height + 1 );
+
+    delete image;
+    image = new QImage(x,y, QImage::Format_RGB32);
+    image->fill(fontColor);
+    resize(QSize(x, y));
+}
+
 void Field::clippingLine(QPoint *point1, QPoint *point2)
 {
     //unsafe
@@ -210,6 +228,60 @@ void Field::fillCell(uint x, uint y, QRgb color)
 void Field::setField(std::vector<std::vector<bool> > *_field)
 {
     field = _field;
+}
+
+void Field::mousePressEvent(QMouseEvent *e)
+{
+    int i = e->x();
+    int j = e->y();
+
+    QRgb* pixels = reinterpret_cast<QRgb*>(image->bits());
+    int width = image->bytesPerLine() / sizeof(QRgb);
+    if (pixels[width*j + i] == lineColor){
+        return;
+    }
+    int rsin30 = cellSize/2;
+    int rcos30 = cellSize*sqrt(3)/2;
+
+    int x0 , y0;
+    int y = j / (2 * cellSize - rsin30);
+    y0 = y * (2 * cellSize - rsin30);
+    int x = 0;
+
+    if (y & 0u == 0){
+        x = (i - rcos30)/(2*rcos30);
+        x0 = 2 * x * rcos30 + rcos30;
+    } else {
+         x = i/(2*rcos30);
+         x0 = 2 * x * rcos30;
+    }
+
+    if (j < y0 + rsin30){
+        if (i < x0 + rcos30){
+            int dy = j - y0;
+            int dx = x0 + rcos30 - i;
+            if (dy*rcos30 <= dx*rsin30){
+                x = x - (y+1)%2;
+                y--;
+            }
+        } else {
+            int dy = j - y0;
+            int dx = i - x0 - rcos30;
+            if (dy*rcos30 <= dx*rsin30){
+                x = x + y%2;
+                y--;
+            }
+        }
+    }
+
+    if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight){
+        return;
+    }
+
+    //good pattern
+    (*field)[y][x] = (*field)[y][x] != true;
+    update();
+
 }
 
 uint Field::getGridHeight() const
