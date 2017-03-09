@@ -12,6 +12,7 @@ Controller::Controller(QObject *parent) : QObject(parent)
     connect(timer, SIGNAL(timeout()), this, SLOT(nextIteration()));
 }
 
+
 Controller::~Controller()
 {
 
@@ -40,6 +41,49 @@ void Controller::nextIteration()
     model->countNextState();
     field->setField(&model->getCurrentState());
     field->update();
+}
+
+void Controller::run()
+{
+    if (!isRun){
+        timer->start();
+        isRun = true;
+    }
+}
+
+void Controller::stop()
+{
+    if (isRun){
+        timer->stop();
+        isRun = false;
+    }
+}
+
+void Controller::step()
+{
+
+}
+
+void Controller::clearField()
+{
+
+}
+
+void Controller::replaceMode()
+{
+
+}
+
+void Controller::xorMode()
+{
+
+}
+
+
+
+void Controller::changeState(QPoint point)
+{
+
 }
 
 

@@ -279,7 +279,7 @@ void Field::mousePressEvent(QMouseEvent *e)
     }
 
     //good pattern
-    (*field)[y][x] = (*field)[y][x] != true;
+    (*field)[y][x] = !(*field)[y][x];
     update();
 
 }

@@ -21,7 +21,16 @@ signals:
 
 public slots:
     void nextIteration();
+    void run();
+    void stop();
+    void step();
+    void clearField();
+    void replaceMode();
+    void xorMode();
+
+
 private:
+    void changeState(QPoint point);
 
     std::unique_ptr<Model> model;
     std::unique_ptr<View> view;
@@ -29,6 +38,9 @@ private:
 
     QTimer* timer;
     const static int defaultDelay = 1000;
+
+    bool isRun = false;
+    bool isXOR = false;
 };
 
 #endif // CONTROLLER_H
