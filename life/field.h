@@ -34,6 +34,8 @@ public:
 
     void mousePressEvent(QMouseEvent *e) override;
 
+    bool isXOR = false;
+
 signals:
 
 public slots:

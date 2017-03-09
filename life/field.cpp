@@ -279,7 +279,12 @@ void Field::mousePressEvent(QMouseEvent *e)
     }
 
     //good pattern
-    (*field)[y][x] = !(*field)[y][x];
+    if (isXOR){
+        (*field)[y][x] = !(*field)[y][x];
+    } else {
+        (*field)[y][x] = true;
+    }
+
     update();
 
 }

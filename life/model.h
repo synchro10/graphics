@@ -15,6 +15,7 @@ public:
     void invertCell(int x, int y);
     void countNextState();
     void changeState();
+    void clear();
 
     void resize(uint x, uint y);
     bool changeRules(uint, uint, uint, uint, uint, uint);
@@ -47,6 +48,8 @@ private:
         { QPoint(0, -2), QPoint(-1, -1), QPoint (2, -1), QPoint (-1, 1), QPoint(2, 1), QPoint(0, 2) },
         { QPoint(0, -2), QPoint(-2, -1), QPoint (1, -1), QPoint (-2, 1), QPoint(1, 1), QPoint(0, 2) }
     };
+
+    bool isImpactCounted = false;
 
 };
 

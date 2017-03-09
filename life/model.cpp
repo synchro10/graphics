@@ -43,6 +43,9 @@ void Model::invertCell(int x, int y)
 
 void Model::countNextState()
 {
+    if (isImpactCounted){
+        return;
+    }
     for(uint y = 0; y < gridHeight; y++){
         for(uint x = 0; x < gridWidth; x++){
             uint nearCount = 0;
@@ -78,12 +81,24 @@ void Model::countNextState()
             }
         }
     }
-    changeState();
+    isImpactCounted = true;
 }
 
 void Model::changeState()
 {
     currentState.swap(nextState);
+    isImpactCounted = false;
+}
+
+void Model::clear()
+{
+    for(uint y = 0; y < gridHeight; y++){
+        for(uint x = 0; x < gridWidth; x++){
+            currentState[y][x] = false;
+            //nextState[y][x] = false;
+            impact[y][x] = false;
+        }
+    }
 }
 
 void Model::resize(uint x, uint y)

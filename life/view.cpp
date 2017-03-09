@@ -11,6 +11,10 @@ View::View(QWidget *parent)
     createMenus();
     createToolbar();
 
+    timer = new QTimer(this);
+    timer->setInterval(defaultDelay);
+    connect(timer, SIGNAL(timeout()), this, SLOT(nextIteration()));
+
     scroll->setWidget(field.get());
     setCentralWidget(scroll);
 
@@ -33,38 +37,37 @@ void View::createActions()
     saveAct = new QAction(tr("&Save"), this);
     connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
-    //todo
     newGameAct = new QAction(tr("&New Game"), this);
-    connect(newGameAct, SIGNAL(triggered()), this, nullptr);
+    connect(newGameAct, SIGNAL(triggered()), this, SLOT(newGame()));
 
     exitAct = new QAction(tr("&Exit"), this);
     exitAct->setShortcuts(QKeySequence::Quit);
     connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
     runAct = new QAction(tr("&Run"), this);
-    connect(runAct, SIGNAL(triggered()), this, nullptr);
+    connect(runAct, SIGNAL(triggered()), this, SLOT(run()));
 
     stopAct = new QAction(tr("&Stop"), this);
-    connect(stopAct, SIGNAL(triggered()), this,nullptr);
+    connect(stopAct, SIGNAL(triggered()), this, SLOT(stop()));
 
     stepAct = new QAction(tr("&Step"), this);
-    connect(stepAct, SIGNAL(triggered()), this, nullptr);
+    connect(stepAct, SIGNAL(triggered()), this, SLOT(nextIteration()));
 
     replaceAct = new QAction(tr("&Replace"), this);
-    connect(replaceAct, SIGNAL(triggered()), this, nullptr);
+    connect(replaceAct, SIGNAL(triggered()), this, SLOT(replaceMode()));
 
     xorAct = new QAction(tr("&XOR"), this);
     xorAct->setDisabled(true);
-    connect(xorAct, SIGNAL(triggered()), this, nullptr);
+    connect(xorAct, SIGNAL(triggered()), this, SLOT(xorMode()));
 
     clearAct = new QAction(tr("&Clear"), this);
-    connect(clearAct, SIGNAL(triggered()), this, nullptr);
+    connect(clearAct, SIGNAL(triggered()), this, SLOT(clearField()));
 
     impactAct = new QAction(tr("&Show impacts"), this);
-    connect(impactAct, SIGNAL(triggered()), this, nullptr);
+    connect(impactAct, SIGNAL(triggered()), this, SLOT(impact()));
 
     paramsAct = new QAction(tr("&Change options"), this);
-    connect(paramsAct, SIGNAL(triggered()), this, nullptr);
+    connect(paramsAct, SIGNAL(triggered()), this, SLOT(params()));
 
     aboutAct = new QAction(tr("&About"), this);
     connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
@@ -106,8 +109,8 @@ void View::createToolbar()
     toolbar->addAction(openAct);
     toolbar->addAction(saveAct);
     toolbar->addSeparator();
-    toolbar->addAction(exitAct);
     toolbar->addAction(runAct);
+    toolbar->addAction(stopAct);
     toolbar->addAction(stepAct);
     toolbar->addAction(replaceAct);
     toolbar->addAction(xorAct);
@@ -148,14 +151,86 @@ void View::save()
 void View::about()
 {
     QMessageBox::about(this, tr("About App"),
-            tr("Kondratyev 14202"));
+                       tr("Kondratyev 14202"));
+}
+
+void View::startGame(uint width, uint height, int cellSize)
+{
+
+}
+
+void View::nextIteration()
+{
+    model->countNextState();
+    model->changeState();
+    field->setField(&model->getCurrentState());
+    field->update();
+}
+
+void View::run()
+{
+    if (!isRun){
+        timer->start();
+        isRun = true;
+    }
+}
+
+void View::stop()
+{
+    if (isRun){
+        timer->stop();
+        isRun = false;
+    }
+}
+
+void View::clearField()
+{
+    model->clear();
+    field->setField(&model->getCurrentState());
+    field->update();
+}
+
+void View::replaceMode()
+{
+    isXOR = false;
+    field->isXOR = false;
+    replaceAct->setDisabled(true);
+    xorAct->setEnabled(true);
+}
+
+void View::xorMode()
+{
+    isXOR = true;
+    field->isXOR = true;
+    xorAct->setDisabled(true);
+    replaceAct->setEnabled(true);
+}
+
+void View::impact()
+{
+
+}
+
+void View::params()
+{
+
+}
+
+void View::newGame()
+{
+
+}
+
+void View::setModel(Model *value)
+{
+    model = value;
 }
 
 
 bool View::maybeSave()
 {
-//    if (scribbleArea->isModified()) {
-//       QMessageBox::StandardButton ret;
+    //    if (scribbleArea->isModified()) {
+    //       QMessageBox::StandardButton ret;
 //       ret = QMessageBox::warning(this, tr("Scribble"),
 //                          tr("The image has been modified.\n"
 //                             "Do you want to save your changes?"),
