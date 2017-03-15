@@ -54,10 +54,10 @@ void View::createActions()
     connect(stepAct, SIGNAL(triggered()), this, SLOT(nextIteration()));
 
     replaceAct = new QAction(tr("&Replace"), this);
+    replaceAct->setDisabled(true);
     connect(replaceAct, SIGNAL(triggered()), this, SLOT(replaceMode()));
 
     xorAct = new QAction(tr("&XOR"), this);
-    xorAct->setDisabled(true);
     connect(xorAct, SIGNAL(triggered()), this, SLOT(xorMode()));
 
     clearAct = new QAction(tr("&Clear"), this);
@@ -208,7 +208,7 @@ void View::xorMode()
 
 void View::impact()
 {
-
+    field->isShowImpact = !field->isShowImpact;
 }
 
 void View::params()

@@ -53,7 +53,7 @@ void Field::changeParam(uint width, uint height, uint cell)
     setCellSize(cell);
 
     int x = (cell*sqrt(3)) * (width);
-    int y  = (3*cell/2) * (height + 1 );
+    int y  = (3*cell/2 + cell % 2) * (height + 1 ) ;
 
     delete image;
     image = new QImage(x,y, QImage::Format_RGB32);
@@ -126,6 +126,49 @@ void Field::drawLineY(QPoint point1, QPoint point2)
             x += sign;
         }
     }
+}
+
+QPoint Field::getCellByClick(int i, int j)
+{
+    int rsin30 = cellSize/2;
+    int rcos30 = cellSize*sqrt(3)/2;
+
+    int x0 , y0;
+    int y = j / (2 * cellSize - rsin30);
+    y0 = y * (2 * cellSize - rsin30);
+    int x = 0;
+
+    if (y & 0u == 0){
+        x = (i - rcos30)/(2*rcos30);
+        x0 = 2 * x * rcos30 + rcos30;
+    } else {
+         x = i/(2*rcos30);
+         x0 = 2 * x * rcos30;
+    }
+
+    if (j < y0 + rsin30){
+        if (i < x0 + rcos30){
+            int dy = j - y0;
+            int dx = x0 + rcos30 - i;
+            if (dy*rcos30 <= dx*rsin30){
+                x = x - (y+1)%2;
+                y--;
+            }
+        } else {
+            int dy = j - y0;
+            int dx = i - x0 - rcos30;
+            if (dy*rcos30 <= dx*rsin30){
+                x = x + y%2;
+                y--;
+            }
+        }
+    }
+    return QPoint(x,y);
+}
+
+void Field::setModel(Model *value)
+{
+    model = value;
 }
 
 uint Field::getGridWidth() const
@@ -223,11 +266,23 @@ void Field::fillCell(uint x, uint y, QRgb color)
             pixels[i * width + j] = color;
         }
     }
+    if (isShowImpact){
+//        QPainter painter;
+//        painter.begin(this);
+//        QString text = "121";
+//        painter.drawText(x0, y0, text);
+    }
 }
 
 void Field::setField(std::vector<std::vector<bool> > *_field)
 {
     field = _field;
+}
+
+void Field::init()
+{
+    field = &(model->getCurrentState());
+    impact = &(model->getImpact());
 }
 
 void Field::mousePressEvent(QMouseEvent *e)
@@ -240,53 +295,58 @@ void Field::mousePressEvent(QMouseEvent *e)
     if (pixels[width*j + i] == lineColor){
         return;
     }
-    int rsin30 = cellSize/2;
-    int rcos30 = cellSize*sqrt(3)/2;
 
-    int x0 , y0;
-    int y = j / (2 * cellSize - rsin30);
-    y0 = y * (2 * cellSize - rsin30);
-    int x = 0;
-
-    if (y & 0u == 0){
-        x = (i - rcos30)/(2*rcos30);
-        x0 = 2 * x * rcos30 + rcos30;
-    } else {
-         x = i/(2*rcos30);
-         x0 = 2 * x * rcos30;
-    }
-
-    if (j < y0 + rsin30){
-        if (i < x0 + rcos30){
-            int dy = j - y0;
-            int dx = x0 + rcos30 - i;
-            if (dy*rcos30 <= dx*rsin30){
-                x = x - (y+1)%2;
-                y--;
-            }
-        } else {
-            int dy = j - y0;
-            int dx = i - x0 - rcos30;
-            if (dy*rcos30 <= dx*rsin30){
-                x = x + y%2;
-                y--;
-            }
-        }
-    }
+    QPoint cell = getCellByClick(i, j);
+    int x = cell.x();
+    int y = cell.y();
 
     if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight){
         return;
     }
 
-    //good pattern
+    lastPoint = cell;
+
     if (isXOR){
-        (*field)[y][x] = !(*field)[y][x];
+        model->invertCell(x,y);
     } else {
-        (*field)[y][x] = true;
+        model->aliveCell(x,y);
     }
 
     update();
+}
 
+void Field::mouseMoveEvent(QMouseEvent *e)
+{
+    int i = e->x();
+    int j = e->y();
+
+    QRgb* pixels = reinterpret_cast<QRgb*>(image->bits());
+    int width = image->bytesPerLine() / sizeof(QRgb);
+    if (pixels[width*j + i] == lineColor){
+        return;
+    }
+
+    QPoint cell = getCellByClick(i, j);
+
+    int x = cell.x();
+    int y = cell.y();
+
+    if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight){
+        return;
+    }
+    if (cell == lastPoint){
+        return;
+    } else {
+        lastPoint = cell;
+    }
+
+    if (isXOR){
+        model->invertCell(x,y);
+    } else {
+        model->aliveCell(x,y);
+    }
+
+    update();
 }
 
 uint Field::getGridHeight() const

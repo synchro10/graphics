@@ -145,3 +145,8 @@ std::vector<std::vector<bool> >& Model::getCurrentState()
     return currentState;
 }
 
+std::vector<std::vector<uint> > &Model::getImpact()
+{
+    return impact;
+}
+

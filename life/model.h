@@ -32,6 +32,8 @@ public:
 
     std::vector<std::vector<bool> >& getCurrentState();
 
+    std::vector<std::vector<uint> >& getImpact();
+
 private:
     uint gridWidth = 5;
     uint gridHeight = 5;

@@ -71,7 +71,7 @@ private:
     QAction *aboutAct;
 
     QTimer* timer;
-    const static int defaultDelay = 1000;
+    const static int defaultDelay = 100;
 
     bool isRun = false;
     bool isXOR = false;

@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Controller controller;
-    controller.startGame(50,50,20);
+    controller.startGame(180,100,7);
 
     return a.exec();
 }
