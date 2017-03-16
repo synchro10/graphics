@@ -25,11 +25,13 @@ Model::~Model()
 void Model::aliveCell(int x, int y)
 {
     currentState[y][x] = true;
+    isImpactCounted = false;
 }
 
 void Model::killCell(int x, int y)
 {
     currentState[y][x] = false;
+    isImpactCounted = false;
 }
 
 void Model::invertCell(int x, int y)
@@ -39,10 +41,14 @@ void Model::invertCell(int x, int y)
     } else {
          currentState[y][x] = true;
     }
+    isImpactCounted = false;
 }
 
 void Model::countNextState()
 {
+    if (isImpactCounted){
+        return;
+    }
     for(uint y = 0; y < gridHeight; y++){
         for(uint x = 0; x < gridWidth; x++){
             uint nearCount = 0;
@@ -78,12 +84,29 @@ void Model::countNextState()
             }
         }
     }
-    changeState();
+    isImpactCounted = true;
 }
 
 void Model::changeState()
 {
     currentState.swap(nextState);
+    isImpactCounted = false;
+}
+
+void Model::clear()
+{
+    for(uint y = 0; y < gridHeight; y++){
+        for(uint x = 0; x < gridWidth; x++){
+            currentState[y][x] = false;
+            nextState[y][x] = false;
+            impact[y][x] = false;
+        }
+    }
+}
+
+uint Model::getImpact(int x, int y)
+{
+    return impact[y][x];
 }
 
 void Model::resize(uint x, uint y)
@@ -128,5 +151,10 @@ uint Model::getGridHeight() const
 std::vector<std::vector<bool> >& Model::getCurrentState()
 {
     return currentState;
+}
+
+std::vector<std::vector<uint> > &Model::getImpact()
+{
+    return impact;
 }
 

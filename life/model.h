@@ -15,6 +15,8 @@ public:
     void invertCell(int x, int y);
     void countNextState();
     void changeState();
+    void clear();
+    uint getImpact(int x, int y);
 
     void resize(uint x, uint y);
     bool changeRules(uint, uint, uint, uint, uint, uint);
@@ -30,6 +32,8 @@ public:
     uint SND_IMPACT = 3;
 
     std::vector<std::vector<bool> >& getCurrentState();
+
+    std::vector<std::vector<uint> >& getImpact();
 
 private:
     uint gridWidth = 5;
@@ -47,6 +51,8 @@ private:
         { QPoint(0, -2), QPoint(-1, -1), QPoint (2, -1), QPoint (-1, 1), QPoint(2, 1), QPoint(0, 2) },
         { QPoint(0, -2), QPoint(-2, -1), QPoint (1, -1), QPoint (-2, 1), QPoint(1, 1), QPoint(0, 2) }
     };
+
+    bool isImpactCounted = false;
 
 };
 
