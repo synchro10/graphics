@@ -19,6 +19,8 @@ public:
     uint getImpact(int x, int y);
 
     void resize(uint x, uint y);
+    uint initFromFile(QString fileName);
+    void saveToFile(QString fileName, uint cellSize);
     bool changeRules(uint, uint, uint, uint, uint, uint);
 
     uint getGridWidth() const;
@@ -38,9 +40,11 @@ public:
 private:
     uint gridWidth = 5;
     uint gridHeight = 5;
+    uint liveCount = 0;
     std::vector<std::vector<bool> > currentState;
     std::vector<std::vector<bool> > nextState;
     std::vector<std::vector<uint>> impact;
+    void recountLiveCells();
 
     //[0][] for even line, [1][] for odd line
     QPoint offsetNearCells[2][6] = {

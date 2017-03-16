@@ -351,6 +351,9 @@ void Field::mouseMoveEvent(QMouseEvent *e)
 
     QRgb* pixels = reinterpret_cast<QRgb*>(image->bits());
     int width = image->bytesPerLine() / sizeof(QRgb);
+    if (i < 0 || j < 0 || i > width || j > image->height()){
+        return;
+    }
     if (pixels[width*j + i] == lineColor){
         return;
     }

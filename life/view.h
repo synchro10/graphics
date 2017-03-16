@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtWidgets>
 #include <memory>
+#include "newgamediagog.h"
 #include "field.h"
 #include "model.h"
 
@@ -54,6 +55,8 @@ private:
     QMenu *helpMenu;
     QToolBar *toolbar;
 
+    QDialog *startGameDialog;
+
     QAction *openAct;
     QAction *saveAct;
     QAction *exitAct;
@@ -76,5 +79,6 @@ private:
     bool isRun = false;
     bool isXOR = false;
 };
+
 
 #endif // VIEW_H

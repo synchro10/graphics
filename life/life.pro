@@ -18,9 +18,11 @@ SOURCES += main.cpp\
         view.cpp \
     field.cpp \
     model.cpp \
-    controller.cpp
+    controller.cpp \
+    newgamediagog.cpp
 
 HEADERS  += view.h \
     field.h \
     model.h \
-    controller.h
+    controller.h \
+    newgamediagog.h
