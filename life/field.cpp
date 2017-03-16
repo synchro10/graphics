@@ -9,6 +9,7 @@ Field::Field(QWidget *parent) : QWidget(parent)
     lineColor = qRgb(0,0,0);
     cellColor = qRgb(10,255,10);
     fontColor = qRgb(255,255,255);
+    textColor = qRgb(10,10,200);
     image = new QImage(DEFAULT_WIDTH, DEFAULT_HEIGHT, QImage::Format_RGB32);
     image->fill(fontColor);
 
@@ -29,6 +30,9 @@ void Field::paintEvent(QPaintEvent *event)
     drawGrid();
 
     painter.drawImage(dirtyRect, *image, dirtyRect);
+    if (isShowImpact){
+        drawImpacts(painter);
+    }
 }
 
 void Field::drawLine(QPoint point1, QPoint point2)
@@ -166,6 +170,37 @@ QPoint Field::getCellByClick(int i, int j)
     return QPoint(x,y);
 }
 
+void Field::drawImpacts(QPainter &painter)
+{
+    if (cellSize < 17){
+        return;
+    }
+    painter.setPen(textColor);
+
+    int rsin30 = cellSize/2;
+    int rcos30 = cellSize*sqrt(3)/2;
+
+    for(uint y = 0; y < gridHeight; y++){
+        uint width = gridWidth - y%2;
+        for(uint x = 0; x < width; x++){
+            int y0 = y * (2 * cellSize - rsin30);
+            int x0 = 0;
+            if (y & 0u == 0u){
+                x0 = 2 * x * rcos30 + 2*rcos30;
+            } else {
+                 x0 = 2 * x * rcos30 + rcos30;
+            }
+            y0 += cellSize;
+            y0 += cellSize/6;
+            uint impact = model->getImpact(x,y);
+            double impact_ = (double)impact/10;
+            QString text = QString::number(impact_);
+            x0 -= 3*text.length();
+            painter.drawText(x0,y0,text);
+        }
+    }
+}
+
 void Field::setModel(Model *value)
 {
     model = value;
@@ -266,12 +301,6 @@ void Field::fillCell(uint x, uint y, QRgb color)
             pixels[i * width + j] = color;
         }
     }
-    if (isShowImpact){
-//        QPainter painter;
-//        painter.begin(this);
-//        QString text = "121";
-//        painter.drawText(x0, y0, text);
-    }
 }
 
 void Field::setField(std::vector<std::vector<bool> > *_field)
@@ -311,7 +340,7 @@ void Field::mousePressEvent(QMouseEvent *e)
     } else {
         model->aliveCell(x,y);
     }
-
+    model->countNextState();
     update();
 }
 
@@ -345,7 +374,7 @@ void Field::mouseMoveEvent(QMouseEvent *e)
     } else {
         model->aliveCell(x,y);
     }
-
+    model->countNextState();
     update();
 }
 

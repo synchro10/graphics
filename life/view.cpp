@@ -163,6 +163,7 @@ void View::nextIteration()
 {
     model->countNextState();
     model->changeState();
+    model->countNextState();
     field->setField(&model->getCurrentState());
     field->update();
 }
@@ -209,6 +210,7 @@ void View::xorMode()
 void View::impact()
 {
     field->isShowImpact = !field->isShowImpact;
+    field->update();
 }
 
 void View::params()

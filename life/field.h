@@ -52,10 +52,12 @@ private:
     void drawLineY(QPoint point1, QPoint point2);
     std::pair<QPoint, QPoint> findSpan(QPoint, QRgb color);
     QPoint getCellByClick(int x, int y);
+    void drawImpacts(QPainter& painter);
 
     QRgb lineColor;
     QRgb cellColor;
     QRgb fontColor;
+    QRgb textColor;
     QImage* image = nullptr;
     static const int DEFAULT_WIDTH = 1300;
     static const int DEFAULT_HEIGHT = 700;

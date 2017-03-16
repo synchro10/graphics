@@ -16,6 +16,7 @@ public:
     void countNextState();
     void changeState();
     void clear();
+    uint getImpact(int x, int y);
 
     void resize(uint x, uint y);
     bool changeRules(uint, uint, uint, uint, uint, uint);

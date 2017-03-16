@@ -14,14 +14,6 @@ void Controller::startGame(uint width, uint height, int cellSize)
 {
     model->resize(width, height);
     field->changeParam(width, height, cellSize);
-
-    //tmp demonstration
-    model->aliveCell(10,12);
-    model->aliveCell(11,12);
-    model->aliveCell(12,10);
-    model->aliveCell(12,11);
-    model->aliveCell(12,12);
-
     view->show();
 }
 

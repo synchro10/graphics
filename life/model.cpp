@@ -25,11 +25,13 @@ Model::~Model()
 void Model::aliveCell(int x, int y)
 {
     currentState[y][x] = true;
+    isImpactCounted = false;
 }
 
 void Model::killCell(int x, int y)
 {
     currentState[y][x] = false;
+    isImpactCounted = false;
 }
 
 void Model::invertCell(int x, int y)
@@ -39,6 +41,7 @@ void Model::invertCell(int x, int y)
     } else {
          currentState[y][x] = true;
     }
+    isImpactCounted = false;
 }
 
 void Model::countNextState()
@@ -95,10 +98,15 @@ void Model::clear()
     for(uint y = 0; y < gridHeight; y++){
         for(uint x = 0; x < gridWidth; x++){
             currentState[y][x] = false;
-            //nextState[y][x] = false;
+            nextState[y][x] = false;
             impact[y][x] = false;
         }
     }
+}
+
+uint Model::getImpact(int x, int y)
+{
+    return impact[y][x];
 }
 
 void Model::resize(uint x, uint y)
