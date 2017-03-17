@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QIODevice>
 #include <QTextStream>
+#include <QStringList>
 
 Model::Model()
 {
@@ -163,15 +164,40 @@ uint Model::initFromFile(QString fileName)
     int line = 0;
     int k = 0;
     int all = 0;
-//    QString str;
-//    QStringList stringList = in.readLine(str);
-//    stringList.begin();
-//    str.split(" ");
-    in >> m;
-    in >> n;
-    in >> line;
-    in >> k;
-    in >> all;
+
+    QString str = in.readLine();
+    QStringList words = str.split(" ");
+    if (words.length() < 2){
+        file.close();
+        return 0;
+    }
+    m = words.at(0).toInt();
+    n = words.at(1).toInt();
+
+    str = in.readLine();
+    words = str.split(" ");
+    if (words.length() < 1){
+        file.close();
+        return 0;
+    }
+    line = words.at(0).toInt();
+
+    str = in.readLine();
+    words = str.split(" ");
+    if (words.length() < 1){
+        file.close();
+        return 0;
+    }
+    k = words.at(0).toInt();
+
+    str = in.readLine();
+    words = str.split(" ");
+    if (words.length() < 1){
+        file.close();
+        return 0;
+    }
+    all = words.at(0).toInt();
+
     if (m < 1 || n < 1 || k < 4 || all < 0){
         file.close();
         return 0;
@@ -186,7 +212,6 @@ uint Model::initFromFile(QString fileName)
     newImpact.resize(newGridHeight);
     for(uint i = 0; i < newGridHeight; i++){
         int width = newGridWidth - i%2;
-        //may be resize?
         newCurrentState[i] = std::vector<bool>(width);
         newNextState[i] = std::vector<bool>(width);
         newImpact[i] = std::vector<uint>(width);
@@ -204,8 +229,10 @@ uint Model::initFromFile(QString fileName)
             file.close();
             return 0;
         }
-        in >> x;
-        in >> y;
+        str = in.readLine();
+        words = str.split(" ");
+        x = words.at(0).toInt();
+        y = words.at(1).toInt();
         if (y < 0 || y >= n){
             file.close();
             return 0;

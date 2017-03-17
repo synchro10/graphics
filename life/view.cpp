@@ -49,6 +49,7 @@ void View::createActions()
     connect(runAct, SIGNAL(triggered()), this, SLOT(run()));
 
     stopAct = new QAction(tr("&Stop"), this);
+    stopAct->setDisabled(true);
     connect(stopAct, SIGNAL(triggered()), this, SLOT(stop()));
 
     stepAct = new QAction(tr("&Step"), this);
@@ -134,13 +135,15 @@ void View::closeEvent(QCloseEvent *event)
 
 void View::open()
 {
+    QString initialPath = QDir::currentPath() + "/Data/";
     if (maybeSave()) {
         QString fileName = QFileDialog::getOpenFileName(this,
-                                   tr("Open File"), QDir::currentPath());
+                                   tr("Open File"), initialPath);
         uint cellSize = model->initFromFile(fileName);
         if (0 != cellSize){
             field->changeParam(model->getGridWidth(), model->getGridHeight(), cellSize);
         }
+        model->countNextState();
     }
 }
 
@@ -177,6 +180,8 @@ void View::run()
     if (!isRun){
         timer->start();
         isRun = true;
+        runAct->setDisabled(true);
+        stopAct->setEnabled(true);
     }
 }
 
@@ -185,11 +190,14 @@ void View::stop()
     if (isRun){
         timer->stop();
         isRun = false;
+        stopAct->setDisabled(true);
+        runAct->setEnabled(true);
     }
 }
 
 void View::clearField()
 {
+    stop();
     model->clear();
     field->setField(&model->getCurrentState());
     field->update();
