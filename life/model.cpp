@@ -128,7 +128,6 @@ uint Model::getImpact(int x, int y)
 
 void Model::resize(uint x, uint y)
 {
-    //todo copy
     gridHeight = y;
     gridWidth = x;
 
@@ -141,6 +140,9 @@ void Model::resize(uint x, uint y)
         currentState[i] = std::vector<bool>(width);
         nextState[i] = std::vector<bool>(width);
         impact[i] = std::vector<uint>(width);
+//        currentState[i].resize(width);
+//        nextState[i].resize(width);
+//        impact[i].resize(width);
         for(int j = 0; j < width; j++){
             currentState[i][j] = false;
             nextState[i][j] = false;

@@ -1,5 +1,6 @@
 #include "view.h"
 #include <QtWidgets>
+#include <iostream>
 #include "controller.h"
 
 View::View(QWidget *parent)
@@ -19,6 +20,8 @@ View::View(QWidget *parent)
     setCentralWidget(scroll);
 
     startGameDialog = new NewGameDiagog(this);
+    options = new Options(this);
+    configDialogs();
     resize(800, 600);
 }
 
@@ -124,6 +127,12 @@ void View::createToolbar()
     this->addToolBar(toolbar);
 }
 
+void View::configDialogs()
+{
+    connect(startGameDialog->button, SIGNAL(accepted()), this,
+            SLOT(startGame()));
+}
+
 void View::closeEvent(QCloseEvent *event)
 {
     if (maybeSave()) {
@@ -161,9 +170,16 @@ void View::about()
                        tr("Kondratyev 14202"));
 }
 
-void View::startGame(uint width, uint height, int cellSize)
+void View::startGame()
 {
+    //uint width, uint height, int cellSize
+    uint width = startGameDialog->sliderM->value();
+    uint height = startGameDialog->sliderN->value();
+    uint cellSize = startGameDialog->sliderC->value();
+    model->resize(width, height);
+    field->changeParam(model->getGridWidth(), model->getGridHeight(), cellSize);
 
+    startGameDialog->close();
 }
 
 void View::nextIteration()
@@ -227,13 +243,13 @@ void View::impact()
 
 void View::params()
 {
-
+    options->show();
 }
 
 void View::newGame()
 {
+    stop();
     startGameDialog->show();
-
 }
 
 void View::setModel(Model *value)
