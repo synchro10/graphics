@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QtWidgets>
 #include <memory>
+#include "newgamediagog.h"
+#include "options.h"
 #include "field.h"
 #include "model.h"
 
@@ -25,7 +27,7 @@ private slots:
     void open();
     void save();
     void about();
-    void startGame(uint width, uint height, int cellSize);
+    void startGame();
     void nextIteration();
     void run();
     void stop();
@@ -35,6 +37,7 @@ private slots:
     void impact();
     void params();
     void newGame();
+    void setOptions();
 
 private:
     std::unique_ptr<Field> field;
@@ -45,6 +48,7 @@ private:
     void createActions();
     void createMenus();
     void createToolbar();
+    void configDialogs();
     bool maybeSave();
     bool saveFile(const QByteArray &fileFormat);
 
@@ -53,6 +57,9 @@ private:
     QMenu *optionMenu;
     QMenu *helpMenu;
     QToolBar *toolbar;
+
+    NewGameDiagog *startGameDialog;
+    Options *options;
 
     QAction *openAct;
     QAction *saveAct;
@@ -76,5 +83,6 @@ private:
     bool isRun = false;
     bool isXOR = false;
 };
+
 
 #endif // VIEW_H

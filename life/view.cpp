@@ -1,5 +1,6 @@
 #include "view.h"
 #include <QtWidgets>
+#include <iostream>
 #include "controller.h"
 
 View::View(QWidget *parent)
@@ -18,6 +19,9 @@ View::View(QWidget *parent)
     scroll->setWidget(field.get());
     setCentralWidget(scroll);
 
+    startGameDialog = new NewGameDiagog(this);
+    options = new Options(this);
+    configDialogs();
     resize(800, 600);
 }
 
@@ -48,6 +52,7 @@ void View::createActions()
     connect(runAct, SIGNAL(triggered()), this, SLOT(run()));
 
     stopAct = new QAction(tr("&Stop"), this);
+    stopAct->setDisabled(true);
     connect(stopAct, SIGNAL(triggered()), this, SLOT(stop()));
 
     stepAct = new QAction(tr("&Step"), this);
@@ -122,6 +127,14 @@ void View::createToolbar()
     this->addToolBar(toolbar);
 }
 
+void View::configDialogs()
+{
+    connect(startGameDialog->button, SIGNAL(accepted()), this,
+            SLOT(startGame()));
+    connect(options->button, SIGNAL(accepted()), this,
+            SLOT(setOptions()));
+}
+
 void View::closeEvent(QCloseEvent *event)
 {
     if (maybeSave()) {
@@ -133,17 +146,22 @@ void View::closeEvent(QCloseEvent *event)
 
 void View::open()
 {
+    QString initialPath = QDir::currentPath() + "/Data/";
     if (maybeSave()) {
         QString fileName = QFileDialog::getOpenFileName(this,
-                                   tr("Open File"), QDir::currentPath());
-//        if (!fileName.isEmpty())
-//            scribbleArea->openImage(fileName);
+                                   tr("Open File"), initialPath);
+        uint cellSize = model->initFromFile(fileName);
+        if (0 != cellSize){
+            field->changeParam(model->getGridWidth(), model->getGridHeight(), cellSize);
+        }
+        model->countNextState();
     }
 }
 
 void View::save()
 {
     QAction *action = qobject_cast<QAction *>(sender());
+    action->setData(QVariant("txt"));
     QByteArray fileFormat = action->data().toByteArray();
     saveFile(fileFormat);
 }
@@ -154,9 +172,17 @@ void View::about()
                        tr("Kondratyev 14202"));
 }
 
-void View::startGame(uint width, uint height, int cellSize)
+void View::startGame()
 {
+    //uint width, uint height, int cellSize
+    uint width = startGameDialog->sliderM->value();
+    uint height = startGameDialog->sliderN->value();
+    uint cellSize = startGameDialog->sliderC->value();
+    model->resize(width, height);
+    field->changeParam(model->getGridWidth(), model->getGridHeight(), cellSize);
 
+    startGameDialog->close();
+    clearField();
 }
 
 void View::nextIteration()
@@ -173,6 +199,8 @@ void View::run()
     if (!isRun){
         timer->start();
         isRun = true;
+        runAct->setDisabled(true);
+        stopAct->setEnabled(true);
     }
 }
 
@@ -181,11 +209,14 @@ void View::stop()
     if (isRun){
         timer->stop();
         isRun = false;
+        stopAct->setDisabled(true);
+        runAct->setEnabled(true);
     }
 }
 
 void View::clearField()
 {
+    stop();
     model->clear();
     field->setField(&model->getCurrentState());
     field->update();
@@ -215,12 +246,14 @@ void View::impact()
 
 void View::params()
 {
-
+    stop();
+    options->show();
 }
 
 void View::newGame()
 {
-
+    stop();
+    startGameDialog->show();
 }
 
 void View::setModel(Model *value)
@@ -231,35 +264,41 @@ void View::setModel(Model *value)
 
 bool View::maybeSave()
 {
-    //    if (scribbleArea->isModified()) {
-    //       QMessageBox::StandardButton ret;
-//       ret = QMessageBox::warning(this, tr("Scribble"),
-//                          tr("The image has been modified.\n"
-//                             "Do you want to save your changes?"),
-//                          QMessageBox::Save | QMessageBox::Discard
-//                          | QMessageBox::Cancel);
-//        if (ret == QMessageBox::Save) {
-//            return saveFile("png");
-//        } else if (ret == QMessageBox::Cancel) {
-//            return false;
-//        }
-//    }
-//    return true;
+    return true;
 }
 
 bool View::saveFile(const QByteArray &fileFormat)
 {
-//    QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
+    QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
 
-//    QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
-//                               initialPath,
-//                               tr("%1 Files (*.%2);;All Files (*)")
-//                               .arg(QString::fromLatin1(fileFormat.toUpper()))
-//                               .arg(QString::fromLatin1(fileFormat)));
-//    if (fileName.isEmpty()) {
-//        return false;
-//    } else {
-//        return scribbleArea->saveImage(fileName, fileFormat.constData());
-//    }
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
+                               initialPath,
+                               tr("%1 Files (*.%2);;All Files (*)")
+                               .arg(QString::fromLatin1(fileFormat.toUpper()))
+                               .arg(QString::fromLatin1(fileFormat)));
+    model->saveToFile(fileName, field->getCellSize());
+}
+
+void View::setOptions()
+{
+    uint width = options->sliderM->value();
+    uint height = options->sliderN->value();
+    uint cellSize = options->sliderC->value();
+    model->resize(width, height);
+    field->changeParam(model->getGridWidth(), model->getGridHeight(), cellSize);
+
+    uint LIVE_BEGIN = options->sliderLiveB->value();
+    uint LIVE_END = options->sliderBirthE->value();
+    uint BIRTH_BEGIN = options->sliderBirthB->value();
+    uint BIRTH_END = options->sliderBirthE->value();
+    uint FST_IMPACT = options->sliderFstI->value();
+    uint SND_IMPACT = options->sliderSndI->value();
+
+    if( model->changeRules(LIVE_BEGIN, LIVE_END, BIRTH_BEGIN, BIRTH_END, FST_IMPACT, SND_IMPACT)){
+        model->countNextState();
+    }
+
+    options->close();
+    update();
 }
 
