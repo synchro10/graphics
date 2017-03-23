@@ -293,13 +293,6 @@ void View::setOptions()
     uint BIRTH_END = options->sliderBirthE->value();
     uint FST_IMPACT = options->sliderFstI->value();
     uint SND_IMPACT = options->sliderSndI->value();
-    //tmp
-    options->spinBoxLiveB   ->setValue(LIVE_BEGIN/10);
-    options->spinBoxBirthE   ->setValue(LIVE_END/10);
-    options->spinBoxBirthB   ->setValue(BIRTH_BEGIN/10);
-    options->spinBoxBirthE   ->setValue(LIVE_BEGIN/10);
-    options->spinBoxFstI   ->setValue(FST_IMPACT/10);
-    options->spinBoxSndI   ->setValue(SND_IMPACT/10);
 
     if( model->changeRules(LIVE_BEGIN, LIVE_END, BIRTH_BEGIN, BIRTH_END, FST_IMPACT, SND_IMPACT)){
         model->countNextState();
