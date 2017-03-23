@@ -52,6 +52,9 @@ void Field::changeParam(uint width, uint height, uint cell)
     if (width*height*cell == 0){
         return;
     }
+    if (width == gridWidth && height == gridHeight && cell == cellSize){
+        return;
+    }
     setGridWidth(width);
     setGridHeight(height);
     setCellSize(cell);

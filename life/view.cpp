@@ -131,6 +131,8 @@ void View::configDialogs()
 {
     connect(startGameDialog->button, SIGNAL(accepted()), this,
             SLOT(startGame()));
+    connect(options->button, SIGNAL(accepted()), this,
+            SLOT(setOptions()));
 }
 
 void View::closeEvent(QCloseEvent *event)
@@ -180,6 +182,7 @@ void View::startGame()
     field->changeParam(model->getGridWidth(), model->getGridHeight(), cellSize);
 
     startGameDialog->close();
+    clearField();
 }
 
 void View::nextIteration()
@@ -243,6 +246,7 @@ void View::impact()
 
 void View::params()
 {
+    stop();
     options->show();
 }
 
@@ -273,5 +277,35 @@ bool View::saveFile(const QByteArray &fileFormat)
                                .arg(QString::fromLatin1(fileFormat.toUpper()))
                                .arg(QString::fromLatin1(fileFormat)));
     model->saveToFile(fileName, field->getCellSize());
+}
+
+void View::setOptions()
+{
+    uint width = options->sliderM->value();
+    uint height = options->sliderN->value();
+    uint cellSize = options->sliderC->value();
+    model->resize(width, height);
+    field->changeParam(model->getGridWidth(), model->getGridHeight(), cellSize);
+
+    uint LIVE_BEGIN = options->sliderLiveB->value();
+    uint LIVE_END = options->sliderBirthE->value();
+    uint BIRTH_BEGIN = options->sliderBirthB->value();
+    uint BIRTH_END = options->sliderBirthE->value();
+    uint FST_IMPACT = options->sliderFstI->value();
+    uint SND_IMPACT = options->sliderSndI->value();
+    //tmp
+    options->spinBoxLiveB   ->setValue(LIVE_BEGIN/10);
+    options->spinBoxBirthE   ->setValue(LIVE_END/10);
+    options->spinBoxBirthB   ->setValue(BIRTH_BEGIN/10);
+    options->spinBoxBirthE   ->setValue(LIVE_BEGIN/10);
+    options->spinBoxFstI   ->setValue(FST_IMPACT/10);
+    options->spinBoxSndI   ->setValue(SND_IMPACT/10);
+
+    if( model->changeRules(LIVE_BEGIN, LIVE_END, BIRTH_BEGIN, BIRTH_END, FST_IMPACT, SND_IMPACT)){
+        model->countNextState();
+    }
+
+    options->close();
+    update();
 }
 

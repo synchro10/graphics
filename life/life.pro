@@ -20,11 +20,15 @@ SOURCES += main.cpp\
     model.cpp \
     controller.cpp \
     newgamediagog.cpp \
-    options.cpp
+    options.cpp \
+    myslider.cpp \
+    mydoublespinbox.cpp
 
 HEADERS  += view.h \
     field.h \
     model.h \
     controller.h \
     newgamediagog.h \
-    options.h
+    options.h \
+    myslider.h \
+    mydoublespinbox.h

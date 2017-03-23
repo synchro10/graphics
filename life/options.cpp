@@ -6,32 +6,32 @@ Options::Options(QObject *parent)
     mainLayout = new QGridLayout;
 
     spinBoxM = new QSpinBox(this);
-    sliderM = new QSlider(Qt::Horizontal , this);
+    sliderM = new MySlider(Qt::Horizontal , this);
     labelM = new QLabel(this);
     spinBoxN = new QSpinBox(this);
-    sliderN = new QSlider(Qt::Horizontal , this);
+    sliderN = new MySlider(Qt::Horizontal , this);
     labelN = new QLabel(this);
     spinBoxC = new QSpinBox(this);
-    sliderC = new QSlider(Qt::Horizontal , this);
+    sliderC = new MySlider(Qt::Horizontal , this);
     labelC = new QLabel(this);
 
-    spinBoxLiveB    = new QDoubleSpinBox(this);
-    sliderLiveB     = new QSlider(Qt::Horizontal , this);
+    spinBoxLiveB    = new MyDoubleSpinBox(this);
+    sliderLiveB     = new MySlider(Qt::Horizontal , this);
     labelLiveB      = new QLabel(this);
-    spinBoxLiveE    = new QDoubleSpinBox(this);
-    sliderLiveE     = new QSlider(Qt::Horizontal , this);
+    spinBoxLiveE    = new MyDoubleSpinBox(this);
+    sliderLiveE     = new MySlider(Qt::Horizontal , this);
     labelLiveE      = new QLabel(this);
-    spinBoxBirthB   = new QDoubleSpinBox(this);
-    sliderBirthB    = new QSlider(Qt::Horizontal , this);
+    spinBoxBirthB   = new MyDoubleSpinBox(this);
+    sliderBirthB    = new MySlider(Qt::Horizontal , this);
     labelBirthB     = new QLabel(this);
-    spinBoxBirthE   = new QDoubleSpinBox(this);
-    sliderBirthE    = new QSlider(Qt::Horizontal , this);
+    spinBoxBirthE   = new MyDoubleSpinBox(this);
+    sliderBirthE    = new MySlider(Qt::Horizontal , this);
     labelBirthE     = new QLabel(this);
-    spinBoxFstI     = new QDoubleSpinBox(this);
-    sliderFstI      = new QSlider(Qt::Horizontal , this);
+    spinBoxFstI     = new MyDoubleSpinBox(this);
+    sliderFstI      = new MySlider(Qt::Horizontal , this);
     labelFstI       = new QLabel(this);
-    spinBoxSndI     = new QDoubleSpinBox(this);
-    sliderSndI      = new QSlider(Qt::Horizontal , this);
+    spinBoxSndI     = new MyDoubleSpinBox(this);
+    sliderSndI      = new MySlider(Qt::Horizontal , this);
     labelSndI       = new QLabel(this);
     button          = new QDialogButtonBox(QDialogButtonBox::Cancel | QDialogButtonBox::Ok);
 
@@ -98,13 +98,20 @@ void Options::setup()
     spinBoxBirthE->setRange(0.1, 5.0);
     spinBoxFstI->setRange(0.1, 5.0);
     spinBoxSndI->setRange(0.1, 5.0);
+    spinBoxLiveB->  setSingleStep(0.1);
+    spinBoxLiveE->  setSingleStep(0.1);
+    spinBoxBirthB-> setSingleStep(0.1);
+    spinBoxBirthE-> setSingleStep(0.1);
+    spinBoxFstI->   setSingleStep(0.1);
+    spinBoxSndI->   setSingleStep(0.1);
 
-    sliderLiveB->setRange(0.1, 5.0);
-    sliderLiveE->setRange(0.1, 5.0);
-    sliderBirthB->setRange(0.1, 5.0);
-    sliderBirthE->setRange(0.1, 5.0);
-    sliderFstI->setRange(0.1, 5.0);
-    sliderSndI->setRange(0.1, 5.0);
+
+    sliderLiveB->setRange   (1, 50);
+    sliderLiveE->setRange   (1, 50);
+    sliderBirthB->setRange  (1, 50);
+    sliderBirthE->setRange  (1, 50);
+    sliderFstI->setRange    (1, 50);
+    sliderSndI->setRange    (1, 50);
 
     connect(sliderM, SIGNAL(valueChanged(int)), spinBoxM, SLOT(setValue(int)));
     connect(spinBoxM, SIGNAL(valueChanged(int)), sliderM, SLOT(setValue(int)));
@@ -113,8 +120,9 @@ void Options::setup()
     connect(sliderC, SIGNAL(valueChanged(int)), spinBoxC, SLOT(setValue(int)));
     connect(spinBoxC, SIGNAL(valueChanged(int)), sliderC, SLOT(setValue(int)));
 
-    connect(spinBoxLiveB, SIGNAL(valueChanged(double)), sliderLiveB, SLOT(setValue(int)));
-    connect(sliderLiveB, SIGNAL(valueChanged(int)), spinBoxLiveB, SLOT(setValue(double)));
+    connect(spinBoxLiveB, SIGNAL(valueChanged(double)), sliderLiveB, SLOT(setDoubleValue(double)));
+    connect(sliderLiveB, SIGNAL(valueChanged(int)), spinBoxLiveB, SLOT(setIntValue(int)));
 
     connect(button, SIGNAL(rejected()), this, SLOT(close()));
 }
+

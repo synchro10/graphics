@@ -37,6 +37,7 @@ private slots:
     void impact();
     void params();
     void newGame();
+    void setOptions();
 
 private:
     std::unique_ptr<Field> field;

@@ -2,6 +2,8 @@
 #define OPTIONS_H
 
 #include <QtWidgets>
+#include "mydoublespinbox.h"
+#include "myslider.h"
 
 class Options : public QDialog
 {
@@ -9,32 +11,32 @@ public:
     Options(QObject *parent);
 
     QSpinBox* spinBoxM = nullptr;
-    QSlider* sliderM = nullptr;
+    MySlider* sliderM = nullptr;
     QLabel* labelM = nullptr;
     QSpinBox* spinBoxN = nullptr;
-    QSlider* sliderN = nullptr;
+    MySlider* sliderN = nullptr;
     QLabel* labelN = nullptr;
     QSpinBox* spinBoxC = nullptr;
-    QSlider* sliderC = nullptr;
+    MySlider* sliderC = nullptr;
     QLabel* labelC = nullptr;
 
-    QDoubleSpinBox* spinBoxLiveB = nullptr;
-    QSlider*         sliderLiveB = nullptr;
+    MyDoubleSpinBox* spinBoxLiveB = nullptr;
+    MySlider*         sliderLiveB = nullptr;
     QLabel*           labelLiveB = nullptr;
-    QDoubleSpinBox* spinBoxLiveE = nullptr;
-    QSlider*         sliderLiveE = nullptr;
+    MyDoubleSpinBox* spinBoxLiveE = nullptr;
+    MySlider*         sliderLiveE = nullptr;
     QLabel*           labelLiveE = nullptr;
-    QDoubleSpinBox* spinBoxBirthB = nullptr;
-    QSlider*         sliderBirthB = nullptr;
+    MyDoubleSpinBox* spinBoxBirthB = nullptr;
+    MySlider*         sliderBirthB = nullptr;
     QLabel*           labelBirthB = nullptr;
-    QDoubleSpinBox* spinBoxBirthE = nullptr;
-    QSlider*         sliderBirthE = nullptr;
+    MyDoubleSpinBox* spinBoxBirthE = nullptr;
+    MySlider*         sliderBirthE = nullptr;
     QLabel*           labelBirthE = nullptr;
-    QDoubleSpinBox* spinBoxFstI = nullptr;
-    QSlider*         sliderFstI = nullptr;
+    MyDoubleSpinBox* spinBoxFstI = nullptr;
+    MySlider*         sliderFstI = nullptr;
     QLabel*           labelFstI = nullptr;
-    QDoubleSpinBox* spinBoxSndI = nullptr;
-    QSlider*         sliderSndI = nullptr;
+    MyDoubleSpinBox* spinBoxSndI = nullptr;
+    MySlider*         sliderSndI = nullptr;
     QLabel*           labelSndI = nullptr;
 
 

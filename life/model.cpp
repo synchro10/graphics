@@ -128,27 +128,40 @@ uint Model::getImpact(int x, int y)
 
 void Model::resize(uint x, uint y)
 {
-    gridHeight = y;
-    gridWidth = x;
+    if(x == gridWidth && y == gridHeight){
+        return;
+    }
+    int newGridHeight = y;
+    int newGridWidth = x;
 
-    currentState.resize(gridHeight);
-    nextState.resize(gridHeight);
-    impact.resize(gridHeight);
-    for(uint i = 0; i < gridHeight; i++){
-        int width = gridWidth - i%2;
-        //may be resize?
-        currentState[i] = std::vector<bool>(width);
-        nextState[i] = std::vector<bool>(width);
-        impact[i] = std::vector<uint>(width);
-//        currentState[i].resize(width);
-//        nextState[i].resize(width);
-//        impact[i].resize(width);
+    std::vector<std::vector<bool> > newCurrentState;
+    std::vector<std::vector<bool> > newNextState;
+    std::vector<std::vector<uint>> newImpact;
+    newCurrentState.resize(newGridHeight);
+    newNextState.resize(newGridHeight);
+    newImpact.resize(newGridHeight);
+    for(uint i = 0; i < newGridHeight; i++){
+        int width = newGridWidth - i%2;
+        newCurrentState[i] = std::vector<bool>(width);
+        newNextState[i] = std::vector<bool>(width);
+        newImpact[i] = std::vector<uint>(width);
         for(int j = 0; j < width; j++){
-            currentState[i][j] = false;
-            nextState[i][j] = false;
-            impact[i][j] = 0;
+            if (i < currentState.size()){
+                if (j < currentState[i].size())
+                    newCurrentState[i][j] = currentState[i][j];
+            } else {
+                newCurrentState[i][j] = false;
+            }
+            newNextState[i][j] = false;
+            newImpact[i][j] = 0;
         }
     }
+    gridHeight = newGridHeight;
+    gridWidth = newGridWidth;
+    currentState = newCurrentState;
+    nextState = newNextState;
+    impact = newImpact;
+
     recountLiveCells();
     isImpactCounted = false;
 }
@@ -278,9 +291,20 @@ void Model::saveToFile(QString fileName, uint cellSize)
     file.close();
 }
 
-bool Model::changeRules(uint, uint, uint, uint, uint, uint)
+bool Model::changeRules(uint lb, uint le, uint bb, uint be, uint fi, uint si)
 {
-    //todo check and set
+    if (lb <= bb && bb <= be && be <= le){
+        LIVE_BEGIN = lb;
+        LIVE_END = le;
+        BIRTH_BEGIN = bb;
+        BIRTH_END = be;
+        FST_IMPACT = fi;
+        SND_IMPACT = si;
+        isImpactCounted = false;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 uint Model::getGridWidth() const
