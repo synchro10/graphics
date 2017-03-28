@@ -18,11 +18,13 @@ SOURCES += main.cpp\
     model.cpp \
     drawingarea.cpp \
     zone.cpp \
-    controlpanel.cpp
+    controlpanel.cpp \
+    zonea.cpp
 
 HEADERS  += view.h \
     executor.h \
     model.h \
     drawingarea.h \
     zone.h \
-    controlpanel.h
+    controlpanel.h \
+    zonea.h
