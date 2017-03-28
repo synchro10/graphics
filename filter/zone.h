@@ -12,26 +12,22 @@ class Zone : public QWidget
     Q_OBJECT
 public:
     explicit Zone(QWidget *parent = 0);
-
-    void paintEvent(QPaintEvent *event) override;
-
+    virtual void setImage(QImage* image_) = 0;
+    virtual void setSelect(){ }
     int getSize() const;
-    void drawDottedRect(int x0, int y0, int x1, int y1);
-    void drawDottedLine(QPoint& start, QPoint& end);
-
+    void drawDottedRect(QImage* image, int x0, int y0, int x1, int y1);
+    void drawDottedLine(QImage* image, QPoint& start, QPoint& end);
+    const int size = 352;
+    const QRgb lineColor = qRgb(0,0,0);
+    const QRgb fontColor = qRgb(255,255,255);
+    const QRgb testColor = qRgb(255,0,0);
 signals:
 
 public slots:
 
 private:
-    const int size = 352;
-    QRgb lineColor = qRgb(0,0,0);
-    QRgb fontColor = qRgb(255,255,255);
-    QRgb testColor = qRgb(255,0,0);
-    QSharedPointer<QImage> image;
-
-    void drawDottedLineY(QPoint& start, QPoint& end);
-    void drawDottedLineX(QPoint& start, QPoint& end);
+    void drawDottedLineY(QImage* image, QPoint& start, QPoint& end);
+    void drawDottedLineX(QImage* image, QPoint& start, QPoint& end);
 };
 
 #endif // ZONE_H

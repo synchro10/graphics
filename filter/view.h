@@ -12,10 +12,34 @@ class View : public QMainWindow
 
 public:
     View(QWidget *parent = 0);
-    ~View();
+    ~View(){}
+
+private slots:
+    void open();
+    void save();
+    void about();
+    void select();
+
 private:
+    void createActions();
+    void createMenus();
+    void createToolbar();
+
+    QMenu *editMenu;
+    QMenu *fileMenu;
+    QMenu *filterMenu;
+    QMenu *helpMenu;
+    QToolBar *toolbar;
+
+    QAction *openAct;
+    QAction *saveAct;
+    QAction *exitAct;
+    QAction *selectAct;
+
+    QAction *aboutAct;
+
     DrawingArea* area = nullptr;
-    const int DEFAULT_HEIGHT = 350 + 200;
+    const int DEFAULT_HEIGHT = 350 + 300;
     const int DEFAULT_WIDTH = 3 * 350 + 100;
 };
 
