@@ -4,8 +4,9 @@
 DrawingArea::DrawingArea(QWidget *parent) : QWidget(parent)
 {
     zoneA = new ZoneA(this);
-    zoneB = new ZoneA(this);
-    zoneC = new ZoneA(this);
+    zoneB = new ZoneB(this);
+    zoneC = new ZoneB(this);
+    zoneA->setZoneB(zoneB);
     controlPanel = new ControlPanel(this);
     zoneLayout = new QHBoxLayout;
     zoneLayout->setSpacing(20);
@@ -32,7 +33,28 @@ void DrawingArea::open(const QString& fileName)
     zoneA->setImage(image);
 }
 
+void DrawingArea::save(const QString &fileName)
+{
+    QImage image = zoneB->getImage();
+    image.save(fileName, "png");
+}
+
 void DrawingArea::select()
 {
     zoneA->setSelect();
 }
+
+void DrawingArea::moveToB()
+{
+    QImage* image_ = zoneA->getSelectedImage();
+    if (image_ != nullptr){
+        zoneB->setImage(image_);
+    }
+}
+
+void DrawingArea::moveFromC()
+{
+    QImage image_ = zoneC->getImage();
+    zoneB->setImage(new QImage(image_));
+}
+

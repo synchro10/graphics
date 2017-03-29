@@ -19,6 +19,7 @@ private slots:
     void save();
     void about();
     void select();
+    void moveFromC();
 
 private:
     void createActions();
@@ -35,6 +36,7 @@ private:
     QAction *saveAct;
     QAction *exitAct;
     QAction *selectAct;
+    QAction *moveCAct;
 
     QAction *aboutAct;
 

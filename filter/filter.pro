@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     drawingarea.cpp \
     zone.cpp \
     controlpanel.cpp \
-    zonea.cpp
+    zonea.cpp \
+    zoneb.cpp
 
 HEADERS  += view.h \
     executor.h \
@@ -27,4 +28,5 @@ HEADERS  += view.h \
     drawingarea.h \
     zone.h \
     controlpanel.h \
-    zonea.h
+    zonea.h \
+    zoneb.h
