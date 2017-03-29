@@ -30,6 +30,9 @@ void View::createActions()
 
     selectAct = new QAction(tr("&Select"), this);
     connect(selectAct, SIGNAL(triggered()), this, SLOT(select()));
+
+    moveCAct = new QAction(tr("&<-Move"), this);
+    connect(moveCAct, SIGNAL(triggered()), this, SLOT(moveFromC()));
 }
 
 void View::createMenus()
@@ -41,6 +44,7 @@ void View::createMenus()
 
     editMenu = new QMenu(tr("&Edit"), this);
     editMenu->addAction(selectAct);
+    editMenu->addAction(moveCAct);
 
     filterMenu = new QMenu(tr("&Filter"), this);
     //filterMenu->addAction(filterMenu);
@@ -62,6 +66,7 @@ void View::createToolbar()
     toolbar->addAction(saveAct);
     toolbar->addSeparator();
     toolbar->addAction(selectAct);
+    toolbar->addAction(moveCAct);
     toolbar->addSeparator();
     toolbar->addSeparator();
     toolbar->addAction(aboutAct);
@@ -74,7 +79,8 @@ void View::open()
     QString initialPath = QDir::currentPath() + "/Data/";
     QString fileName = QFileDialog::getOpenFileName(this,
                                 tr("Open File"), initialPath);
-    area->open(fileName);
+    if (!fileName.isNull())
+        area->open(fileName);
 }
 
 void View::save()
@@ -90,7 +96,8 @@ void View::save()
                                tr("%1 Files (*.%2);;All Files (*)")
                                .arg(QString::fromLatin1(fileFormat.toUpper()))
                                .arg(QString::fromLatin1(fileFormat)));
-    //todo save
+    if (!fileName.isNull())
+        area->save(fileName);
 }
 
 void View::about()
@@ -102,4 +109,9 @@ void View::about()
 void View::select()
 {
     area->select();
+}
+
+void View::moveFromC()
+{
+    area->moveFromC();
 }

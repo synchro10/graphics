@@ -2,8 +2,9 @@
 #define DRAWINGAREA_H
 
 #include <QtWidgets>
-//#include "zone.h"
+#include "zone.h"
 #include "zonea.h"
+#include "zoneb.h"
 #include "controlpanel.h"
 
 class DrawingArea : public QWidget
@@ -13,14 +14,17 @@ public:
     explicit DrawingArea(QWidget *parent = 0);
     void paintEvent(QPaintEvent *event) override;
     void open(const QString &fileName);
+    void save(const QString &fileName);
     void select();
+    void moveToB();
+    void moveFromC();
 signals:
 
 public slots:
 private:
-    Zone* zoneA = nullptr;
-    Zone* zoneB = nullptr;
-    Zone* zoneC = nullptr;
+    ZoneA* zoneA = nullptr;
+    ZoneB* zoneB = nullptr;
+    ZoneB* zoneC = nullptr;
     ControlPanel* controlPanel = nullptr;
 
     QHBoxLayout* zoneLayout = nullptr;

@@ -1,5 +1,6 @@
 #include "zonea.h"
 #include <iostream>
+#include <QtMath>
 
 ZoneA::ZoneA(QWidget *parent)
 {
@@ -34,9 +35,45 @@ void ZoneA::setImage(QImage *image_)
     updateSelector();
 }
 
+QImage *ZoneA::getSelectedImage()
+{
+    if (isSelect == false){
+        return nullptr;
+    }
+    int biggestSize = std::max<int>(imagePrototype->height(), imagePrototype->width());
+    if (biggestSize < size){
+        return new QImage(*image.data());
+    }
+    QRgb* pixelsProt = reinterpret_cast<QRgb*>(imagePrototype->bits());
+    int pixPerLineProt = imagePrototype->bytesPerLine() / sizeof(QRgb);
+    int heightProt = imagePrototype->height();
+    int widthProt = imagePrototype->width();
+    int startX = (selectorPosX * widthProt)/width;
+    int startY = (selectorPosY * heightProt)/height;
+    QImage* image_ = new QImage(size, size,  QImage::Format_RGB32);
+    QRgb* pixels = reinterpret_cast<QRgb*>(image_->bits());
+    int pixPerLine = image_->bytesPerLine() / sizeof(QRgb);
+    if (selectorPosY + selectorSize >= size){
+        startY = heightProt - 1;
+        for(int j = 0; j < size; j++){
+            for(int i = 0; i < size; i++){
+                pixels[i + (size-j)*pixPerLine] = pixelsProt[startX + i + (startY - j)*pixPerLineProt];
+            }
+        }
+        return image_;
+    } else {
+        for(int j = 0; j < size; j++){
+            for(int i = 0; i < size; i++){
+                pixels[i + j*pixPerLine] = pixelsProt[startX + i + (startY + j)*pixPerLineProt];
+            }
+        }
+        return image_;
+    }
+}
+
 void ZoneA::mouseMoveEvent(QMouseEvent *e)
 {
-    if (isSelect){
+    if (isSelect && imagePrototype.data() != nullptr){
         int i = e->x();
         int j = e->y();
         if (i < 0){
@@ -46,15 +83,21 @@ void ZoneA::mouseMoveEvent(QMouseEvent *e)
             j = 0;
         }
         if (i + selectorSize > width){
-            i = width - selectorSize > 0 ? width - selectorSize : 0;
+            i = width - selectorSize > 0 ? width - selectorSize - 1 : 0;
         }
         if (j + selectorSize > height){
-            j = height - selectorSize > 0 ? height - selectorSize : 0;
+            j = height - selectorSize > 0 ? height - selectorSize - 1 : 0;
         }
         selectorPosX = i;
         selectorPosY = j;
+        zoneB->setImage(getSelectedImage());
         update();
     }
+}
+
+void ZoneA::setZoneB(ZoneB *value)
+{
+    zoneB = value;
 }
 
 QImage *ZoneA::correctImage(QImage *image2)
@@ -94,7 +137,8 @@ void ZoneA::updateSelector()
     if (biggestSide == size){
         selectorSize = size;
     } else {
-        selectorSize = (size*size)/biggestSide;
+        selectorSizef = (float)(size*size)/biggestSide;
+        selectorSize = qFloor(selectorSizef);
     }
 }
 
