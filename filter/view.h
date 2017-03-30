@@ -31,6 +31,7 @@ public:
     QAction *waterAct;
     QAction *blurAct;
     QAction *sharpenAct;
+    void setControl(QWidget* controlWidget);
 
 private slots:
     void open();

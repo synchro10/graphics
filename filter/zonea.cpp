@@ -56,7 +56,7 @@ QImage *ZoneA::getSelectedImage()
         startY = heightProt - 1;
         for(int j = 0; j < size; j++){
             for(int i = 0; i < size; i++){
-                pixels[i + (size-j)*pixPerLine] = pixelsProt[startX + i + (startY - j)*pixPerLineProt];
+                pixels[i + (size - j - 1)*pixPerLine] = pixelsProt[startX + i + (startY - j)*pixPerLineProt];
             }
         }
         return image_;
@@ -82,10 +82,10 @@ void ZoneA::mouseMoveEvent(QMouseEvent *e)
             j = 0;
         }
         if (i + selectorSize > width){
-            i = width - selectorSize > 0 ? width - selectorSize - 1 : 0;
+            i = width - selectorSize > 0 ? width - selectorSize  : 0;
         }
         if (j + selectorSize > height){
-            j = height - selectorSize > 0 ? height - selectorSize - 1 : 0;
+            j = height - selectorSize > 0 ? height - selectorSize  : 0;
         }
         selectorPosX = i;
         selectorPosY = j;

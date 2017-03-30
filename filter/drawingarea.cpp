@@ -70,3 +70,17 @@ QImage* DrawingArea::getImageB()
     return zoneB->getImage();
 }
 
+void DrawingArea::setControlPanel(QWidget *value)
+{
+    controlPanel = value;
+    controlPanel->setParent(this);
+    QLayoutItem * item;
+    QWidget * widget;
+    item = mainLayout->takeAt(1);
+    widget = item->widget();
+    widget->hide();
+    delete widget;
+
+    mainLayout->addWidget(controlPanel);
+}
+

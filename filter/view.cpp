@@ -64,15 +64,15 @@ void View::createMenus()
     filterMenu = new QMenu(tr("&Filter"), this);
     filterMenu->addAction(blackWhiteAct);
     filterMenu->addAction(negativeAct);
-    filterMenu->addAction(ditheringAct     );
-    filterMenu->addAction(ditheringErrorAct);
+//    filterMenu->addAction(ditheringAct     );
+//    filterMenu->addAction(ditheringErrorAct);
     filterMenu->addAction(upscaleAct       );
     filterMenu->addAction(rotateAct        );
-    filterMenu->addAction(gammaAct         );
-    filterMenu->addAction(edgeRobertAct    );
-    filterMenu->addAction(edgeSobelAct     );
-    filterMenu->addAction(edgeSpecAct      );
-    filterMenu->addAction(embossAct        );
+//    filterMenu->addAction(gammaAct         );
+//    filterMenu->addAction(edgeRobertAct    );
+//    filterMenu->addAction(edgeSobelAct     );
+//    filterMenu->addAction(edgeSpecAct      );
+//    filterMenu->addAction(embossAct        );
     filterMenu->addAction(waterAct         );
     filterMenu->addAction(blurAct          );
     filterMenu->addAction(sharpenAct       );
@@ -101,15 +101,15 @@ void View::createToolbar()
 
     filterToolbar->addAction(blackWhiteAct);
     filterToolbar->addAction(negativeAct);
-    filterToolbar->addAction(ditheringAct     );
-    filterToolbar->addAction(ditheringErrorAct);
+//    filterToolbar->addAction(ditheringAct     );
+//    filterToolbar->addAction(ditheringErrorAct);
     filterToolbar->addAction(upscaleAct       );
     filterToolbar->addAction(rotateAct        );
-    filterToolbar->addAction(gammaAct         );
-    filterToolbar->addAction(edgeRobertAct    );
-    filterToolbar->addAction(edgeSobelAct     );
-    filterToolbar->addAction(edgeSpecAct      );
-    filterToolbar->addAction(embossAct        );
+//    filterToolbar->addAction(gammaAct         );
+//    filterToolbar->addAction(edgeRobertAct    );
+//    filterToolbar->addAction(edgeSobelAct     );
+//    filterToolbar->addAction(edgeSpecAct      );
+//    filterToolbar->addAction(embossAct        );
     filterToolbar->addAction(waterAct         );
     filterToolbar->addAction(blurAct          );
     filterToolbar->addAction(sharpenAct       );
@@ -169,4 +169,9 @@ void View::setImageC(QImage *image)
 QImage *View::getImageB()
 {
     return area->getImageB();
+}
+
+void View::setControl(QWidget *controlWidget)
+{
+    area->setControlPanel(controlWidget);
 }

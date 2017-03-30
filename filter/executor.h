@@ -10,7 +10,10 @@
 #include "blurfilter.h"
 #include "sharpenfilter.h"
 #include "waterfilter.h"
+#include "upscaledfilter.h"
+#include "rotatefilter.h"
 #include <iostream>
+#include "rotatewidget.h"
 
 class Executor : public QObject
 {
@@ -27,7 +30,8 @@ public slots:
     void ditheringFilter     ();
     void ditheringErrorFilter();
     void upscaleFilter       ();
-    void rotateFilter        ();
+    void rotateButton        ();
+    void rotateFilter        (int);
     void gammaFilter         ();
     void edgeRobertFilter    ();
     void edgeSobelFilter     ();
