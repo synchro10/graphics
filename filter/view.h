@@ -5,6 +5,7 @@
 #include <QtWidgets>
 #include <QSharedPointer>
 #include "drawingarea.h"
+#include <QImage>
 
 class View : public QMainWindow
 {
@@ -13,6 +14,11 @@ class View : public QMainWindow
 public:
     View(QWidget *parent = 0);
     ~View(){}
+    void setImageC(QImage* image);
+    QImage* getImageB();
+
+    QAction *blackWhiteAct;
+    QAction *negativeAct;
 
 private slots:
     void open();

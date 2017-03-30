@@ -30,7 +30,7 @@ void ZoneB::setImage(QImage *image_)
 }
 
 //return copy of image
-QImage ZoneB::getImage()
+QImage *ZoneB::getImage()
 {
-   return *image.data();
+   return new QImage(*image.data());
 }

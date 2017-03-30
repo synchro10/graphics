@@ -17,7 +17,9 @@ public:
     void save(const QString &fileName);
     void select();
     void moveToB();
+    void setCImage(QImage* image);
     void moveFromC();
+    QImage *getImageB();
 signals:
 
 public slots:
