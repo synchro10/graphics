@@ -35,8 +35,8 @@ void DrawingArea::open(const QString& fileName)
 
 void DrawingArea::save(const QString &fileName)
 {
-    QImage image = zoneB->getImage();
-    image.save(fileName, "png");
+    QSharedPointer<QImage> image = QSharedPointer<QImage>(zoneB->getImage());
+    image->save(fileName, "png");
 }
 
 void DrawingArea::select()
@@ -52,9 +52,21 @@ void DrawingArea::moveToB()
     }
 }
 
+void DrawingArea::setCImage(QImage *image_)
+{
+    if (image_ != nullptr){
+        zoneC->setImage(image_);
+    }
+}
+
 void DrawingArea::moveFromC()
 {
-    QImage image_ = zoneC->getImage();
-    zoneB->setImage(new QImage(image_));
+    QImage* image_ = zoneC->getImage();
+    zoneB->setImage(image_);
+}
+
+QImage* DrawingArea::getImageB()
+{
+    return zoneB->getImage();
 }
 

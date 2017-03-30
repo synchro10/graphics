@@ -21,7 +21,6 @@ void ZoneA::paintEvent(QPaintEvent *event)
     if (isSelect && selectorSize != 0){
         paintSelector(&buffer);
     }
-
     painter.drawImage(dirtyRect, buffer, dirtyRect);
 }
 

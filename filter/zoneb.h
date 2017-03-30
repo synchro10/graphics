@@ -11,7 +11,7 @@ public:
 
     void paintEvent(QPaintEvent *event) override;
     void setImage(QImage* image_);
-    QImage getImage();
+    QImage* getImage();
 private:
     QSharedPointer<QImage> image;
 };

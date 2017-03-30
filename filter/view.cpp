@@ -33,6 +33,9 @@ void View::createActions()
 
     moveCAct = new QAction(tr("&<-Move"), this);
     connect(moveCAct, SIGNAL(triggered()), this, SLOT(moveFromC()));
+
+    blackWhiteAct = new QAction(tr("&Black White"), this);
+    negativeAct = new QAction(tr("&Negative"), this);
 }
 
 void View::createMenus()
@@ -47,7 +50,8 @@ void View::createMenus()
     editMenu->addAction(moveCAct);
 
     filterMenu = new QMenu(tr("&Filter"), this);
-    //filterMenu->addAction(filterMenu);
+    filterMenu->addAction(blackWhiteAct);
+    filterMenu->addAction(negativeAct);
 
     helpMenu = new QMenu(tr("&Help"), this);
     helpMenu->addAction(aboutAct);
@@ -68,6 +72,8 @@ void View::createToolbar()
     toolbar->addAction(selectAct);
     toolbar->addAction(moveCAct);
     toolbar->addSeparator();
+    toolbar->addAction(blackWhiteAct);
+    toolbar->addAction(negativeAct);
     toolbar->addSeparator();
     toolbar->addAction(aboutAct);
 
@@ -114,4 +120,14 @@ void View::select()
 void View::moveFromC()
 {
     area->moveFromC();
+}
+
+void View::setImageC(QImage *image)
+{
+    area->setCImage(image);
+}
+
+QImage *View::getImageB()
+{
+    return area->getImageB();
 }

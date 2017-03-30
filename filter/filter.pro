@@ -20,7 +20,10 @@ SOURCES += main.cpp\
     zone.cpp \
     controlpanel.cpp \
     zonea.cpp \
-    zoneb.cpp
+    zoneb.cpp \
+    filter.cpp \
+    blackwhitefilter.cpp \
+    negativefilter.cpp
 
 HEADERS  += view.h \
     executor.h \
@@ -29,4 +32,7 @@ HEADERS  += view.h \
     zone.h \
     controlpanel.h \
     zonea.h \
-    zoneb.h
+    zoneb.h \
+    filter.h \
+    blackwhitefilter.h \
+    negativefilter.h
