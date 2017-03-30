@@ -20,6 +20,8 @@ public:
     void setCImage(QImage* image);
     void moveFromC();
     QImage *getImageB();
+    void setControlPanel(QWidget *value);
+
 signals:
 
 public slots:
@@ -27,7 +29,7 @@ private:
     ZoneA* zoneA = nullptr;
     ZoneB* zoneB = nullptr;
     ZoneB* zoneC = nullptr;
-    ControlPanel* controlPanel = nullptr;
+    QWidget* controlPanel = nullptr;
 
     QHBoxLayout* zoneLayout = nullptr;
     QVBoxLayout *mainLayout = nullptr;

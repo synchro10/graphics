@@ -1,4 +1,5 @@
 #include "executor.h"
+#include <QDebug>
 
 Executor::Executor(QObject *parent) : QObject(parent)
 {
@@ -39,14 +40,28 @@ void Executor::ditheringErrorFilter()
 
 void Executor::upscaleFilter()
 {
-    std::cout << "В разработке" << std::endl;
-
+    QImage* image = view->getImageB();
+    Filter* filter = new UpscaledFilter();
+    filter->setImage(image);
+    connect(filter, &Filter::finished, this, &Executor::setCImage);
+    addTask(filter);
 }
 
-void Executor::rotateFilter()
+void Executor::rotateButton()
 {
-    std::cout << "В разработке" << std::endl;
+    RotateWidget* widget = new RotateWidget();
+    connect(widget->sliderA, &QSlider::valueChanged, this, &Executor::rotateFilter);
+    view->setControl(widget);
+}
 
+void Executor::rotateFilter(int value)
+{
+//    std::cout << value << std::endl;
+    QImage* image = view->getImageB();
+    Filter* filter = new RotateFilter(value);
+    filter->setImage(image);
+    connect(filter, &Filter::finished, this, &Executor::setCImage);
+    addTask(filter);
 }
 
 void Executor::gammaFilter()
@@ -118,7 +133,7 @@ void Executor::setup()
     connect(view->ditheringAct     , SIGNAL(triggered()), this, SLOT(ditheringFilter     ()));
     connect(view->ditheringErrorAct, SIGNAL(triggered()), this, SLOT(ditheringErrorFilter()));
     connect(view->upscaleAct       , SIGNAL(triggered()), this, SLOT(upscaleFilter       ()));
-    connect(view->rotateAct        , SIGNAL(triggered()), this, SLOT(rotateFilter        ()));
+    connect(view->rotateAct        , SIGNAL(triggered()), this, SLOT(rotateButton        ()));
     connect(view->gammaAct         , SIGNAL(triggered()), this, SLOT(gammaFilter         ()));
     connect(view->edgeRobertAct    , SIGNAL(triggered()), this, SLOT(edgeRobertFilter    ()));
     connect(view->edgeSobelAct     , SIGNAL(triggered()), this, SLOT(edgeSobelFilter     ()));

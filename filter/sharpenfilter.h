@@ -10,6 +10,8 @@ public:
     SharpenFilter();
 
     void processImage() override;
+private:
+
 };
 
 #endif // SHARPENFILTER_H

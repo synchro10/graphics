@@ -25,7 +25,10 @@ SOURCES += main.cpp\
     negativefilter.cpp \
     blurfilter.cpp \
     sharpenfilter.cpp \
-    waterfilter.cpp
+    waterfilter.cpp \
+    upscaledfilter.cpp \
+    rotatewidget.cpp \
+    rotatefilter.cpp
 
 HEADERS  += view.h \
     executor.h \
@@ -39,4 +42,7 @@ HEADERS  += view.h \
     negativefilter.h \
     blurfilter.h \
     sharpenfilter.h \
-    waterfilter.h
+    waterfilter.h \
+    upscaledfilter.h \
+    rotatewidget.h \
+    rotatefilter.h
