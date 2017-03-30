@@ -34,8 +34,20 @@ void View::createActions()
     moveCAct = new QAction(tr("&<-Move"), this);
     connect(moveCAct, SIGNAL(triggered()), this, SLOT(moveFromC()));
 
-    blackWhiteAct = new QAction(tr("&Black White"), this);
-    negativeAct = new QAction(tr("&Negative"), this);
+    blackWhiteAct       = new QAction(tr("&Grey"), this);
+    negativeAct         = new QAction(tr("&Negative"), this);
+    ditheringAct        = new QAction(tr("&Dithering"), this);
+    ditheringErrorAct   = new QAction(tr("&Dithering Error"), this);
+    upscaleAct          = new QAction(tr("&Upscale"), this);
+    rotateAct           = new QAction(tr("&Rotate"), this);
+    gammaAct            = new QAction(tr("&Gamma"), this);
+    edgeRobertAct       = new QAction(tr("&Edge Robert"), this);
+    edgeSobelAct        = new QAction(tr("&Edge Sobel"), this);
+    edgeSpecAct         = new QAction(tr("&Edge Spec"), this);
+    embossAct           = new QAction(tr("&Emboss"), this);
+    waterAct            = new QAction(tr("&Water"), this);
+    blurAct             = new QAction(tr("&Blur"), this);
+    sharpenAct          = new QAction(tr("&Sharpen"), this);
 }
 
 void View::createMenus()
@@ -52,6 +64,18 @@ void View::createMenus()
     filterMenu = new QMenu(tr("&Filter"), this);
     filterMenu->addAction(blackWhiteAct);
     filterMenu->addAction(negativeAct);
+    filterMenu->addAction(ditheringAct     );
+    filterMenu->addAction(ditheringErrorAct);
+    filterMenu->addAction(upscaleAct       );
+    filterMenu->addAction(rotateAct        );
+    filterMenu->addAction(gammaAct         );
+    filterMenu->addAction(edgeRobertAct    );
+    filterMenu->addAction(edgeSobelAct     );
+    filterMenu->addAction(edgeSpecAct      );
+    filterMenu->addAction(embossAct        );
+    filterMenu->addAction(waterAct         );
+    filterMenu->addAction(blurAct          );
+    filterMenu->addAction(sharpenAct       );
 
     helpMenu = new QMenu(tr("&Help"), this);
     helpMenu->addAction(aboutAct);
@@ -65,6 +89,7 @@ void View::createMenus()
 void View::createToolbar()
 {
     toolbar = new QToolBar(this);
+    filterToolbar = new QToolBar(this);
 
     toolbar->addAction(openAct);
     toolbar->addAction(saveAct);
@@ -72,12 +97,26 @@ void View::createToolbar()
     toolbar->addAction(selectAct);
     toolbar->addAction(moveCAct);
     toolbar->addSeparator();
-    toolbar->addAction(blackWhiteAct);
-    toolbar->addAction(negativeAct);
-    toolbar->addSeparator();
-    toolbar->addAction(aboutAct);
+    toolbar->addAction(aboutAct);   
+
+    filterToolbar->addAction(blackWhiteAct);
+    filterToolbar->addAction(negativeAct);
+    filterToolbar->addAction(ditheringAct     );
+    filterToolbar->addAction(ditheringErrorAct);
+    filterToolbar->addAction(upscaleAct       );
+    filterToolbar->addAction(rotateAct        );
+    filterToolbar->addAction(gammaAct         );
+    filterToolbar->addAction(edgeRobertAct    );
+    filterToolbar->addAction(edgeSobelAct     );
+    filterToolbar->addAction(edgeSpecAct      );
+    filterToolbar->addAction(embossAct        );
+    filterToolbar->addAction(waterAct         );
+    filterToolbar->addAction(blurAct          );
+    filterToolbar->addAction(sharpenAct       );
 
     this->addToolBar(toolbar);
+    this->addToolBarBreak();
+    this->addToolBar(filterToolbar);
 }
 
 void View::open()

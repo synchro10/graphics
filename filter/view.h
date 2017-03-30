@@ -19,6 +19,18 @@ public:
 
     QAction *blackWhiteAct;
     QAction *negativeAct;
+    QAction *ditheringAct;
+    QAction *ditheringErrorAct;
+    QAction *upscaleAct;
+    QAction *rotateAct;
+    QAction *gammaAct;
+    QAction *edgeRobertAct;
+    QAction *edgeSobelAct;
+    QAction *edgeSpecAct;
+    QAction *embossAct;
+    QAction *waterAct;
+    QAction *blurAct;
+    QAction *sharpenAct;
 
 private slots:
     void open();
@@ -37,6 +49,7 @@ private:
     QMenu *filterMenu;
     QMenu *helpMenu;
     QToolBar *toolbar;
+    QToolBar *filterToolbar;
 
     QAction *openAct;
     QAction *saveAct;
