@@ -10,8 +10,6 @@ Filter::Filter(QObject *parent) : QObject(parent)
 
 void Filter::run()
 {
-    std::cout << " run " << std::endl;
-    qDebug() << "jopa ";
     processImage();
     emit finished(new QImage(*image.data()));
 }

@@ -15,7 +15,6 @@ TEMPLATE = app
 SOURCES += main.cpp\
         view.cpp \
     executor.cpp \
-    model.cpp \
     drawingarea.cpp \
     zone.cpp \
     controlpanel.cpp \
@@ -23,11 +22,13 @@ SOURCES += main.cpp\
     zoneb.cpp \
     filter.cpp \
     blackwhitefilter.cpp \
-    negativefilter.cpp
+    negativefilter.cpp \
+    blurfilter.cpp \
+    sharpenfilter.cpp \
+    waterfilter.cpp
 
 HEADERS  += view.h \
     executor.h \
-    model.h \
     drawingarea.h \
     zone.h \
     controlpanel.h \
@@ -35,4 +36,7 @@ HEADERS  += view.h \
     zoneb.h \
     filter.h \
     blackwhitefilter.h \
-    negativefilter.h
+    negativefilter.h \
+    blurfilter.h \
+    sharpenfilter.h \
+    waterfilter.h
