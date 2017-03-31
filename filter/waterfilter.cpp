@@ -4,7 +4,6 @@
 
 WaterFilter::WaterFilter()
 {
-    std::cout << "tmp " << std::endl;
 }
 
 void WaterFilter::processImage()

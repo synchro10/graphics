@@ -21,7 +21,7 @@ private:
     QSharedPointer<QImage> image;
     QSharedPointer<QImage> imagePrototype;
     ZoneB* zoneB = nullptr;
-    QImage* correctImage(QImage* image_);
+    QImage* scaleImage(QImage* image_);
     void updateSelector();
     int height = 0;
     int width = 0;
