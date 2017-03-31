@@ -20,14 +20,14 @@ void RotateFilter::processImage()
     const int dy = height/2;
     float cosA = qCos(qDegreesToRadians((float)angle));
     float sinA = qSin(qDegreesToRadians((float)angle));
-    for(int j = startY; j < dy; j++){
-        for(int i = startX; i < dx; i++){
-            int i1 = i*cosA + j*sinA;
-            int j1 = -1*i*sinA + j+cosA;
-            i1 += dx;
-            j1 += dy;
-            if (belong(i1, j1)){
-                pixels1[i1 + (j1)*pixPerLine] = pixels[i - startX + (j - startY)*pixPerLine];
+    for(int j1 = startY; j1 < dy; j1++){
+        for(int i1 = startX; i1 < dx; i1++){
+            int i = i1*cosA + -1*j1*sinA;
+            int j = i1*sinA + j1*cosA;
+            i += dx;
+            j += dy;
+            if (belong(i, j)){
+                pixels1[i1 - startX + (j1 - startY)*pixPerLine] = pixels[i + (j)*pixPerLine];
             }
         }
     }

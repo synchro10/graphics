@@ -35,7 +35,7 @@ void DrawingArea::open(const QString& fileName)
 
 void DrawingArea::save(const QString &fileName)
 {
-    QSharedPointer<QImage> image = QSharedPointer<QImage>(zoneB->getImage());
+    QSharedPointer<QImage> image = QSharedPointer<QImage>(zoneC->getImage());
     image->save(fileName, "png");
 }
 
