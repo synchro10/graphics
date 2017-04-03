@@ -15,6 +15,7 @@ public:
 
 private slots:
     void open();
+    void interpolation();
     void about();
 
 private:
@@ -27,6 +28,7 @@ private:
     QToolBar *toolbar;
 
     QAction *openAct;
+    QAction *interpolateAct;
     QAction *exitAct;
 
     QAction *aboutAct;

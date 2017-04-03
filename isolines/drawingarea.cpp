@@ -11,7 +11,7 @@ DrawingArea::DrawingArea(QWidget *parent) : QWidget(parent)
 
 void DrawingArea::paintEvent(QPaintEvent *event)
 {
-    zone->update();
+//    zone->update();
 //    legend->update();
 }
 
@@ -48,4 +48,10 @@ void DrawingArea::open(const QString &fileName){
 
     file.close();
     return;
+}
+
+void DrawingArea::setInterpolation()
+{
+    zone->setInterpolation();
+    zone->update();
 }

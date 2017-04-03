@@ -21,6 +21,9 @@ void View::createActions()
     exitAct->setShortcuts(QKeySequence::Quit);
     connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
+    interpolateAct = new QAction(tr("&Interpolation"), this);
+    connect(interpolateAct, SIGNAL(triggered()), this, SLOT(interpolation()));
+
     aboutAct = new QAction(tr("&About"), this);
     connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 }
@@ -29,6 +32,7 @@ void View::createMenus()
 {
     fileMenu = new QMenu(tr("&File"), this);
     fileMenu->addAction(openAct);
+    fileMenu->addAction(interpolateAct);
     fileMenu->addAction(exitAct);
 
     helpMenu = new QMenu(tr("&Help"), this);
@@ -44,6 +48,7 @@ void View::createToolbar()
 
     toolbar->addAction(openAct);
     toolbar->addSeparator();
+    toolbar->addAction(interpolateAct);
     toolbar->addSeparator();
     toolbar->addAction(aboutAct);
 
@@ -58,6 +63,12 @@ void View::open()
                                 tr("Open File"), initialPath);
     if (!fileName.isNull())
         area->open(fileName);
+}
+
+void View::interpolation()
+{
+    area->setInterpolation();
+    area->update();
 }
 
 void View::about()

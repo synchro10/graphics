@@ -1,6 +1,5 @@
 #include "zone.h"
 #include <iostream>
-#include <omp.h>
 
 Zone::Zone(QWidget *parent) : QWidget(parent)
 {
@@ -14,26 +13,31 @@ void Zone::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QRect dirtyRect = event->rect();
-//    QImage buffer = QImage(*image.data());
     fillImage();
     painter.drawImage(dirtyRect, *image.data(), dirtyRect);
 }
 
 void Zone::defaultParams()
 {
-    setFunction([](double x,double y){return x*x + y*y;});
+//    setFunction([](double x,double y){return x + y;});
+    setFunction([](double x,double y){return exp(-x*x - y*y/2)*cos(4*x)+exp(-3*((x+0.5)*(x+0.5)+y*y/2));});
     k = 10;
     m = 10;
-    a = 0.0;
-    b = 0.0;
-    c = 5.0;
-    d = 5.0;
-    n = 9;
+    a = -2.0;
+    b = -4.0;
+    c = 2.0;
+    d = 4.0;
+    n = 10;
     colors.clear();
     for (int i = 0; i <= n; i++){
         colors.push_back(qRgb(255*i/n,255*(n-i)/n,0));
     }
     updateValues();
+}
+
+void Zone::setInterpolation()
+{
+    isInterpolate = !isInterpolate;
 }
 
 void Zone::setFunction(double (*func_)(double, double))
@@ -71,7 +75,6 @@ void Zone::fillImage()
     double x = 0.0;
     double y = 0.0;
     double z = 0.0;
-#pragma omp for
     for(int j = 0; j < height; j++){
         for(int i = 0; i < width; i++){
             x = (double)(c-a)*i/width + a;
@@ -80,7 +83,30 @@ void Zone::fillImage()
 
             int number = floor(((z - minValue)/(maxValue - minValue))*(n+1));
             number = number < 0 ? 0 : number > n ? n : number;
-            pixels[i + j*pixPerLine] = colors[number];
+            if (!isInterpolate || number >= n){
+                pixels[i + j*pixPerLine] = colors[number];
+            } else {
+                QColor color1 = QColor(colors[number]);
+                QColor color2 = QColor(colors[number+1]);
+                int red1  = color1.red();
+                int red2 = color2.red();
+                int green1 = color1.green();
+                int green2 = color2.green();
+                int blue1 = color1.blue();
+                int blue2 = color2.blue();
+                int red = (((double)red1*(values[number+1] - z)/ (values[number+1] - values[number]) +
+                        (double)red2*(z - values[number])/ (values[number+1] - values[number])));
+                int green = (((double)green1*(values[number+1] - z)/ (values[number+1] - values[number]) +
+                        (double)green2*(z - values[number])/ (values[number+1] - values[number])));
+                int blue = (((double)blue1*(values[number+1] - z)/ (values[number+1] - values[number]) +
+                        (double)blue2*(z - values[number])/ (values[number+1] - values[number])));
+                red = red > 255 ? 255 : red < 0 ? 0 : red;
+                blue = blue > 255 ? 255 : blue < 0 ? 0 : blue;
+                green = green > 255 ? 255 : green < 0 ? 0 : green;
+
+                pixels[i + j*pixPerLine] = qRgb(red, green, blue);
+            }
+
         }
     }
 }
@@ -114,6 +140,7 @@ void Zone::updateValues()
         z+=step;
         values.push_back(z);
     }
+    values.push_back(zMax);
     this->minValue = zMin;
     this->maxValue = zMax;
     this->step = step;

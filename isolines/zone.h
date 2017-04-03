@@ -13,6 +13,7 @@ public:
     explicit Zone(QWidget *parent = 0);
     void paintEvent(QPaintEvent *event) override;
     void defaultParams();
+    void setInterpolation();
     void setFunction(double (*func_)(double x, double y));
     void setColors(const QVector<QRgb> &value);
 
@@ -41,7 +42,7 @@ private:
     double b = 0.0;
     double c = 1.0;
     double d = 1.0;
-
+    bool isInterpolate = false;
     double minValue = 0.0;
     double maxValue = 0.0;
     double step = 0.0;

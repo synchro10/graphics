@@ -12,11 +12,12 @@ public:
     explicit DrawingArea(QWidget *parent = 0);
     void paintEvent(QPaintEvent *event) override;
     void open(const QString &fileName);
+    void setInterpolation();
 signals:
 
 public slots:
 private:
-    QWidget* zone = nullptr;
+    Zone* zone = nullptr;
     QWidget* legend = nullptr;
     QVBoxLayout *mainLayout = nullptr;
 };
