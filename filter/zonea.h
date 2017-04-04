@@ -12,8 +12,9 @@ public:
     void paintEvent(QPaintEvent *event) override;
     void setImage(QImage* image_);
     QImage* getSelectedImage();
-    void mouseMoveEvent(QMouseEvent *e) override;//todo
-    void setSelect(){ isSelect = !isSelect; }
+    void mouseMoveEvent(QMouseEvent *e) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void setSelect();
 
     void setZoneB(ZoneB *value);
 

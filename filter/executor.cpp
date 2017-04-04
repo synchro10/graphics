@@ -11,6 +11,8 @@ Executor::Executor(QObject *parent) : QObject(parent)
 
 void Executor::blackWhiteFilter()
 {
+    ControlPanel* widget = new ControlPanel();
+    view->setControl(widget);
     QImage* image = view->getImageB();
     Filter* filter = new BlackWhiteFilter();
     filter->setImage(image);
@@ -20,6 +22,8 @@ void Executor::blackWhiteFilter()
 
 void Executor::negativeFilter()
 {
+    ControlPanel* widget = new ControlPanel();
+    view->setControl(widget);
     QImage* image = view->getImageB();
     Filter* filter = new NegativeFilter();
     filter->setImage(image);
@@ -40,6 +44,8 @@ void Executor::ditheringErrorFilter()
 
 void Executor::upscaleFilter()
 {
+    ControlPanel* widget = new ControlPanel();
+    view->setControl(widget);
     QImage* image = view->getImageB();
     Filter* filter = new UpscaledFilter();
     filter->setImage(image);
@@ -56,7 +62,6 @@ void Executor::rotateButton()
 
 void Executor::rotateFilter(int value)
 {
-//    std::cout << value << std::endl;
     QImage* image = view->getImageB();
     Filter* filter = new RotateFilter(value);
     filter->setImage(image);
@@ -64,37 +69,72 @@ void Executor::rotateFilter(int value)
     addTask(filter);
 }
 
-void Executor::gammaFilter()
+void Executor::gammaFilter(int value)
 {
-    std::cout << "В разработке" << std::endl;
+    QImage* image = view->getImageB();
+    Filter* filter = new GammaFilter((double)value/100);
+    filter->setImage(image);
+    connect(filter, &Filter::finished, this, &Executor::setCImage);
+    addTask(filter);
 }
 
-void Executor::edgeRobertFilter()
+void Executor::edgeRobertButton()
 {
-    std::cout << "В разработке" << std::endl;
+    EdgeWidget* widget = new EdgeWidget();
+    connect(widget->sliderA, &QSlider::valueChanged, this, &Executor::edgeRobertFilter);
+    view->setControl(widget);
+}
+
+void Executor::gammaButton()
+{
+    GammaWidget* widget = new GammaWidget();
+    connect(widget->sliderA, &QSlider::valueChanged, this, &Executor::gammaFilter);
+    view->setControl(widget);
+}
+
+void Executor::edgeRobertFilter(int threshold)
+{
+    QImage* image = view->getImageB();
+    Filter* filter = new EdgeRobertFilter(threshold);
+    filter->setImage(image);
+    connect(filter, &Filter::finished, this, &Executor::setCImage);
+    addTask(filter);
 
 }
 
-void Executor::edgeSobelFilter()
+void Executor::edgeSobelButton()
 {
-    std::cout << "В разработке" << std::endl;
-
+    EdgeWidget* widget = new EdgeWidget();
+    connect(widget->sliderA, &QSlider::valueChanged, this, &Executor::edgeSobelFilter);
+    view->setControl(widget);
 }
 
-void Executor::edgeSpecFilter()
+void Executor::edgeSobelFilter(int threshold)
 {
-    std::cout << "В разработке" << std::endl;
+    QImage* image = view->getImageB();
+    Filter* filter = new EdgeSobelFilter(threshold);
+    filter->setImage(image);
+    connect(filter, &Filter::finished, this, &Executor::setCImage);
+    addTask(filter);
 
 }
 
 void Executor::embossFilter()
 {
-    std::cout << "В разработке" << std::endl;
+    ControlPanel* widget = new ControlPanel();
+    view->setControl(widget);
+    QImage* image = view->getImageB();
+    Filter* filter = new EmbossFilter();
+    filter->setImage(image);
+    connect(filter, &Filter::finished, this, &Executor::setCImage);
+    addTask(filter);
 
 }
 
 void Executor::waterFilter()
 {
+    ControlPanel* widget = new ControlPanel();
+    view->setControl(widget);
     QImage* image = view->getImageB();
     Filter* filter = new WaterFilter();
     filter->setImage(image);
@@ -104,6 +144,8 @@ void Executor::waterFilter()
 
 void Executor::blurFilter()
 {
+    ControlPanel* widget = new ControlPanel();
+    view->setControl(widget);
     QImage* image = view->getImageB();
     Filter* filter = new BlurFilter();
     filter->setImage(image);
@@ -113,6 +155,8 @@ void Executor::blurFilter()
 
 void Executor::sharpenFilter()
 {
+    ControlPanel* widget = new ControlPanel();
+    view->setControl(widget);
     QImage* image = view->getImageB();
     Filter* filter = new SharpenFilter();
     filter->setImage(image);
@@ -134,10 +178,9 @@ void Executor::setup()
     connect(view->ditheringErrorAct, SIGNAL(triggered()), this, SLOT(ditheringErrorFilter()));
     connect(view->upscaleAct       , SIGNAL(triggered()), this, SLOT(upscaleFilter       ()));
     connect(view->rotateAct        , SIGNAL(triggered()), this, SLOT(rotateButton        ()));
-    connect(view->gammaAct         , SIGNAL(triggered()), this, SLOT(gammaFilter         ()));
-    connect(view->edgeRobertAct    , SIGNAL(triggered()), this, SLOT(edgeRobertFilter    ()));
-    connect(view->edgeSobelAct     , SIGNAL(triggered()), this, SLOT(edgeSobelFilter     ()));
-    connect(view->edgeSpecAct      , SIGNAL(triggered()), this, SLOT(edgeSpecFilter      ()));
+    connect(view->gammaAct         , SIGNAL(triggered()), this, SLOT(gammaButton         ()));
+    connect(view->edgeRobertAct    , SIGNAL(triggered()), this, SLOT(edgeRobertButton    ()));
+    connect(view->edgeSobelAct     , SIGNAL(triggered()), this, SLOT(edgeSobelButton     ()));
     connect(view->embossAct        , SIGNAL(triggered()), this, SLOT(embossFilter        ()));
     connect(view->waterAct         , SIGNAL(triggered()), this, SLOT(waterFilter         ()));
     connect(view->blurAct          , SIGNAL(triggered()), this, SLOT(blurFilter          ()));

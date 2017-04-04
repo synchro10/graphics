@@ -26,7 +26,6 @@ public:
     QAction *gammaAct;
     QAction *edgeRobertAct;
     QAction *edgeSobelAct;
-    QAction *edgeSpecAct;
     QAction *embossAct;
     QAction *waterAct;
     QAction *blurAct;

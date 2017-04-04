@@ -1,13 +1,12 @@
-#ifndef ROTATEWIDGET_H
-#define ROTATEWIDGET_H
+#ifndef EDGEWIDGET_H
+#define EDGEWIDGET_H
 
 #include <QtWidgets>
 
-class RotateWidget : public QWidget
+class EdgeWidget: public QWidget
 {
-    Q_OBJECT
 public:
-    explicit RotateWidget(QWidget *parent = 0);
+    EdgeWidget();
     QSpinBox* spinBoxA = nullptr;
     QSlider* sliderA = nullptr;
     QLabel* labelA = nullptr;
@@ -20,4 +19,4 @@ signals:
 public slots:
 };
 
-#endif // ROTATEWIDGET_H
+#endif // EDGEWIDGET_H

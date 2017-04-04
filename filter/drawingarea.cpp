@@ -22,15 +22,14 @@ DrawingArea::DrawingArea(QWidget *parent) : QWidget(parent)
 
 void DrawingArea::paintEvent(QPaintEvent *event)
 {
-    zoneA->update();
-    zoneB->update();
-    zoneC->update();
+
 }
 
 void DrawingArea::open(const QString& fileName)
 {
     QImage* image = new QImage(fileName);
     zoneA->setImage(image);
+    zoneA->update();
 }
 
 void DrawingArea::save(const QString &fileName)
@@ -42,6 +41,7 @@ void DrawingArea::save(const QString &fileName)
 void DrawingArea::select()
 {
     zoneA->setSelect();
+    zoneA->update();
 }
 
 void DrawingArea::moveToB()
@@ -56,6 +56,7 @@ void DrawingArea::setCImage(QImage *image_)
 {
     if (image_ != nullptr){
         zoneC->setImage(image_);
+        zoneC->update();
     }
 }
 
@@ -63,6 +64,7 @@ void DrawingArea::moveFromC()
 {
     QImage* image_ = zoneC->getImage();
     zoneB->setImage(image_);
+    zoneB->update();
 }
 
 QImage* DrawingArea::getImageB()

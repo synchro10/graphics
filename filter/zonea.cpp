@@ -95,7 +95,22 @@ void ZoneA::mouseMoveEvent(QMouseEvent *e)
         selectorPosX = i;
         selectorPosY = j;
         zoneB->setImage(getSelectedImage());
-        update();
+        this->update();
+        zoneB->update();
+    }
+}
+
+void ZoneA::mousePressEvent(QMouseEvent *e)
+{
+    mouseMoveEvent(e);
+}
+
+void ZoneA::setSelect()
+{
+    isSelect = !isSelect;
+    if (isSelect && imagePrototype != nullptr){
+        zoneB->setImage(getSelectedImage());
+        zoneB->update();
     }
 }
 

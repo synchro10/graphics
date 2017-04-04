@@ -14,6 +14,12 @@
 #include "rotatefilter.h"
 #include <iostream>
 #include "rotatewidget.h"
+#include "gammawidget.h"
+#include "gammafilter.h"
+#include "embossfilter.h"
+#include "edgewidget.h"
+#include "edgerobertfilter.h"
+#include "edgesobelfilter.h"
 
 class Executor : public QObject
 {
@@ -32,10 +38,12 @@ public slots:
     void upscaleFilter       ();
     void rotateButton        ();
     void rotateFilter        (int);
-    void gammaFilter         ();
-    void edgeRobertFilter    ();
-    void edgeSobelFilter     ();
-    void edgeSpecFilter      ();
+    void gammaButton         ();
+    void gammaFilter         (int);
+    void edgeRobertButton    ();
+    void edgeRobertFilter    (int);
+    void edgeSobelButton     ();
+    void edgeSobelFilter     (int);
     void embossFilter        ();
     void waterFilter         ();
     void blurFilter          ();
