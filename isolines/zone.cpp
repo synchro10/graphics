@@ -3,6 +3,7 @@
 
 Zone::Zone(QWidget *parent) : QWidget(parent)
 {
+    setFixedSize(width + 20, height + 20);
     image = QSharedPointer<QImage>(new QImage(width, height, QImage::Format_RGB32));
     values = QVector<double>();
     colors = QVector<QRgb>();
@@ -19,20 +20,28 @@ void Zone::paintEvent(QPaintEvent *event)
 
 void Zone::defaultParams()
 {
-//    setFunction([](double x,double y){return x + y;});
-    setFunction([](double x,double y){return exp(-x*x - y*y/2)*cos(4*x)+exp(-3*((x+0.5)*(x+0.5)+y*y/2));});
+    setFunction([](double x,double y){return x + y;});
+//    setFunction([](double x,double y){return exp(-x*x - y*y/2)*cos(4*x)+exp(-3*((x+0.5)*(x+0.5)+y*y/2));});
     k = 10;
     m = 10;
     a = -2.0;
-    b = -4.0;
-    c = 2.0;
+    c = -4.0;
+    b = 2.0;
     d = 4.0;
     n = 10;
     colors.clear();
     for (int i = 0; i <= n; i++){
-        colors.push_back(qRgb(255*i/n,255*(n-i)/n,0));
+//        colors.push_back(qRgb(255*i/n,255*(n-i)/n,0));
+        colors.push_back(qRgb(255*(n-i)/n,255*(n-i)/n,255*(n-i)/n));
+//        if (i == n -1){
+//            colors.push_back(qRgb(255,255,255));
+//        } else {
+//            colors.push_back(qRgb(255*(n-i)/n,255*(n-i)/n,255*(n-i)/n));
+//        }
+//        std::cout << 255*i/n << " " << 255*(n-i)/n << " " << 0 << std::endl;
     }
     updateValues();
+    initLegend();
 }
 
 void Zone::setInterpolation()
@@ -65,6 +74,12 @@ void Zone::setN(int value)
     n = value;
 }
 
+void Zone::setLegend(Legend *value)
+{
+    legend = value;
+    initLegend();
+}
+
 void Zone::fillImage()
 {
     if (function == nullptr){
@@ -77,8 +92,8 @@ void Zone::fillImage()
     double z = 0.0;
     for(int j = 0; j < height; j++){
         for(int i = 0; i < width; i++){
-            x = (double)(c-a)*i/width + a;
-            y = (double)(d-b)*(height - j)/height + b;
+            x = (double)(b-a)*i/width + a;
+            y = (double)(d-c)*(height - j)/height + c;
             z = function(x, y);
 
             int number = floor(((z - minValue)/(maxValue - minValue))*(n+1));
@@ -111,20 +126,25 @@ void Zone::fillImage()
     }
 }
 
+void Zone::drawIsoline()
+{
+
+}
+
 void Zone::updateValues()
 {
     if (function == nullptr || n < 2){
         return;
     }
-    double zMin = function(a,b);
-    double zMax = function(a,b);
+    double zMin = function(a,c);
+    double zMax = function(a,c);
     double x = 0.0;
     double y = 0.0;
     double z = 0.0;
     for(int j = 0; j < height; j++){
         for(int i = 0; i < width; i++){
-            x = (double)(c-a)*i/width + a;
-            y = (double)(d-b)*(height - j)/height + b;
+            x = (double)(b-a)*i/width + a;
+            y = (double)(d-c)*(height - j)/height + c;
             z = function(x, y);
             if (z < zMin){
                 zMin = z;
@@ -144,5 +164,15 @@ void Zone::updateValues()
     this->minValue = zMin;
     this->maxValue = zMax;
     this->step = step;
+
+}
+
+void Zone::initLegend()
+{
+    if (legend == nullptr){
+        return;
+    }
+    legend->setN(n);
+    legend->setColors(&colors);
 }
 

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QVector>
 #include "zone.h"
+#include "legend.h"
 
 class DrawingArea : public QWidget
 {
@@ -18,7 +19,7 @@ signals:
 public slots:
 private:
     Zone* zone = nullptr;
-    QWidget* legend = nullptr;
+    Legend* legend = nullptr;
     QVBoxLayout *mainLayout = nullptr;
 };
 

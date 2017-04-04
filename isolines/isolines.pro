@@ -15,8 +15,10 @@ TEMPLATE = app
 SOURCES += main.cpp\
         view.cpp \
     drawingarea.cpp \
-    zone.cpp
+    zone.cpp \
+    legend.cpp
 
 HEADERS  += view.h \
     drawingarea.h \
-    zone.h
+    zone.h \
+    legend.h

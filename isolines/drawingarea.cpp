@@ -3,10 +3,13 @@
 DrawingArea::DrawingArea(QWidget *parent) : QWidget(parent)
 {
     zone = new Zone(this);
+    legend = new Legend(this);
     mainLayout = new QVBoxLayout;
-    mainLayout->setSpacing(10);
+    mainLayout->setSpacing(50);
     mainLayout->addWidget(zone);
+    mainLayout->addWidget(legend);
     setLayout(mainLayout);
+    zone->setLegend(legend);
 }
 
 void DrawingArea::paintEvent(QPaintEvent *event)
@@ -53,5 +56,6 @@ void DrawingArea::open(const QString &fileName){
 void DrawingArea::setInterpolation()
 {
     zone->setInterpolation();
+    legend->setInterpolation();
     zone->update();
 }

@@ -3,7 +3,7 @@
 View::View(QWidget *parent)
     : QMainWindow(parent)
 {
-    setFixedSize(520, 650);
+    setFixedSize(520, 700);
     area = new DrawingArea(this);
     setCentralWidget(area);
     createActions();

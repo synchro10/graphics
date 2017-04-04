@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QSharedPointer>
 #include <QRgb>
+#include "legend.h"
 
 class Zone : public QWidget
 {
@@ -23,6 +24,8 @@ public:
 
     void setN(int value);
 
+    void setLegend(Legend *value);
+
 signals:
 
 public slots:
@@ -30,9 +33,12 @@ private:
     int width = 500;
     int height = 500;
     QSharedPointer<QImage> image;
+    Legend* legend = nullptr;
 
     void fillImage();
+    void drawIsoline();
     void updateValues();
+    void initLegend();
 
     int k = 0;
     int m = 0;
@@ -48,6 +54,7 @@ private:
     double step = 0.0;
     QVector<double> values;
     QVector<QRgb> colors;
+    QRgb lineColor = qRgb(0,0,0);
 
     double (*function)(double x, double y) = nullptr;
 };
