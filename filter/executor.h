@@ -20,6 +20,9 @@
 #include "edgewidget.h"
 #include "edgerobertfilter.h"
 #include "edgesobelfilter.h"
+#include "ditheringfilter.h"
+#include "ditheringwidget.h"
+#include "dithringfloydfilter.h"
 
 class Executor : public QObject
 {
@@ -34,7 +37,8 @@ public slots:
     void blackWhiteFilter();
     void negativeFilter();
     void ditheringFilter     ();
-    void ditheringErrorFilter();
+    void ditheringFloydFilter();
+    void ditheringFloydButton();
     void upscaleFilter       ();
     void rotateButton        ();
     void rotateFilter        (int);
@@ -51,6 +55,7 @@ public slots:
 private:
     QSharedPointer<View> view;
     QThreadPool* threadPool;
+    QWidget* controlWidget = nullptr;
 
     void setCImage(QImage* image);
     void setup();

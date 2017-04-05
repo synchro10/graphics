@@ -37,7 +37,7 @@ void View::createActions()
     blackWhiteAct       = new QAction(tr("&Grey"), this);
     negativeAct         = new QAction(tr("&Negative"), this);
     ditheringAct        = new QAction(tr("&Dithering"), this);
-    ditheringErrorAct   = new QAction(tr("&Dithering Error"), this);
+    ditheringErrorAct   = new QAction(tr("&Dithering Floyd"), this);
     upscaleAct          = new QAction(tr("&Upscale"), this);
     rotateAct           = new QAction(tr("&Rotate"), this);
     gammaAct            = new QAction(tr("&Gamma"), this);
@@ -63,8 +63,8 @@ void View::createMenus()
     filterMenu = new QMenu(tr("&Filter"), this);
     filterMenu->addAction(blackWhiteAct);
     filterMenu->addAction(negativeAct);
-//    filterMenu->addAction(ditheringAct     );
-//    filterMenu->addAction(ditheringErrorAct);
+    filterMenu->addAction(ditheringAct     );
+    filterMenu->addAction(ditheringErrorAct);
     filterMenu->addAction(upscaleAct       );
     filterMenu->addAction(rotateAct        );
     filterMenu->addAction(gammaAct         );
@@ -99,8 +99,8 @@ void View::createToolbar()
 
     filterToolbar->addAction(blackWhiteAct);
     filterToolbar->addAction(negativeAct);
-//    filterToolbar->addAction(ditheringAct     );
-//    filterToolbar->addAction(ditheringErrorAct);
+    filterToolbar->addAction(ditheringAct     );
+    filterToolbar->addAction(ditheringErrorAct);
     filterToolbar->addAction(upscaleAct       );
     filterToolbar->addAction(rotateAct        );
     filterToolbar->addAction(gammaAct         );

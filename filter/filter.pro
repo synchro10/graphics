@@ -34,7 +34,10 @@ SOURCES += main.cpp\
     embossfilter.cpp \
     edgewidget.cpp \
     edgerobertfilter.cpp \
-    edgesobelfilter.cpp
+    edgesobelfilter.cpp \
+    ditheringfilter.cpp \
+    ditheringwidget.cpp \
+    dithringfloydfilter.cpp
 
 HEADERS  += view.h \
     executor.h \
@@ -57,4 +60,7 @@ HEADERS  += view.h \
     embossfilter.h \
     edgewidget.h \
     edgerobertfilter.h \
-    edgesobelfilter.h
+    edgesobelfilter.h \
+    ditheringfilter.h \
+    ditheringwidget.h \
+    dithringfloydfilter.h

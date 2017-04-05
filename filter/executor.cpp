@@ -33,13 +33,36 @@ void Executor::negativeFilter()
 
 void Executor::ditheringFilter()
 {
-    std::cout << "В разработке" << std::endl;
+    ControlPanel* widget = new ControlPanel();
+    view->setControl(widget);
+    QImage* image = view->getImageB();
+    Filter* filter = new DitheringFilter();
+    filter->setImage(image);
+    connect(filter, &Filter::finished, this, &Executor::setCImage);
+    addTask(filter);
 }
 
-void Executor::ditheringErrorFilter()
+void Executor::ditheringFloydFilter()
 {
-    std::cout << "В разработке" << std::endl;
+    DitheringWidget* widget = dynamic_cast<DitheringWidget*>(controlWidget);
+    int red = widget->sliderRed->value();
+    int green = widget->sliderGreen->value();
+    int blue = widget->sliderBlue->value();
+    QImage* image = view->getImageB();
+    Filter* filter = new DithringFloydFilter(red, green, blue);
+    filter->setImage(image);
+    connect(filter, &Filter::finished, this, &Executor::setCImage);
+    addTask(filter);
+}
 
+void Executor::ditheringFloydButton()
+{
+    DitheringWidget* widget = new DitheringWidget();
+    connect(widget->sliderRed, &QSlider::valueChanged, this, &Executor::ditheringFloydFilter);
+    connect(widget->sliderGreen, &QSlider::valueChanged, this, &Executor::ditheringFloydFilter);
+    connect(widget->sliderBlue, &QSlider::valueChanged, this, &Executor::ditheringFloydFilter);
+    view->setControl(widget);
+    controlWidget = widget;
 }
 
 void Executor::upscaleFilter()
@@ -175,7 +198,7 @@ void Executor::setup()
     connect(view->blackWhiteAct, SIGNAL(triggered()),     this, SLOT(blackWhiteFilter    ()));
     connect(view->negativeAct, SIGNAL(triggered()),       this, SLOT(negativeFilter      ()));
     connect(view->ditheringAct     , SIGNAL(triggered()), this, SLOT(ditheringFilter     ()));
-    connect(view->ditheringErrorAct, SIGNAL(triggered()), this, SLOT(ditheringErrorFilter()));
+    connect(view->ditheringErrorAct, SIGNAL(triggered()), this, SLOT(ditheringFloydButton()));
     connect(view->upscaleAct       , SIGNAL(triggered()), this, SLOT(upscaleFilter       ()));
     connect(view->rotateAct        , SIGNAL(triggered()), this, SLOT(rotateButton        ()));
     connect(view->gammaAct         , SIGNAL(triggered()), this, SLOT(gammaButton         ()));
