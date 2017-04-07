@@ -15,6 +15,7 @@ public:
     QGridLayout *mainLayout = nullptr;
 
     void setup();
+    double getValue(){return spinBoxA->value();}
 signals:
 
 public slots:

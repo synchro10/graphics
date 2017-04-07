@@ -97,6 +97,7 @@ void ZoneA::mouseMoveEvent(QMouseEvent *e)
         zoneB->setImage(getSelectedImage());
         this->update();
         zoneB->update();
+        emit lastFilter();
     }
 }
 

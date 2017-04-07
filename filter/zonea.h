@@ -6,6 +6,7 @@
 
 class ZoneA : public Zone
 {
+    Q_OBJECT
 public:
     ZoneA(QWidget *parent);
 
@@ -17,7 +18,8 @@ public:
     void setSelect();
 
     void setZoneB(ZoneB *value);
-
+signals:
+    void lastFilter();
 private:
     QSharedPointer<QImage> image;
     QSharedPointer<QImage> imagePrototype;

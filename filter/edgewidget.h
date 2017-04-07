@@ -14,6 +14,7 @@ public:
     QGridLayout *mainLayout = nullptr;
 
     void setup();
+    int getValue(){ return sliderA->value();}
 signals:
 
 public slots:

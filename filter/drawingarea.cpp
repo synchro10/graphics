@@ -83,6 +83,12 @@ void DrawingArea::setControlPanel(QWidget *value)
     widget->hide();
     delete widget;
 
-    mainLayout->addWidget(controlPanel);
+    
+    
+   mainLayout->addWidget(controlPanel);
 }
 
+ZoneA *DrawingArea::getZoneA() const
+{
+    return zoneA;
+}

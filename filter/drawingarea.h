@@ -22,6 +22,8 @@ public:
     QImage *getImageB();
     void setControlPanel(QWidget *value);
 
+    ZoneA *getZoneA() const;
+
 signals:
 
 public slots:

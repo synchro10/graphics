@@ -6,6 +6,7 @@
 #include <QSharedPointer>
 #include "drawingarea.h"
 #include <QImage>
+#include "zonea.h"
 
 class View : public QMainWindow
 {
@@ -31,6 +32,7 @@ public:
     QAction *blurAct;
     QAction *sharpenAct;
     void setControl(QWidget* controlWidget);
+    ZoneA* getZoneA(){return area->getZoneA();}
 
 private slots:
     void open();

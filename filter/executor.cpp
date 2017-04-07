@@ -4,6 +4,7 @@
 Executor::Executor(QObject *parent) : QObject(parent)
 {
     view = QSharedPointer<View>(new View());
+    zoneA = view->getZoneA();
     threadPool = new QThreadPool(this);
     threadPool->setMaxThreadCount(1);
     setup();
@@ -18,6 +19,7 @@ void Executor::blackWhiteFilter()
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
+    lastFilter = &Executor::blackWhiteFilter;
 }
 
 void Executor::negativeFilter()
@@ -29,6 +31,7 @@ void Executor::negativeFilter()
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
+    lastFilter = &Executor::negativeFilter;
 }
 
 void Executor::ditheringFilter()
@@ -40,6 +43,7 @@ void Executor::ditheringFilter()
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
+    lastFilter = &Executor::ditheringFilter;
 }
 
 void Executor::ditheringFloydFilter()
@@ -53,6 +57,7 @@ void Executor::ditheringFloydFilter()
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
+    lastFilter = &Executor::ditheringFloydFilter;
 }
 
 void Executor::ditheringFloydButton()
@@ -74,6 +79,7 @@ void Executor::upscaleFilter()
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
+    lastFilter = &Executor::upscaleFilter;
 }
 
 void Executor::rotateButton()
@@ -81,6 +87,7 @@ void Executor::rotateButton()
     RotateWidget* widget = new RotateWidget();
     connect(widget->sliderA, &QSlider::valueChanged, this, &Executor::rotateFilter);
     view->setControl(widget);
+    controlWidget = widget;
 }
 
 void Executor::rotateFilter(int value)
@@ -90,6 +97,19 @@ void Executor::rotateFilter(int value)
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
+    lastFilter = &Executor::rotateFilter1;
+}
+
+void Executor::rotateFilter1()
+{
+    RotateWidget* widget = dynamic_cast<RotateWidget*>(controlWidget);
+    int value = widget->getValue();
+    QImage* image = view->getImageB();
+    Filter* filter = new RotateFilter(value);
+    filter->setImage(image);
+    connect(filter, &Filter::finished, this, &Executor::setCImage);
+    addTask(filter);
+    lastFilter = &Executor::rotateFilter1;
 }
 
 void Executor::gammaFilter(int value)
@@ -99,6 +119,19 @@ void Executor::gammaFilter(int value)
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
+    lastFilter = &Executor::gammaFilter1;
+}
+
+void Executor::gammaFilter1()
+{
+    GammaWidget* widget = dynamic_cast<GammaWidget*>(controlWidget);
+    double value = widget->getValue();
+    QImage* image = view->getImageB();
+    Filter* filter = new GammaFilter(value);
+    filter->setImage(image);
+    connect(filter, &Filter::finished, this, &Executor::setCImage);
+    addTask(filter);
+    lastFilter = &Executor::gammaFilter1;
 }
 
 void Executor::edgeRobertButton()
@@ -106,6 +139,7 @@ void Executor::edgeRobertButton()
     EdgeWidget* widget = new EdgeWidget();
     connect(widget->sliderA, &QSlider::valueChanged, this, &Executor::edgeRobertFilter);
     view->setControl(widget);
+    controlWidget = widget;
 }
 
 void Executor::gammaButton()
@@ -113,6 +147,7 @@ void Executor::gammaButton()
     GammaWidget* widget = new GammaWidget();
     connect(widget->sliderA, &QSlider::valueChanged, this, &Executor::gammaFilter);
     view->setControl(widget);
+    controlWidget = widget;
 }
 
 void Executor::edgeRobertFilter(int threshold)
@@ -122,7 +157,19 @@ void Executor::edgeRobertFilter(int threshold)
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
+    lastFilter = &Executor::edgeRobertFilter1;
+}
 
+void Executor::edgeRobertFilter1()
+{
+    EdgeWidget* widget = dynamic_cast<EdgeWidget*>(controlWidget);
+    int threshold = widget->getValue();
+    QImage* image = view->getImageB();
+    Filter* filter = new EdgeRobertFilter(threshold);
+    filter->setImage(image);
+    connect(filter, &Filter::finished, this, &Executor::setCImage);
+    addTask(filter);
+    lastFilter = &Executor::edgeRobertFilter1;
 }
 
 void Executor::edgeSobelButton()
@@ -130,6 +177,7 @@ void Executor::edgeSobelButton()
     EdgeWidget* widget = new EdgeWidget();
     connect(widget->sliderA, &QSlider::valueChanged, this, &Executor::edgeSobelFilter);
     view->setControl(widget);
+    controlWidget = widget;
 }
 
 void Executor::edgeSobelFilter(int threshold)
@@ -139,7 +187,19 @@ void Executor::edgeSobelFilter(int threshold)
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
+    lastFilter = &Executor::edgeSobelFilter1;
+}
 
+void Executor::edgeSobelFilter1()
+{
+    EdgeWidget* widget = dynamic_cast<EdgeWidget*>(controlWidget);
+    int threshold = widget->getValue();
+    QImage* image = view->getImageB();
+    Filter* filter = new EdgeSobelFilter(threshold);
+    filter->setImage(image);
+    connect(filter, &Filter::finished, this, &Executor::setCImage);
+    addTask(filter);
+    lastFilter = &Executor::edgeSobelFilter1;
 }
 
 void Executor::embossFilter()
@@ -151,7 +211,7 @@ void Executor::embossFilter()
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
-
+    lastFilter = &Executor::embossFilter;
 }
 
 void Executor::waterFilter()
@@ -163,6 +223,7 @@ void Executor::waterFilter()
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
+    lastFilter = &Executor::waterFilter;
 }
 
 void Executor::blurFilter()
@@ -174,6 +235,7 @@ void Executor::blurFilter()
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
+    lastFilter = &Executor::blurFilter;
 }
 
 void Executor::sharpenFilter()
@@ -185,7 +247,20 @@ void Executor::sharpenFilter()
     filter->setImage(image);
     connect(filter, &Filter::finished, this, &Executor::setCImage);
     addTask(filter);
+    lastFilter = &Executor::sharpenFilter;
 
+}
+
+void Executor::runLastFilter()
+{
+    if (lastFilter != nullptr){
+        (((Executor*)this)->*lastFilter)();
+    }
+}
+
+void Executor::setZoneA(ZoneA *value)
+{
+    zoneA = value;
 }
 
 void Executor::setCImage(QImage *image)
@@ -208,6 +283,7 @@ void Executor::setup()
     connect(view->waterAct         , SIGNAL(triggered()), this, SLOT(waterFilter         ()));
     connect(view->blurAct          , SIGNAL(triggered()), this, SLOT(blurFilter          ()));
     connect(view->sharpenAct       , SIGNAL(triggered()), this, SLOT(sharpenFilter       ()));
+    connect(zoneA, SIGNAL(lastFilter()), this, SLOT(runLastFilter()));
 }
 
 void Executor::addTask(Filter *filter)
