@@ -5,10 +5,14 @@
 #include <QImage>
 #include <QSharedPointer>
 #include <QRgb>
+#include <utility>
 #include "legend.h"
 
+class ParametrsIsoline;
+
 class Zone : public QWidget
-{
+{    
+    friend class ParametrsIsoline;
     Q_OBJECT
 public:
     explicit Zone(QWidget *parent = 0);
@@ -37,9 +41,12 @@ private:
 
     void fillImage();
     void drawGrid();
-    void drawIsoline();
+    void drawAllIsolines();
+    void drawIsoline(const ParametrsIsoline &params, const double value);
     void updateValues();
     void initLegend();
+    QPoint pixelFromCoord(double x, double y);
+    std::pair<double, double> coordFromPixel(int i, int j);
 
     int k = 0;
     int m = 0;
@@ -61,6 +68,24 @@ private:
     void drawLineY(QPoint point1, QPoint point2);
     void drawLineX(QPoint point1, QPoint point2);
     void drawLine(QPoint point1, QPoint point2);
+
+
+};
+
+class ParametrsIsoline{
+public:
+    ParametrsIsoline(Zone *zone, int i, int j);
+
+    double f1 = 0.0;
+    double f2 = 0.0;
+    double f3 = 0.0;
+    double f4 = 0.0;
+    double xi = 0.0;
+    double yj = 0.0;
+    double xi1 = 0.0;
+    double yj1 = 0.0;
+    double dx = 0.0;
+    double dy = 0.0;
 };
 
 #endif // ZONE_H

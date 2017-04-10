@@ -16,10 +16,10 @@ void Zone::paintEvent(QPaintEvent *event)
     QRect dirtyRect = event->rect();
     fillImage();
     drawGrid();
+    drawAllIsolines();
     painter.drawImage(dirtyRect, *image.data(), dirtyRect);
 }
 
-//todo необходимо реализовать рисование изолиний
 void Zone::defaultParams()
 {
     setFunction([](double x,double y){return x + y;});
@@ -94,8 +94,11 @@ void Zone::fillImage()
     double z = 0.0;
     for(int j = 0; j < height; j++){
         for(int i = 0; i < width; i++){
-            x = (double)(b-a)*i/width + a;
-            y = (double)(d-c)*(height - j)/height + c;
+            auto coord = coordFromPixel(i,j);
+            x = coord.first;
+            y = coord.second;
+//            x = (double)(b-a)*i/width + a;
+//            y = (double)(d-c)*(height - j)/height + c;
             z = function(x, y);
 
             int number = floor(((z - minValue)/(maxValue - minValue))*(n+1));
@@ -144,9 +147,32 @@ void Zone::drawGrid()
     }
 }
 
-void Zone::drawIsoline()
+void Zone::drawAllIsolines()
 {
+    for(int j = 0; j < m; j++){
+        for(int i = 0; i < k; i++){
+            const ParametrsIsoline& params = ParametrsIsoline(this, i,j);
+            for(auto value: values){
+                drawIsoline(params, value);
+            }
+        }
+    }
+}
 
+void Zone::drawIsoline(const ParametrsIsoline &params, const double value)
+{
+    bool sign[4];
+    QPoint point[4];
+    sign[0] = params.f1 > value;
+    sign[1] = params.f2 > value;
+    sign[2] = params.f3 > value;
+    sign[3] = params.f4 > value;
+    double EPS = 0.001;
+    if (sign[0] != sign[1]){
+        double x = params.xi + params.dx*(value - params.f1)/(params.f2 - params.f1 + EPS);
+        point[0] = QPoint(x, params.yj);
+    }
+    //todo
 }
 
 void Zone::updateValues()
@@ -192,6 +218,18 @@ void Zone::initLegend()
     }
     legend->setN(n);
     legend->setColors(&colors);
+}
+
+QPoint Zone::pixelFromCoord(double x, double y)
+{
+    return QPoint((x - a)*width/(b-a), height - (y - c)*height/(d - c));
+}
+
+std::pair<double, double> Zone::coordFromPixel(int i, int j)
+{
+    double x = (double)(b-a)*i/width + a;
+    double y = (double)(d-c)*(height - j)/height + c;
+    return std::pair<double, double>(x,y);
 }
 
 void Zone::drawLine(QPoint point1, QPoint point2)
@@ -267,3 +305,22 @@ void Zone::drawLineY(QPoint point1, QPoint point2)
     }
 }
 
+ParametrsIsoline::ParametrsIsoline(Zone* zone, int i, int j)
+{
+    double a = zone->a;
+    double b = zone->b;
+    double c = zone->c;
+    double d = zone->d;
+    int k = zone->k;
+    int m = zone->m;
+    this->xi = (b-a)*i/k + a;
+    this->yj = (d-c)*j/m + c;
+    this->xi1 = (b-a)*(i+1)/k + a;
+    this->yj1 = (d-c)*(j+1)/m + c;
+    this->f1 = zone->function(xi, yj1);
+    this->f2 = zone->function(xi1, yj1);
+    this->f3 = zone->function(xi, yj);
+    this->f4 = zone->function(xi1, yj);
+    this->dx = xi1 - xi;
+    this->dy = yj1 - yj;
+}
