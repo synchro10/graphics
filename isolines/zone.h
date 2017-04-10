@@ -36,6 +36,7 @@ private:
     Legend* legend = nullptr;
 
     void fillImage();
+    void drawGrid();
     void drawIsoline();
     void updateValues();
     void initLegend();
@@ -57,6 +58,9 @@ private:
     QRgb lineColor = qRgb(0,0,0);
 
     double (*function)(double x, double y) = nullptr;
+    void drawLineY(QPoint point1, QPoint point2);
+    void drawLineX(QPoint point1, QPoint point2);
+    void drawLine(QPoint point1, QPoint point2);
 };
 
 #endif // ZONE_H

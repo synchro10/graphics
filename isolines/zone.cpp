@@ -15,9 +15,11 @@ void Zone::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     QRect dirtyRect = event->rect();
     fillImage();
+    drawGrid();
     painter.drawImage(dirtyRect, *image.data(), dirtyRect);
 }
 
+//todo необходимо реализовать рисование изолиний
 void Zone::defaultParams()
 {
     setFunction([](double x,double y){return x + y;});
@@ -126,6 +128,22 @@ void Zone::fillImage()
     }
 }
 
+void Zone::drawGrid()
+{
+    QPoint point1;
+    QPoint point2;
+    for(int i = 0; i <= k; i++){
+        point1 = QPoint(i*(width-1)/k, 0);
+        point2 = QPoint(i*(width-1)/k, height-1);
+        drawLine(point1, point2);
+    }
+    for(int i = 0; i <= m; i++){
+        point1 = QPoint(0, i*(height-1)/m);
+        point2 = QPoint(width-1, i*(height-1)/m);
+        drawLine(point1, point2);
+    }
+}
+
 void Zone::drawIsoline()
 {
 
@@ -174,5 +192,78 @@ void Zone::initLegend()
     }
     legend->setN(n);
     legend->setColors(&colors);
+}
+
+void Zone::drawLine(QPoint point1, QPoint point2)
+{
+    int dx = std::abs(point1.x() - point2.x());
+    int dy = std::abs(point1.y() - point2.y());
+    if (dx > dy){
+        drawLineX(point1, point2);
+    } else {
+        drawLineY(point1, point2);
+    }
+}
+
+void Zone::drawLineX(QPoint point1, QPoint point2)
+{
+    if (point1.x() > point2.x()){
+        std::swap(point1, point2);
+    }
+
+    QRgb* pixels = reinterpret_cast<QRgb*>(image->bits());
+    int width = image->bytesPerLine() / sizeof(QRgb);
+
+    int dy = point2.y() - point1.y();
+    int dx = point2.x() - point1.x();
+    int sign = 1;
+    if (dy < 0){
+        dy *= -1;
+        sign = -1;
+    }
+    int error = 0;
+    int y = point1.y();
+    int x = point1.x();
+
+    for(int i = 0; i <= dx; i++){
+        pixels[x + y*width] = lineColor;
+        x++;
+        error += dy;
+        if (2*error > dx){
+            error -= dx;
+            y += sign;
+        }
+    }
+}
+
+void Zone::drawLineY(QPoint point1, QPoint point2)
+{
+    if (point1.y() > point2.y()){
+        std::swap(point1, point2);
+    }
+
+    QRgb* pixels = reinterpret_cast<QRgb*>(image->bits());
+    int width = image->bytesPerLine() / sizeof(QRgb);
+
+    int dx = point2.x() - point1.x();
+    int dy = point2.y() - point1.y();
+    int sign = 1;
+    if (dx < 0){
+        dx *= -1;
+        sign = -1;
+    }
+    int error = 0;
+    int x = point1.x();
+    int y = point1.y();
+
+    for(int i = 0; i <= dy; i++){
+        pixels[x + y*width] = lineColor;
+        y++;
+        error += dx;
+        if (2*error > dy){
+            error -= dy;
+            x += sign;
+        }
+    }
 }
 
