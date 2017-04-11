@@ -14,8 +14,7 @@ DrawingArea::DrawingArea(QWidget *parent) : QWidget(parent)
 
 void DrawingArea::paintEvent(QPaintEvent *event)
 {
-//    zone->update();
-//    legend->update();
+
 }
 
 void DrawingArea::open(const QString &fileName){
@@ -57,5 +56,17 @@ void DrawingArea::setInterpolation()
 {
     zone->setInterpolation();
     legend->setInterpolation();
+    zone->update();
+}
+
+void DrawingArea::setGrid()
+{
+    zone->setGrid();
+    zone->update();
+}
+
+void DrawingArea::setIsoline()
+{
+    zone->setIsoline();
     zone->update();
 }

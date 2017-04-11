@@ -16,6 +16,8 @@ public:
 private slots:
     void open();
     void interpolation();
+    void grid();
+    void isoline();
     void about();
 
 private:
@@ -29,6 +31,8 @@ private:
 
     QAction *openAct;
     QAction *interpolateAct;
+    QAction *gridAct;
+    QAction *isolineAct;
     QAction *exitAct;
 
     QAction *aboutAct;

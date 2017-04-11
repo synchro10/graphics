@@ -24,6 +24,12 @@ void View::createActions()
     interpolateAct = new QAction(tr("&Interpolation"), this);
     connect(interpolateAct, SIGNAL(triggered()), this, SLOT(interpolation()));
 
+    gridAct = new QAction(tr("&Grid"), this);
+    connect(gridAct, SIGNAL(triggered()), this, SLOT(grid()));
+
+    isolineAct = new QAction(tr("&Isoline"), this);
+    connect(isolineAct, SIGNAL(triggered()), this, SLOT(isoline()));
+
     aboutAct = new QAction(tr("&About"), this);
     connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 }
@@ -33,6 +39,8 @@ void View::createMenus()
     fileMenu = new QMenu(tr("&File"), this);
     fileMenu->addAction(openAct);
     fileMenu->addAction(interpolateAct);
+    fileMenu->addAction(gridAct);
+    fileMenu->addAction(isolineAct);
     fileMenu->addAction(exitAct);
 
     helpMenu = new QMenu(tr("&Help"), this);
@@ -49,6 +57,8 @@ void View::createToolbar()
     toolbar->addAction(openAct);
     toolbar->addSeparator();
     toolbar->addAction(interpolateAct);
+    toolbar->addAction(gridAct);
+    toolbar->addAction(isolineAct);
     toolbar->addSeparator();
     toolbar->addAction(aboutAct);
 
@@ -68,6 +78,18 @@ void View::open()
 void View::interpolation()
 {
     area->setInterpolation();
+    area->update();
+}
+
+void View::grid()
+{
+    area->setGrid();
+    area->update();
+}
+
+void View::isoline()
+{
+    area->setIsoline();
     area->update();
 }
 

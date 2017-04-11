@@ -14,6 +14,8 @@ public:
     void paintEvent(QPaintEvent *event) override;
     void open(const QString &fileName);
     void setInterpolation();
+    void setGrid();
+    void setIsoline();
 signals:
 
 public slots:

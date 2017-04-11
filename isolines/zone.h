@@ -19,6 +19,8 @@ public:
     void paintEvent(QPaintEvent *event) override;
     void defaultParams();
     void setInterpolation();
+    void setGrid();
+    void setIsoline();
     void setFunction(double (*func_)(double x, double y));
     void setColors(const QVector<QRgb> &value);
 
@@ -45,7 +47,7 @@ private:
     void drawIsoline(const ParametrsIsoline &params, const double value);
     void updateValues();
     void initLegend();
-    QPoint pixelFromCoord(double x, double y);
+    QPoint pixelFromCoord(std::pair<double, double> &coord);
     std::pair<double, double> coordFromPixel(int i, int j);
 
     int k = 0;
@@ -57,6 +59,8 @@ private:
     double c = 1.0;
     double d = 1.0;
     bool isInterpolate = false;
+    bool isGrid = false;
+    bool isIsoline = false;
     double minValue = 0.0;
     double maxValue = 0.0;
     double step = 0.0;

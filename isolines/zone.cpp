@@ -22,10 +22,11 @@ void Zone::paintEvent(QPaintEvent *event)
 
 void Zone::defaultParams()
 {
-    setFunction([](double x,double y){return x + y;});
-//    setFunction([](double x,double y){return exp(-x*x - y*y/2)*cos(4*x)+exp(-3*((x+0.5)*(x+0.5)+y*y/2));});
-    k = 10;
-    m = 10;
+//    setFunction([](double x,double y){return x + y;});
+    setFunction([](double x,double y){return exp(-x*x - y*y/2)*cos(4*x)+exp(-3*((x+0.5)*(x+0.5)+y*y/2));});
+//    setFunction([](double x,double y){return x*x/2 + y*y;});
+    k = 20;
+    m = 20;
     a = -2.0;
     c = -4.0;
     b = 2.0;
@@ -49,6 +50,16 @@ void Zone::defaultParams()
 void Zone::setInterpolation()
 {
     isInterpolate = !isInterpolate;
+}
+
+void Zone::setGrid()
+{
+    isGrid = !isGrid;
+}
+
+void Zone::setIsoline()
+{
+    isIsoline = !isIsoline;
 }
 
 void Zone::setFunction(double (*func_)(double, double))
@@ -133,6 +144,9 @@ void Zone::fillImage()
 
 void Zone::drawGrid()
 {
+    if (!isGrid){
+        return;
+    }
     QPoint point1;
     QPoint point2;
     for(int i = 0; i <= k; i++){
@@ -149,30 +163,82 @@ void Zone::drawGrid()
 
 void Zone::drawAllIsolines()
 {
+    if (!isIsoline){
+        return;
+    }
     for(int j = 0; j < m; j++){
         for(int i = 0; i < k; i++){
             const ParametrsIsoline& params = ParametrsIsoline(this, i,j);
             for(auto value: values){
                 drawIsoline(params, value);
             }
+//            drawIsoline(params, values[0]);
         }
     }
 }
 
 void Zone::drawIsoline(const ParametrsIsoline &params, const double value)
 {
-    bool sign[4];
-    QPoint point[4];
+    bool sign[5];
+    bool intersection[4] = {false};
+    std::pair<double, double> point[4];
     sign[0] = params.f1 > value;
     sign[1] = params.f2 > value;
     sign[2] = params.f3 > value;
     sign[3] = params.f4 > value;
     double EPS = 0.001;
+    int count = 0;
     if (sign[0] != sign[1]){
+        intersection[0] = true;
         double x = params.xi + params.dx*(value - params.f1)/(params.f2 - params.f1 + EPS);
-        point[0] = QPoint(x, params.yj);
+        point[0] = std::pair<double, double>(x, params.yj1);
+        count++;
     }
-    //todo
+    if (sign[2] != sign[3]){
+        intersection[2] = true;
+        double x = params.xi + params.dx*(value - params.f3)/(params.f4 - params.f3 + EPS);
+        point[2] = std::pair<double, double>(x, params.yj);
+        count++;
+    }
+    if (sign[0] != sign[2]){
+        intersection[3] = true;
+        double y = params.yj + params.dy*(value - params.f3)/(params.f1 - params.f3 + EPS);
+        point[3] = std::pair<double, double>(params.xi, y);
+        count++;
+    }
+    if (sign[1] != sign[3]){
+        intersection[1] = true;
+        double y = params.yj + params.dy*(value - params.f4)/(params.f2 - params.f4 + EPS);
+        point[1] = std::pair<double, double>(params.xi1, y);
+        count++;
+    }
+    if (count == 2){
+        if (intersection[0] && intersection[1]){
+            drawLine(pixelFromCoord(point[0]), pixelFromCoord(point[1]));
+        } else if (intersection[0] && intersection[2]){
+            drawLine(pixelFromCoord(point[0]), pixelFromCoord(point[2]));
+        } else if (intersection[0] && intersection[3]){
+            drawLine(pixelFromCoord(point[0]), pixelFromCoord(point[3]));
+        } else if (intersection[1] && intersection[2]){
+            drawLine(pixelFromCoord(point[1]), pixelFromCoord(point[2]));
+        } else if (intersection[1] && intersection[3]){
+            drawLine(pixelFromCoord(point[1]), pixelFromCoord(point[3]));
+        } else if (intersection[2] && intersection[3]){
+            drawLine(pixelFromCoord(point[2]), pixelFromCoord(point[3]));
+        }
+    }
+    if (count == 4){
+        sign[4] = function((params.xi + params.xi1)/2, (params.yj + params.yj1)/2) > value;
+        if(sign[0] == sign[4] && sign[4] == sign[3]){
+            //1
+            drawLine(pixelFromCoord(point[0]), pixelFromCoord(point[1]));
+            drawLine(pixelFromCoord(point[2]), pixelFromCoord(point[3]));
+        } else {
+            //2
+            drawLine(pixelFromCoord(point[0]), pixelFromCoord(point[3]));
+            drawLine(pixelFromCoord(point[1]), pixelFromCoord(point[2]));
+        }
+    }
 }
 
 void Zone::updateValues()
@@ -220,9 +286,11 @@ void Zone::initLegend()
     legend->setColors(&colors);
 }
 
-QPoint Zone::pixelFromCoord(double x, double y)
+QPoint Zone::pixelFromCoord(std::pair<double, double>& coord)
 {
-    return QPoint((x - a)*width/(b-a), height - (y - c)*height/(d - c));
+    double x = coord.first;
+    double y = coord.second;
+    return QPoint((x - a)*width/(b - a), height - (y - c)*height/(d - c));
 }
 
 std::pair<double, double> Zone::coordFromPixel(int i, int j)
