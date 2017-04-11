@@ -16,9 +16,11 @@ SOURCES += main.cpp\
         view.cpp \
     drawingarea.cpp \
     zone.cpp \
-    legend.cpp
+    legend.cpp \
+    options.cpp
 
 HEADERS  += view.h \
     drawingarea.h \
     zone.h \
-    legend.h
+    legend.h \
+    options.h

@@ -70,3 +70,20 @@ void DrawingArea::setIsoline()
     zone->setIsoline();
     zone->update();
 }
+
+void DrawingArea::clear()
+{
+    zone->clearIsolines();
+    zone->update();
+}
+
+const Options DrawingArea::getOptions()
+{
+    return zone->getOptions();
+}
+
+void DrawingArea::setOptions(const Options options)
+{
+    zone->setOptions(options);
+    zone->update();
+}

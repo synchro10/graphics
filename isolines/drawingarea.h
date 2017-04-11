@@ -5,6 +5,7 @@
 #include <QVector>
 #include "zone.h"
 #include "legend.h"
+#include "options.h"
 
 class DrawingArea : public QWidget
 {
@@ -16,6 +17,9 @@ public:
     void setInterpolation();
     void setGrid();
     void setIsoline();
+    void clear();
+    const Options getOptions();
+    void setOptions(const Options options);
 signals:
 
 public slots:

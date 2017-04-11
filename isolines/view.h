@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtWidgets>
 #include "drawingarea.h"
+#include "options.h"
 
 class View : public QMainWindow
 {
@@ -18,12 +19,16 @@ private slots:
     void interpolation();
     void grid();
     void isoline();
+    void clear();
+    void showOptions();
+    void setOptions(const Options options);
     void about();
 
 private:
     void createActions();
     void createMenus();
     void createToolbar();
+    void configureDialogs();
 
     QMenu *fileMenu;
     QMenu *helpMenu;
@@ -33,8 +38,11 @@ private:
     QAction *interpolateAct;
     QAction *gridAct;
     QAction *isolineAct;
+    QAction *clearAct;
+    QAction *optionAct;
     QAction *exitAct;
 
+    OptionsDialog *optionsDiagog;
     QAction *aboutAct;
     DrawingArea* area = nullptr;
 };

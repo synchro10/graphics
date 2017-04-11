@@ -7,6 +7,7 @@
 #include <QRgb>
 #include <utility>
 #include "legend.h"
+#include "options.h"
 
 class ParametrsIsoline;
 
@@ -18,20 +19,23 @@ public:
     explicit Zone(QWidget *parent = 0);
     void paintEvent(QPaintEvent *event) override;
     void defaultParams();
+    const Options getOptions();
+
     void setInterpolation();
     void setGrid();
     void setIsoline();
     void setFunction(double (*func_)(double x, double y));
     void setColors(const QVector<QRgb> &value);
-
     void setK(int value);
-
     void setM(int value);
-
     void setN(int value);
-
     void setLegend(Legend *value);
+    void setOptions(const Options options);
 
+    void addIsoline(double value);
+    void clearIsolines();
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseMoveEvent(QMouseEvent *e) override;
 signals:
 
 public slots:
@@ -65,6 +69,7 @@ private:
     double maxValue = 0.0;
     double step = 0.0;
     QVector<double> values;
+    QVector<double> customIsolines;
     QVector<QRgb> colors;
     QRgb lineColor = qRgb(0,0,0);
 

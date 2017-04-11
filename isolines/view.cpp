@@ -9,6 +9,7 @@ View::View(QWidget *parent)
     createActions();
     createMenus();
     createToolbar();
+    configureDialogs();
 }
 
 void View::createActions()
@@ -30,6 +31,12 @@ void View::createActions()
     isolineAct = new QAction(tr("&Isoline"), this);
     connect(isolineAct, SIGNAL(triggered()), this, SLOT(isoline()));
 
+    clearAct = new QAction(tr("&Clear"), this);
+    connect(clearAct, SIGNAL(triggered()), this, SLOT(clear()));
+
+    optionAct = new QAction(tr("&Options"), this);
+    connect(optionAct, SIGNAL(triggered()), this, SLOT(showOptions()));
+
     aboutAct = new QAction(tr("&About"), this);
     connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 }
@@ -38,9 +45,11 @@ void View::createMenus()
 {
     fileMenu = new QMenu(tr("&File"), this);
     fileMenu->addAction(openAct);
+    fileMenu->addAction(optionAct);
     fileMenu->addAction(interpolateAct);
     fileMenu->addAction(gridAct);
     fileMenu->addAction(isolineAct);
+    fileMenu->addAction(clearAct);
     fileMenu->addAction(exitAct);
 
     helpMenu = new QMenu(tr("&Help"), this);
@@ -59,11 +68,19 @@ void View::createToolbar()
     toolbar->addAction(interpolateAct);
     toolbar->addAction(gridAct);
     toolbar->addAction(isolineAct);
+    toolbar->addAction(clearAct);
+    toolbar->addAction(optionAct);
     toolbar->addSeparator();
     toolbar->addAction(aboutAct);
 
     this->addToolBar(toolbar);
     this->addToolBarBreak();
+}
+
+void View::configureDialogs()
+{
+    optionsDiagog = new OptionsDialog(this);
+    connect(optionsDiagog, SIGNAL(finished(Options)), this, SLOT(setOptions(Options)));
 }
 
 void View::open()
@@ -91,6 +108,25 @@ void View::isoline()
 {
     area->setIsoline();
     area->update();
+}
+
+void View::clear()
+{
+    area->clear();
+    area->update();
+}
+
+void View::showOptions()
+{
+    optionsDiagog->init(area->getOptions());
+    optionsDiagog->show();
+}
+
+void View::setOptions(const Options options)
+{
+    area->setOptions(options);
+    area->update();
+    optionsDiagog->close();
 }
 
 void View::about()
