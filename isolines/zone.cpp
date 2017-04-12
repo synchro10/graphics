@@ -126,12 +126,21 @@ void Zone::mousePressEvent(QMouseEvent *e)
     auto coord = coordFromPixel(e->x(), e->y());
     double value = function(coord.first, coord.second);
     addIsoline(value);
+//    for(int j = 0; j < m; j++){
+//        for(int i = 0; i < k; i++){
+//            const ParametrsIsoline& params = ParametrsIsoline(this, i,j);
+//            drawIsoline(params, value);
+//        }
+//    }
     update();
 }
 
 void Zone::mouseMoveEvent(QMouseEvent *e)
 {
     if (0 <= e->x() && e->x() < width && 0 <= e->y() && e->y() < height){
+        if (!customIsolines.isEmpty()){
+            customIsolines.removeLast();
+        }
         mousePressEvent(e);
     }
 }
