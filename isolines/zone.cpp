@@ -45,16 +45,19 @@ void Zone::defaultParams()
 void Zone::setInterpolation()
 {
     isInterpolate = !isInterpolate;
+    reset();
 }
 
 void Zone::setGrid()
 {
     isGrid = !isGrid;
+    reset();
 }
 
 void Zone::setIsoline()
 {
     isIsoline = !isIsoline;
+    reset();
 }
 
 void Zone::setFunction(double (*func_)(double, double))
@@ -102,6 +105,7 @@ void Zone::setOptions(const Options options)
         this->b = options.b;
         this->c = options.c;
         this->d = options.d;
+        reset();
     } else {
         QMessageBox::about(this, tr("Error"),
                            tr("incorrect options"));
@@ -116,6 +120,7 @@ void Zone::addIsoline(double value)
 void Zone::clearIsolines()
 {
     customIsolines.clear();
+    reset();
 }
 
 void Zone::mousePressEvent(QMouseEvent *e)
@@ -126,12 +131,7 @@ void Zone::mousePressEvent(QMouseEvent *e)
     auto coord = coordFromPixel(e->x(), e->y());
     double value = function(coord.first, coord.second);
     addIsoline(value);
-//    for(int j = 0; j < m; j++){
-//        for(int i = 0; i < k; i++){
-//            const ParametrsIsoline& params = ParametrsIsoline(this, i,j);
-//            drawIsoline(params, value);
-//        }
-//    }
+    isLastIsolineDrawn = false;
     update();
 }
 
@@ -140,6 +140,7 @@ void Zone::mouseMoveEvent(QMouseEvent *e)
     if (0 <= e->x() && e->x() < width && 0 <= e->y() && e->y() < height){
         if (!customIsolines.isEmpty()){
             customIsolines.removeLast();
+            reset();
         }
         mousePressEvent(e);
     }
@@ -147,7 +148,7 @@ void Zone::mouseMoveEvent(QMouseEvent *e)
 
 void Zone::fillImage()
 {
-    if (function == nullptr){
+    if (function == nullptr || isMapDrawn){
         return;
     }
     QRgb* pixels = reinterpret_cast<QRgb*>(image->bits());
@@ -190,11 +191,12 @@ void Zone::fillImage()
 
         }
     }
+    isMapDrawn = true;
 }
 
 void Zone::drawGrid()
 {
-    if (!isGrid){
+    if (!isGrid || isGridDrawn){
         return;
     }
     QPoint point1;
@@ -209,23 +211,38 @@ void Zone::drawGrid()
         point2 = QPoint(width-1, i*(height-1)/m);
         drawLine(point1, point2);
     }
+    isGridDrawn = true;
 }
 
 void Zone::drawAllIsolines()
 {
     if (!isIsoline){
         return;
-    }
-    for(int j = 0; j < m; j++){
-        for(int i = 0; i < k; i++){
-            const ParametrsIsoline& params = ParametrsIsoline(this, i,j);
-            for(auto value: values){
-                drawIsoline(params, value);
-            }
-            for(auto value: customIsolines){
-                drawIsoline(params, value);
+    } else if (!isIsolineDrawn){
+        for(int j = 0; j < m; j++){
+            for(int i = 0; i < k; i++){
+                const ParametrsIsoline& params = ParametrsIsoline(this, i,j);
+                for(auto value: values){
+                    drawIsoline(params, value);
+                }
+                for(auto value: customIsolines){
+                    drawIsoline(params, value);
+                }
             }
         }
+        isIsolineDrawn = true;
+        isLastIsolineDrawn = true;
+    } else if (!isLastIsolineDrawn){
+        if (!customIsolines.isEmpty()){
+            double value = customIsolines.constLast();
+            for(int j = 0; j < m; j++){
+                for(int i = 0; i < k; i++){
+                    const ParametrsIsoline& params = ParametrsIsoline(this, i,j);
+                    drawIsoline(params, value);
+                }
+            }
+        }
+        isLastIsolineDrawn = true;
     }
 }
 
@@ -325,7 +342,7 @@ void Zone::updateValues()
     this->minValue = zMin;
     this->maxValue = zMax;
     this->step = step;
-
+    reset();
 }
 
 void Zone::initLegend()
@@ -349,6 +366,14 @@ std::pair<double, double> Zone::coordFromPixel(int i, int j)
     double x = (double)(b-a)*i/width + a;
     double y = (double)(d-c)*(height - j)/height + c;
     return std::pair<double, double>(x,y);
+}
+
+void Zone::reset()
+{
+    isMapDrawn = false;
+    isGridDrawn = false;
+    isIsolineDrawn = false;
+    isLastIsolineDrawn = false;
 }
 
 void Zone::drawLine(QPoint point1, QPoint point2)

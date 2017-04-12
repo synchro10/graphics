@@ -73,12 +73,16 @@ private:
     QVector<QRgb> colors;
     QRgb lineColor = qRgb(0,0,0);
 
+    bool isMapDrawn = false;
+    bool isGridDrawn = false;
+    bool isIsolineDrawn = false;
+    bool isLastIsolineDrawn = false;
+    void reset();
+
     double (*function)(double x, double y) = nullptr;
     void drawLineY(QPoint point1, QPoint point2);
     void drawLineX(QPoint point1, QPoint point2);
     void drawLine(QPoint point1, QPoint point2);
-
-
 };
 
 class ParametrsIsoline{
