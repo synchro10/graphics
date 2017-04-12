@@ -45,8 +45,55 @@ void DrawingArea::open(const QString &fileName){
         return;
     }
     n = words.at(0).toInt();
+    if (0 > n || n > 10000){
+        file.close();
+        QMessageBox::about(this, tr("Fail"),tr("incorrect n"));
+        return;
+    }
+    QVector<QRgb> colors = QVector<QRgb>();
+    for(int i = 0; i <=n; i++){
+        str = in.readLine();
+        words = str.split(" ");
+        if (words.length() < 3){
+            file.close();
+            QMessageBox::about(this, tr("Fail"),tr("bad format"));
+            return;
+        }
+        int red = words.at(0).toInt();
+        int green = words.at(1).toInt();
+        int blue = words.at(2).toInt();
+        if (0 > red || 0 > green || 0 > blue || red > 255 || green > 255 || blue > 255){
+            file.close();
+            QMessageBox::about(this, tr("Fail"),tr("bad format"));
+            return;
+        }
+        colors.push_back(qRgb(red, green, blue));
+    }
 
+    str = in.readLine();
+    words = str.split(" ");
+    if (words.length() < 3){
+        file.close();
+        QMessageBox::about(this, tr("Fail"),tr("bad format"));
+        return;
+    }
+    int red = words.at(0).toInt();
+    int green = words.at(0).toInt();
+    int blue = words.at(0).toInt();
+    if (0 > red || 0 > green || 0 > blue || red > 255 || green > 255 || blue > 255){
+        file.close();
+        QMessageBox::about(this, tr("Fail"),tr("bad format"));
+        return;
+    }
 
+    zone->setK(k);
+    zone->setM(m);
+    zone->setN(n);
+    zone->setColors(colors);
+    zone->setIsolineColor(qRgb(red, green, blue));
+    zone->updateValues();
+    zone->update();
+    legend->update();
 
     file.close();
     return;

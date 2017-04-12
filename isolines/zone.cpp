@@ -37,6 +37,7 @@ void Zone::defaultParams()
     for (int i = 0; i <= n; i++){
 //        colors.push_back(qRgb(255*(n-i)/n,255*(n-i)/n,255*(n-i)/n));
         colors.push_back(qRgb(0,255*(n-i)/n,0));
+        std::cout << 0 << " " << 255*(n-i)/n << " " << 0 << std::endl;
     }
     updateValues();
     initLegend();
@@ -68,6 +69,12 @@ void Zone::setFunction(double (*func_)(double, double))
 void Zone::setColors(const QVector<QRgb> &value)
 {
     colors = value;
+    legend->setColors(&colors);
+}
+
+void Zone::setIsolineColor(QRgb color)
+{
+    lineColor = color;
 }
 
 void Zone::setK(int value)
@@ -342,6 +349,7 @@ void Zone::updateValues()
     this->minValue = zMin;
     this->maxValue = zMax;
     this->step = step;
+    this->clearIsolines();
     reset();
 }
 

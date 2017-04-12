@@ -26,9 +26,11 @@ public:
     void setIsoline();
     void setFunction(double (*func_)(double x, double y));
     void setColors(const QVector<QRgb> &value);
+    void setIsolineColor(QRgb color);
     void setK(int value);
     void setM(int value);
     void setN(int value);
+    void updateValues();
     void setLegend(Legend *value);
     void setOptions(const Options options);
 
@@ -48,8 +50,7 @@ private:
     void fillImage();
     void drawGrid();
     void drawAllIsolines();
-    void drawIsoline(const ParametrsIsoline &params, const double value);
-    void updateValues();
+    void drawIsoline(const ParametrsIsoline &params, const double value); 
     void initLegend();
     QPoint pixelFromCoord(std::pair<double, double> &coord);
     std::pair<double, double> coordFromPixel(int i, int j);
