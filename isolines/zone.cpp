@@ -37,7 +37,7 @@ void Zone::defaultParams()
     for (int i = 0; i <= n; i++){
 //        colors.push_back(qRgb(255*(n-i)/n,255*(n-i)/n,255*(n-i)/n));
         colors.push_back(qRgb(0,255*(n-i)/n,0));
-        std::cout << 0 << " " << 255*(n-i)/n << " " << 0 << std::endl;
+//        std::cout << 0 << " " << 255*(n-i)/n << " " << 0 << std::endl;
     }
     updateValues();
     initLegend();
@@ -262,29 +262,43 @@ void Zone::drawIsoline(const ParametrsIsoline &params, const double value)
     sign[1] = params.f2 > value;
     sign[2] = params.f3 > value;
     sign[3] = params.f4 > value;
-    double EPS = 0.0000001;
+    double EPS = 0.000001;
     int count = 0;
     if (sign[0] != sign[1]){
         intersection[0] = true;
-        double x = params.xi + params.dx*((value - params.f1)/(params.f2 - params.f1 + EPS));
+        double x = params.xi;
+        if (qFabs(value - params.f1) > EPS && qFabs(params.f2 - params.f1) > EPS){
+            x+= params.dx*((value - params.f1)/(params.f2 - params.f1 + EPS));
+        }
+//        double x = params.xi + params.dx*((value - params.f1)/(params.f2 - params.f1 + EPS));
         point[0] = std::pair<double, double>(x, params.yj1);
         count++;
     }
     if (sign[2] != sign[3]){
         intersection[2] = true;
-        double x = params.xi + params.dx*((value - params.f3)/(params.f4 - params.f3 + EPS));
+        double x = params.xi;
+        if (qFabs(value - params.f3) > EPS && qFabs(params.f4 - params.f3) > EPS){
+            x+= params.dx*((value - params.f3)/(params.f4 - params.f3 + EPS));
+        }
+//        double x = params.xi + params.dx*((value - params.f3)/(params.f4 - params.f3 + EPS));
         point[2] = std::pair<double, double>(x, params.yj);
         count++;
     }
     if (sign[0] != sign[2]){
         intersection[3] = true;
-        double y = params.yj + params.dy*((value - params.f3)/(params.f1 - params.f3 + EPS));
+        double y = params.yj;
+        if (qFabs(value - params.f3) > EPS && qFabs(params.f1 - params.f3) > EPS){
+            y += params.dy*((value - params.f3)/(params.f1 - params.f3 + EPS));
+        }
         point[3] = std::pair<double, double>(params.xi, y);
         count++;
     }
     if (sign[1] != sign[3]){
         intersection[1] = true;
-        double y = params.yj + params.dy*((value - params.f4)/(params.f2 - params.f4 + EPS));
+        double y = params.yj;
+        if (qFabs(value - params.f4) > EPS && qFabs(params.f2 - params.f4) > EPS){
+            y += params.dy*((value - params.f4)/(params.f2 - params.f4 + EPS));
+        }
         point[1] = std::pair<double, double>(params.xi1, y);
         count++;
     }

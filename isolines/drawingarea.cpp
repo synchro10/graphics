@@ -17,6 +17,9 @@ void DrawingArea::paintEvent(QPaintEvent *event)
 
 }
 
+//constraints
+// 0 < k, m <= 200
+// 0 < n <= 100000
 void DrawingArea::open(const QString &fileName){
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)){
@@ -28,24 +31,31 @@ void DrawingArea::open(const QString &fileName){
     int n = 0;
 
     QString str = in.readLine();
-    QStringList words = str.split(" ");
-    if (words.length() < 2){
+    deleteComment(str);
+    QStringList words = str.split(" ", QString::SkipEmptyParts);
+    if (words.length() != 2){
         file.close();
-        QMessageBox::about(this, tr("Fail"),tr("bad format"));
+        QMessageBox::about(this, tr("Fail"),tr("bad format in 1 line"));
         return;
     }
     k = words.at(0).toInt();
     m = words.at(1).toInt();
+    if (0 >= k || 0 >= m || k > 200 || m > 200){
+        file.close();
+        QMessageBox::about(this, tr("Fail"),tr("incorrect k or m"));
+        return;
+    }
 
     str = in.readLine();
-    words = str.split(" ");
-    if (words.length() < 1){
+    deleteComment(str);
+    words = str.split(" ", QString::SkipEmptyParts);
+    if (words.length() != 1){
         file.close();
-        QMessageBox::about(this, tr("Fail"),tr("bad format"));
+        QMessageBox::about(this, tr("Fail"),tr("bad format in 2 line"));
         return;
     }
     n = words.at(0).toInt();
-    if (0 > n || n > 10000){
+    if (0 >= n || n > 10000){
         file.close();
         QMessageBox::about(this, tr("Fail"),tr("incorrect n"));
         return;
@@ -53,10 +63,11 @@ void DrawingArea::open(const QString &fileName){
     QVector<QRgb> colors = QVector<QRgb>();
     for(int i = 0; i <=n; i++){
         str = in.readLine();
-        words = str.split(" ");
-        if (words.length() < 3){
+        deleteComment(str);
+        words = str.split(" ", QString::SkipEmptyParts);
+        if (words.length() != 3){
             file.close();
-            QMessageBox::about(this, tr("Fail"),tr("bad format"));
+            QMessageBox::about(this, tr("Fail"),tr("bad format in line ") + QString::number(1+2+i));
             return;
         }
         int red = words.at(0).toInt();
@@ -64,17 +75,18 @@ void DrawingArea::open(const QString &fileName){
         int blue = words.at(2).toInt();
         if (0 > red || 0 > green || 0 > blue || red > 255 || green > 255 || blue > 255){
             file.close();
-            QMessageBox::about(this, tr("Fail"),tr("bad format"));
+            QMessageBox::about(this, tr("Fail"),tr("incorrect color ") + QString::number(i));
             return;
         }
         colors.push_back(qRgb(red, green, blue));
     }
 
     str = in.readLine();
-    words = str.split(" ");
-    if (words.length() < 3){
+    deleteComment(str);
+    words = str.split(" ", QString::SkipEmptyParts);
+    if (words.length() != 3){
         file.close();
-        QMessageBox::about(this, tr("Fail"),tr("bad format"));
+        QMessageBox::about(this, tr("Fail"),tr("bad format in line ") + QString::number(1+2+n+1));
         return;
     }
     int red = words.at(0).toInt();
@@ -82,7 +94,7 @@ void DrawingArea::open(const QString &fileName){
     int blue = words.at(0).toInt();
     if (0 > red || 0 > green || 0 > blue || red > 255 || green > 255 || blue > 255){
         file.close();
-        QMessageBox::about(this, tr("Fail"),tr("bad format"));
+        QMessageBox::about(this, tr("Fail"),tr("incorrect isoline color"));
         return;
     }
 
@@ -133,4 +145,10 @@ void DrawingArea::setOptions(const Options options)
 {
     zone->setOptions(options);
     zone->update();
+}
+
+void DrawingArea::deleteComment(QString &str)
+{
+    QStringList list = str.split("//");
+    str = list.constFirst();
 }

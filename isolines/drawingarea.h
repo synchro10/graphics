@@ -27,6 +27,7 @@ private:
     Zone* zone = nullptr;
     Legend* legend = nullptr;
     QVBoxLayout *mainLayout = nullptr;
+    void deleteComment(QString& str);
 };
 
 #endif // DRAWINGAREA_H
