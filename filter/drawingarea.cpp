@@ -22,7 +22,6 @@ DrawingArea::DrawingArea(QWidget *parent) : QWidget(parent)
 
 void DrawingArea::paintEvent(QPaintEvent *event)
 {
-
 }
 
 void DrawingArea::open(const QString& fileName)
@@ -82,10 +81,7 @@ void DrawingArea::setControlPanel(QWidget *value)
     widget = item->widget();
     widget->hide();
     delete widget;
-
-    
-    
-   mainLayout->addWidget(controlPanel);
+    mainLayout->addWidget(controlPanel);
 }
 
 ZoneA *DrawingArea::getZoneA() const
