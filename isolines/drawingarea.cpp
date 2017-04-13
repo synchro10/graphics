@@ -10,6 +10,7 @@ DrawingArea::DrawingArea(QWidget *parent) : QWidget(parent)
     mainLayout->addWidget(legend);
     setLayout(mainLayout);
     zone->setLegend(legend);
+    connect(zone, &Zone::statusMessage, [this] (const QString message){emit(statusMessage(message));});
 }
 
 void DrawingArea::paintEvent(QPaintEvent *event)

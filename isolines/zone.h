@@ -39,7 +39,7 @@ public:
     void mousePressEvent(QMouseEvent *e) override;
     void mouseMoveEvent(QMouseEvent *e) override;
 signals:
-
+    void statusMessage(const QString& message);
 public slots:
 private:
     int width = 500;
@@ -47,6 +47,7 @@ private:
     QSharedPointer<QImage> image;
     Legend* legend = nullptr;
 
+    QString getStatus(QMouseEvent *e);
     void fillImage();
     void drawGrid();
     void drawAllIsolines();

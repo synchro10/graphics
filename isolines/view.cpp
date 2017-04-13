@@ -10,6 +10,8 @@ View::View(QWidget *parent)
     createMenus();
     createToolbar();
     configureDialogs();
+    statusBar()->setVisible(true);
+    connect(area, &DrawingArea::statusMessage, [this](const QString& message){statusBar()->showMessage(message, 10000);});
 }
 
 void View::createActions()

@@ -1,5 +1,6 @@
 #include "zone.h"
 #include <iostream>
+#include <qmath.h>
 
 Zone::Zone(QWidget *parent) : QWidget(parent)
 {
@@ -9,6 +10,7 @@ Zone::Zone(QWidget *parent) : QWidget(parent)
     customIsolines = QVector<double>();
     colors = QVector<QRgb>();
     defaultParams();
+    setMouseTracking(true);
 }
 
 void Zone::paintEvent(QPaintEvent *event)
@@ -23,9 +25,11 @@ void Zone::paintEvent(QPaintEvent *event)
 
 void Zone::defaultParams()
 {
-//    setFunction([](double x,double y){return x + y;});
-    setFunction([](double x,double y){return exp(-x*x - y*y/2)*cos(4*x)+exp(-3*((x+0.5)*(x+0.5)+y*y/2));});
+    setFunction([](double x,double y){return x + y;});
+//    setFunction([](double x,double y){return exp(-x*x - y*y/2)*cos(4*x)+exp(-3*((x+0.5)*(x+0.5)+y*y/2));});
 //    setFunction([](double x,double y){return x;});
+//    setFunction([](double x,double y){return sin(x * cos(M_PI / 4) - y * sin(M_PI / 4)) +
+//                                            cos(x * sin(M_PI / 4) + y * cos(M_PI / 4));});
     k = 50;
     m = 50;
     a = -2.0;
@@ -39,6 +43,7 @@ void Zone::defaultParams()
         colors.push_back(qRgb(0,255*(n-i)/n,0));
 //        std::cout << 0 << " " << 255*(n-i)/n << " " << 0 << std::endl;
     }
+    setIsolineColor(qRgb(255,255,255));
     updateValues();
     initLegend();
 }
@@ -112,7 +117,7 @@ void Zone::setOptions(const Options options)
         this->b = options.b;
         this->c = options.c;
         this->d = options.d;
-        reset();
+        updateValues();
     } else {
         QMessageBox::about(this, tr("Error"),
                            tr("incorrect options"));
@@ -145,12 +150,27 @@ void Zone::mousePressEvent(QMouseEvent *e)
 void Zone::mouseMoveEvent(QMouseEvent *e)
 {
     if (0 <= e->x() && e->x() < width && 0 <= e->y() && e->y() < height){
-        if (!customIsolines.isEmpty()){
-            customIsolines.removeLast();
-            reset();
+        if (e->buttons() == Qt::LeftButton){
+            if (!customIsolines.isEmpty()){
+                customIsolines.removeLast();
+                reset();
+            }
+            mousePressEvent(e);
         }
-        mousePressEvent(e);
+        emit(statusMessage(getStatus(e)));
     }
+}
+
+QString Zone::getStatus(QMouseEvent *e)
+{
+    auto coord = coordFromPixel(e->x(), e->y());
+    double value = function(coord.first, coord.second);
+    QString message = QString();
+    message += "x = " + QString::number(coord.first, 'f',3);
+    message += " y = " + QString::number(coord.second, 'f',3);
+    message += " f = " + QString::number(value, 'f',3);
+    return message;
+//    return QString("12");
 }
 
 void Zone::fillImage()
@@ -269,8 +289,10 @@ void Zone::drawIsoline(const ParametrsIsoline &params, const double value)
         double x = params.xi;
         if (qFabs(value - params.f1) > EPS && qFabs(params.f2 - params.f1) > EPS){
             x+= params.dx*((value - params.f1)/(params.f2 - params.f1 + EPS));
+        } else {
+            x += params.dx/2;
         }
-//        double x = params.xi + params.dx*((value - params.f1)/(params.f2 - params.f1 + EPS));
+        x = x < params.xi ? params.xi : x > params.xi1 ? params.xi1 : x;
         point[0] = std::pair<double, double>(x, params.yj1);
         count++;
     }
@@ -279,8 +301,10 @@ void Zone::drawIsoline(const ParametrsIsoline &params, const double value)
         double x = params.xi;
         if (qFabs(value - params.f3) > EPS && qFabs(params.f4 - params.f3) > EPS){
             x+= params.dx*((value - params.f3)/(params.f4 - params.f3 + EPS));
+        } else {
+            x += params.dx/2;
         }
-//        double x = params.xi + params.dx*((value - params.f3)/(params.f4 - params.f3 + EPS));
+        x = x < params.xi ? params.xi : x > params.xi1 ? params.xi1 : x;
         point[2] = std::pair<double, double>(x, params.yj);
         count++;
     }
@@ -289,7 +313,10 @@ void Zone::drawIsoline(const ParametrsIsoline &params, const double value)
         double y = params.yj;
         if (qFabs(value - params.f3) > EPS && qFabs(params.f1 - params.f3) > EPS){
             y += params.dy*((value - params.f3)/(params.f1 - params.f3 + EPS));
+        } else {
+            y += params.dy/2;
         }
+        y = y < params.yj ? params.yj : y > params.yj1 ? params.yj1 : y;
         point[3] = std::pair<double, double>(params.xi, y);
         count++;
     }
@@ -298,7 +325,10 @@ void Zone::drawIsoline(const ParametrsIsoline &params, const double value)
         double y = params.yj;
         if (qFabs(value - params.f4) > EPS && qFabs(params.f2 - params.f4) > EPS){
             y += params.dy*((value - params.f4)/(params.f2 - params.f4 + EPS));
+        } else {
+            y += params.dy/2;
         }
+        y = y < params.yj ? params.yj : y > params.yj1 ? params.yj1 : y;
         point[1] = std::pair<double, double>(params.xi1, y);
         count++;
     }
@@ -380,13 +410,13 @@ QPoint Zone::pixelFromCoord(std::pair<double, double>& coord)
 {
     double x = coord.first;
     double y = coord.second;
-    return QPoint((x - a)*width/(b - a), height - (y - c)*height/(d - c));
+    return QPoint((x - a)*(width-1)/(b - a), (height-1) - (y - c)*(height-1)/(d - c));
 }
 
 std::pair<double, double> Zone::coordFromPixel(int i, int j)
 {
-    double x = (double)(b-a)*i/width + a;
-    double y = (double)(d-c)*(height - j)/height + c;
+    double x = (double)(b-a)*i/(width-1) + a;
+    double y = (double)(d-c)*(height-1 - j)/(height-1) + c;
     return std::pair<double, double>(x,y);
 }
 

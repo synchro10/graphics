@@ -21,7 +21,7 @@ public:
     const Options getOptions();
     void setOptions(const Options options);
 signals:
-
+    void statusMessage(const QString& message);
 public slots:
 private:
     Zone* zone = nullptr;
