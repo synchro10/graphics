@@ -33,6 +33,9 @@ void View::createActions()
     isolineAct = new QAction(tr("&Isoline"), this);
     connect(isolineAct, SIGNAL(triggered()), this, SLOT(isoline()));
 
+    pointAct = new QAction(tr("&Points"), this);
+    connect(pointAct, SIGNAL(triggered()), this, SLOT(point()));
+
     clearAct = new QAction(tr("&Clear"), this);
     connect(clearAct, SIGNAL(triggered()), this, SLOT(clear()));
 
@@ -51,6 +54,7 @@ void View::createMenus()
     fileMenu->addAction(interpolateAct);
     fileMenu->addAction(gridAct);
     fileMenu->addAction(isolineAct);
+    fileMenu->addAction(pointAct);
     fileMenu->addAction(clearAct);
     fileMenu->addAction(exitAct);
 
@@ -70,6 +74,7 @@ void View::createToolbar()
     toolbar->addAction(interpolateAct);
     toolbar->addAction(gridAct);
     toolbar->addAction(isolineAct);
+    toolbar->addAction(pointAct);
     toolbar->addAction(clearAct);
     toolbar->addAction(optionAct);
     toolbar->addSeparator();
@@ -97,25 +102,26 @@ void View::open()
 void View::interpolation()
 {
     area->setInterpolation();
-    area->update();
 }
 
 void View::grid()
 {
     area->setGrid();
-    area->update();
 }
 
 void View::isoline()
 {
     area->setIsoline();
-    area->update();
+}
+
+void View::point()
+{
+    area->setPoint();
 }
 
 void View::clear()
 {
     area->clear();
-    area->update();
 }
 
 void View::showOptions()
@@ -127,7 +133,6 @@ void View::showOptions()
 void View::setOptions(const Options options)
 {
     area->setOptions(options);
-    area->update();
     optionsDiagog->close();
 }
 

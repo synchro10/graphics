@@ -24,6 +24,7 @@ public:
     void setInterpolation();
     void setGrid();
     void setIsoline();
+    void setPoint();
     void setFunction(double (*func_)(double x, double y));
     void setColors(const QVector<QRgb> &value);
     void setIsolineColor(QRgb color);
@@ -67,6 +68,7 @@ private:
     bool isInterpolate = false;
     bool isGrid = false;
     bool isIsoline = false;
+    bool isPoint = false;
     double minValue = 0.0;
     double maxValue = 0.0;
     double step = 0.0;
@@ -85,6 +87,8 @@ private:
     void drawLineY(QPoint point1, QPoint point2);
     void drawLineX(QPoint point1, QPoint point2);
     void drawLine(QPoint point1, QPoint point2);
+    void drawLinePoint(QPoint point1, QPoint point2);
+    void drawPoint3(QPoint point);
 };
 
 class ParametrsIsoline{

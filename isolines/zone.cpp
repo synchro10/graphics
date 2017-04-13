@@ -28,8 +28,7 @@ void Zone::defaultParams()
     setFunction([](double x,double y){return x + y;});
 //    setFunction([](double x,double y){return exp(-x*x - y*y/2)*cos(4*x)+exp(-3*((x+0.5)*(x+0.5)+y*y/2));});
 //    setFunction([](double x,double y){return x;});
-//    setFunction([](double x,double y){return sin(x * cos(M_PI / 4) - y * sin(M_PI / 4)) +
-//                                            cos(x * sin(M_PI / 4) + y * cos(M_PI / 4));});
+//    setFunction([](double x,double y){return sin(x * cos(M_PI/4) - y * sin(M_PI/4)) + cos(x * sin(M_PI/4) + y * cos(M_PI/4));});
     k = 50;
     m = 50;
     a = -2.0;
@@ -39,7 +38,6 @@ void Zone::defaultParams()
     n = 10;
     colors.clear();
     for (int i = 0; i <= n; i++){
-//        colors.push_back(qRgb(255*(n-i)/n,255*(n-i)/n,255*(n-i)/n));
         colors.push_back(qRgb(0,255*(n-i)/n,0));
 //        std::cout << 0 << " " << 255*(n-i)/n << " " << 0 << std::endl;
     }
@@ -63,6 +61,12 @@ void Zone::setGrid()
 void Zone::setIsoline()
 {
     isIsoline = !isIsoline;
+    reset();
+}
+
+void Zone::setPoint()
+{
+    isPoint = !isPoint;
     reset();
 }
 
@@ -118,6 +122,7 @@ void Zone::setOptions(const Options options)
         this->c = options.c;
         this->d = options.d;
         updateValues();
+        initLegend();
     } else {
         QMessageBox::about(this, tr("Error"),
                            tr("incorrect options"));
@@ -170,7 +175,6 @@ QString Zone::getStatus(QMouseEvent *e)
     message += " y = " + QString::number(coord.second, 'f',3);
     message += " f = " + QString::number(value, 'f',3);
     return message;
-//    return QString("12");
 }
 
 void Zone::fillImage()
@@ -334,28 +338,28 @@ void Zone::drawIsoline(const ParametrsIsoline &params, const double value)
     }
     if (count == 2){
         if (intersection[0] && intersection[1]){
-            drawLine(pixelFromCoord(point[0]), pixelFromCoord(point[1]));
+            drawLinePoint(pixelFromCoord(point[0]), pixelFromCoord(point[1]));
         } else if (intersection[0] && intersection[2]){
-            drawLine(pixelFromCoord(point[0]), pixelFromCoord(point[2]));
+            drawLinePoint(pixelFromCoord(point[0]), pixelFromCoord(point[2]));
         } else if (intersection[0] && intersection[3]){
-            drawLine(pixelFromCoord(point[0]), pixelFromCoord(point[3]));
+            drawLinePoint(pixelFromCoord(point[0]), pixelFromCoord(point[3]));
         } else if (intersection[1] && intersection[2]){
-            drawLine(pixelFromCoord(point[1]), pixelFromCoord(point[2]));
+            drawLinePoint(pixelFromCoord(point[1]), pixelFromCoord(point[2]));
         } else if (intersection[1] && intersection[3]){
-            drawLine(pixelFromCoord(point[1]), pixelFromCoord(point[3]));
+            drawLinePoint(pixelFromCoord(point[1]), pixelFromCoord(point[3]));
         } else if (intersection[2] && intersection[3]){
-            drawLine(pixelFromCoord(point[2]), pixelFromCoord(point[3]));
+            drawLinePoint(pixelFromCoord(point[2]), pixelFromCoord(point[3]));
         }
     }
     if (count == 4){
         //middle point
         sign[4] = function((params.xi + params.xi1)/2, (params.yj + params.yj1)/2) > value;
         if(sign[0] == sign[4]){
-            drawLine(pixelFromCoord(point[0]), pixelFromCoord(point[1]));
-            drawLine(pixelFromCoord(point[2]), pixelFromCoord(point[3]));
+            drawLinePoint(pixelFromCoord(point[0]), pixelFromCoord(point[1]));
+            drawLinePoint(pixelFromCoord(point[2]), pixelFromCoord(point[3]));
         } else {
-            drawLine(pixelFromCoord(point[0]), pixelFromCoord(point[3]));
-            drawLine(pixelFromCoord(point[1]), pixelFromCoord(point[2]));
+            drawLinePoint(pixelFromCoord(point[0]), pixelFromCoord(point[3]));
+            drawLinePoint(pixelFromCoord(point[1]), pixelFromCoord(point[2]));
         }
     }
 }
@@ -404,6 +408,7 @@ void Zone::initLegend()
     }
     legend->setN(n);
     legend->setColors(&colors);
+    legend->setValues(&values);
 }
 
 QPoint Zone::pixelFromCoord(std::pair<double, double>& coord)
@@ -436,6 +441,30 @@ void Zone::drawLine(QPoint point1, QPoint point2)
         drawLineX(point1, point2);
     } else {
         drawLineY(point1, point2);
+    }
+}
+
+void Zone::drawLinePoint(QPoint point1, QPoint point2)
+{
+    if (isPoint){
+        drawPoint3(point1);
+        drawPoint3(point2);
+    }
+    drawLine(point1, point2);
+}
+
+void Zone::drawPoint3(QPoint point)
+{
+    int x = point.x();
+    int y = point.y();
+    if (0 < x && x < width - 1 && 0 < y && y < height - 1){
+        QRgb* pixels = reinterpret_cast<QRgb*>(image->bits());
+        int pixPerLine = image->bytesPerLine() / sizeof(QRgb);
+        for(int j = -1; j <= 1; j++){
+            for(int i = -1; i <= 1; i++){
+                pixels[x + i + (y+j)*pixPerLine] = lineColor;
+            }
+        }
     }
 }
 

@@ -10,6 +10,7 @@ void Legend::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QRect dirtyRect = event->rect();
+    dirtyRect.setTop(15);
     if (colors == nullptr){
         return;
     }
@@ -28,6 +29,13 @@ void Legend::paintEvent(QPaintEvent *event)
         }
     }
     painter.drawImage(dirtyRect, *image.data(), dirtyRect);
+    if (values == nullptr){
+        return;
+    }
+    for(int i = 1; i <= n; i++){
+        QString str = QString::number((*values)[i-1], 'f', 2);
+        painter.drawText(i*width/(n+1) - str.length()*6/2, 10, str);
+    }
 }
 
 void Legend::setN(int value)
@@ -71,4 +79,9 @@ QRgb Legend::getInterpolateColor(int i)
     blue = blue > 255 ? 255 : blue < 0 ? 0 : blue;
     green = green > 255 ? 255 : green < 0 ? 0 : green;
     return qRgb(red, green, blue);
+}
+
+void Legend::setValues(QVector<double> *value)
+{
+    values = value;
 }

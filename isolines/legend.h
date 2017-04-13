@@ -18,6 +18,8 @@ public:
 
     void setColors(QVector<QRgb> *value);
 
+    void setValues(QVector<double> *value);
+
 signals:
 
 public slots:
@@ -31,6 +33,7 @@ private:
     int n = 0;
     bool isInterpolate = false;
     QVector<QRgb>* colors;
+    QVector<double>* values;
 };
 
 #endif // LEGEND_H

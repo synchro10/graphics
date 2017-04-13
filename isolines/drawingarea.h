@@ -12,11 +12,11 @@ class DrawingArea : public QWidget
     Q_OBJECT
 public:
     explicit DrawingArea(QWidget *parent = 0);
-    void paintEvent(QPaintEvent *event) override;
     void open(const QString &fileName);
     void setInterpolation();
     void setGrid();
     void setIsoline();
+    void setPoint();
     void clear();
     const Options getOptions();
     void setOptions(const Options options);

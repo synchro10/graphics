@@ -13,11 +13,6 @@ DrawingArea::DrawingArea(QWidget *parent) : QWidget(parent)
     connect(zone, &Zone::statusMessage, [this] (const QString message){emit(statusMessage(message));});
 }
 
-void DrawingArea::paintEvent(QPaintEvent *event)
-{
-
-}
-
 //constraints
 // 0 < k, m <= 200
 // 0 < n <= 100000
@@ -117,6 +112,7 @@ void DrawingArea::setInterpolation()
     zone->setInterpolation();
     legend->setInterpolation();
     zone->update();
+    legend->update();
 }
 
 void DrawingArea::setGrid()
@@ -128,6 +124,12 @@ void DrawingArea::setGrid()
 void DrawingArea::setIsoline()
 {
     zone->setIsoline();
+    zone->update();
+}
+
+void DrawingArea::setPoint()
+{
+    zone->setPoint();
     zone->update();
 }
 
@@ -146,6 +148,7 @@ void DrawingArea::setOptions(const Options options)
 {
     zone->setOptions(options);
     zone->update();
+    legend->update();
 }
 
 void DrawingArea::deleteComment(QString &str)

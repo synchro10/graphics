@@ -19,6 +19,7 @@ private slots:
     void interpolation();
     void grid();
     void isoline();
+    void point();
     void clear();
     void showOptions();
     void setOptions(const Options options);
@@ -38,6 +39,7 @@ private:
     QAction *interpolateAct;
     QAction *gridAct;
     QAction *isolineAct;
+    QAction *pointAct;
     QAction *clearAct;
     QAction *optionAct;
     QAction *exitAct;
