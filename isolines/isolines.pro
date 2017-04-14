@@ -5,12 +5,15 @@
 #-------------------------------------------------
 
 QT       += core gui
+CONFIG += c++11
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = isolines
 TEMPLATE = app
 
+CONFIG += -Wc++0x-compat
 
 SOURCES += main.cpp\
         view.cpp \

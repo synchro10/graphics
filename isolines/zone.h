@@ -9,6 +9,8 @@
 #include "legend.h"
 #include "options.h"
 
+typedef std::pair<double, double> Coordinate;
+
 class ParametrsIsoline;
 
 class Zone : public QWidget

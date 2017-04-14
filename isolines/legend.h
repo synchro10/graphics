@@ -16,9 +16,11 @@ public:
 
     void setInterpolation();
 
-    void setColors(QVector<QRgb> *value);
+    void setColors(const QVector<QRgb>& value);
 
-    void setValues(QVector<double> *value);
+    void setValues(const QVector<double>& value);
+
+    void init(int n, const QVector<QRgb>& colors, const QVector<double>& values);
 
 signals:
 
@@ -32,8 +34,8 @@ private:
 
     int n = 0;
     bool isInterpolate = false;
-    QVector<QRgb>* colors;
-    QVector<double>* values;
+    QVector<QRgb> colors = QVector<QRgb>();
+    QVector<double> values = QVector<double>();
 };
 
 #endif // LEGEND_H

@@ -11,7 +11,7 @@ void Legend::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     QRect dirtyRect = event->rect();
     dirtyRect.setTop(15);
-    if (colors == nullptr){
+    if (colors.isEmpty()){
         return;
     }
     QRgb* pixels = reinterpret_cast<QRgb*>(image->bits());
@@ -20,7 +20,7 @@ void Legend::paintEvent(QPaintEvent *event)
         int number = (i*(n+1))/width;
         QRgb color;
         if (!isInterpolate){
-            color = (*colors)[number];
+            color = (colors)[number];
         } else {
             color = getInterpolateColor(i);
         }
@@ -29,11 +29,11 @@ void Legend::paintEvent(QPaintEvent *event)
         }
     }
     painter.drawImage(dirtyRect, *image.data(), dirtyRect);
-    if (values == nullptr){
+    if (values.isEmpty() || n > 12){
         return;
     }
     for(int i = 1; i <= n; i++){
-        QString str = QString::number((*values)[i-1], 'f', 2);
+        QString str = QString::number((values)[i-1], 'f', 2);
         painter.drawText(i*width/(n+1) - str.length()*6/2, 10, str);
     }
 }
@@ -48,19 +48,19 @@ void Legend::setInterpolation()
     isInterpolate = !isInterpolate;
 }
 
-void Legend::setColors(QVector<QRgb> *value)
+void Legend::setColors(const QVector<QRgb> &value)
 {
-    colors = value;
+    colors = QVector<QRgb>(value);
 }
 
 QRgb Legend::getInterpolateColor(int i)
 {
     int number = (i*(n+1))/width;
-    QColor color1 = QColor((*colors)[number]);
+    QColor color1 = QColor((colors)[number]);
     if (number >= n){
         return color1.rgb();
     }
-    QColor color2 = QColor((*colors)[number+1]);
+    QColor color2 = QColor((colors)[number+1]);
     int red1  = color1.red();
     int red2 = color2.red();
     int green1 = color1.green();
@@ -81,7 +81,14 @@ QRgb Legend::getInterpolateColor(int i)
     return qRgb(red, green, blue);
 }
 
-void Legend::setValues(QVector<double> *value)
+void Legend::setValues(const QVector<double> &value)
 {
-    values = value;
+    values = QVector<double>(value);
+}
+
+void Legend::init(int n, const QVector<QRgb> &colors, const QVector<double> &values)
+{
+    this->n = n;
+    this->colors = QVector<QRgb>(colors);
+    this->values = QVector<double>(values);
 }

@@ -25,17 +25,15 @@ void Zone::paintEvent(QPaintEvent *event)
 
 void Zone::defaultParams()
 {
-    setFunction([](double x,double y){return x + y;});
-//    setFunction([](double x,double y){return exp(-x*x - y*y/2)*cos(4*x)+exp(-3*((x+0.5)*(x+0.5)+y*y/2));});
-//    setFunction([](double x,double y){return x;});
-//    setFunction([](double x,double y){return sin(x * cos(M_PI/4) - y * sin(M_PI/4)) + cos(x * sin(M_PI/4) + y * cos(M_PI/4));});
-    k = 50;
-    m = 50;
-    a = -2.0;
-    c = -4.0;
-    b = 2.0;
-    d = 4.0;
-    n = 10;
+//    setFunction([](double x,double y){return x*x + y*y;});
+    setFunction([](double x,double y){return sin(x*y);});
+    k = 5;
+    m = 5;
+    a = -1.0;
+    c = -1.0;
+    b = 1.0;
+    d = 1.0;
+    n = 4;
     colors.clear();
     for (int i = 0; i <= n; i++){
         colors.push_back(qRgb(0,255*(n-i)/n,0));
@@ -78,7 +76,6 @@ void Zone::setFunction(double (*func_)(double, double))
 void Zone::setColors(const QVector<QRgb> &value)
 {
     colors = value;
-    legend->setColors(&colors);
 }
 
 void Zone::setIsolineColor(QRgb color)
@@ -281,59 +278,59 @@ void Zone::drawIsoline(const ParametrsIsoline &params, const double value)
 {
     bool sign[5];
     bool intersection[4] = {false};
-    std::pair<double, double> point[4];
+    Coordinate point[4];
     sign[0] = params.f1 > value;
     sign[1] = params.f2 > value;
     sign[2] = params.f3 > value;
     sign[3] = params.f4 > value;
-    double EPS = 0.000001;
+    double EPS = 0.0000001;
     int count = 0;
     if (sign[0] != sign[1]){
         intersection[0] = true;
         double x = params.xi;
         if (qFabs(value - params.f1) > EPS && qFabs(params.f2 - params.f1) > EPS){
-            x+= params.dx*((value - params.f1)/(params.f2 - params.f1 + EPS));
+            x += params.dx*(qFabs(value - params.f1)/qFabs(params.f2 - params.f1  ));
         } else {
             x += params.dx/2;
         }
         x = x < params.xi ? params.xi : x > params.xi1 ? params.xi1 : x;
-        point[0] = std::pair<double, double>(x, params.yj1);
+        point[0] = Coordinate(x, params.yj1);
         count++;
     }
     if (sign[2] != sign[3]){
         intersection[2] = true;
         double x = params.xi;
         if (qFabs(value - params.f3) > EPS && qFabs(params.f4 - params.f3) > EPS){
-            x+= params.dx*((value - params.f3)/(params.f4 - params.f3 + EPS));
+            x+= params.dx*(qFabs(value - params.f3)/qFabs(params.f4 - params.f3  ));
         } else {
             x += params.dx/2;
         }
         x = x < params.xi ? params.xi : x > params.xi1 ? params.xi1 : x;
-        point[2] = std::pair<double, double>(x, params.yj);
+        point[2] = Coordinate(x, params.yj);
         count++;
     }
     if (sign[0] != sign[2]){
         intersection[3] = true;
         double y = params.yj;
         if (qFabs(value - params.f3) > EPS && qFabs(params.f1 - params.f3) > EPS){
-            y += params.dy*((value - params.f3)/(params.f1 - params.f3 + EPS));
+            y += params.dy*(qFabs(value - params.f3)/qFabs(params.f1 - params.f3  ));
         } else {
             y += params.dy/2;
         }
         y = y < params.yj ? params.yj : y > params.yj1 ? params.yj1 : y;
-        point[3] = std::pair<double, double>(params.xi, y);
+        point[3] = Coordinate(params.xi, y);
         count++;
     }
     if (sign[1] != sign[3]){
         intersection[1] = true;
         double y = params.yj;
         if (qFabs(value - params.f4) > EPS && qFabs(params.f2 - params.f4) > EPS){
-            y += params.dy*((value - params.f4)/(params.f2 - params.f4 + EPS));
+            y += params.dy*(qFabs(value - params.f4)/qFabs(params.f2 - params.f4  ));
         } else {
             y += params.dy/2;
         }
         y = y < params.yj ? params.yj : y > params.yj1 ? params.yj1 : y;
-        point[1] = std::pair<double, double>(params.xi1, y);
+        point[1] = Coordinate(params.xi1, y);
         count++;
     }
     if (count == 2){
@@ -353,13 +350,84 @@ void Zone::drawIsoline(const ParametrsIsoline &params, const double value)
     }
     if (count == 4){
         //middle point
-        sign[4] = function((params.xi + params.xi1)/2, (params.yj + params.yj1)/2) > value;
+        double f5 = function((params.xi + params.xi1)/2, (params.yj + params.yj1)/2);
+        sign[4] = f5 > value;
+        double x = 0.0;
+        double y = 0.0;
+        const double dx = params.dx/2;
+        const double dy = params.dy/2;
         if(sign[0] == sign[4]){
-            drawLinePoint(pixelFromCoord(point[0]), pixelFromCoord(point[1]));
-            drawLinePoint(pixelFromCoord(point[2]), pixelFromCoord(point[3]));
+            //point between 2 edge and 3 edge
+            x = params.xi;
+            y = params.yj;
+            if (qFabs(value - params.f3) > EPS && qFabs(f5 - params.f3) > EPS){
+                x += dx*(qFabs(value - params.f3)/qFabs(f5 - params.f3  ));
+                y += dy*(qFabs(value - params.f3)/qFabs(f5 - params.f3  ));
+            } else {
+                x += dx/2;
+                y += dy/2;
+            }
+            x = x < params.xi ? params.xi : x > params.xi + dx ? params.xi + dx : x;
+            y = y < params.yj ? params.yj : y > params.yj + dy ? params.yj + dy : y;
+
+            Coordinate point23 = Coordinate(x, y);
+
+            //point between 0 edge and 1 edge
+            x = params.xi + dx;
+            y = params.yj + dy;
+            if (qFabs(value - f5) > EPS && qFabs(params.f2 - f5) > EPS){
+                x += dx*(qFabs(value - f5)/qFabs(params.f2 - f5  ));
+                y += dy*(qFabs(value - f5)/qFabs(params.f2 - f5  ));
+            } else {
+                x += dx/2;
+                y += dy/2;
+            }
+            x = x < params.xi + dx ? params.xi + dx: x > params.xi1 ? params.xi1 : x;
+            y = y < params.yj1 - dy ? params.yj1 - dy : y > params.yj1 ? params.yj1 : y;
+
+            Coordinate point01 = Coordinate(x, y);
+
+            drawLinePoint(pixelFromCoord(point[0]), pixelFromCoord(point01));
+            drawLinePoint(pixelFromCoord(point01), pixelFromCoord(point[1]));
+            drawLinePoint(pixelFromCoord(point[2]), pixelFromCoord(point23));
+            drawLinePoint(pixelFromCoord(point23), pixelFromCoord(point[3]));
+
         } else {
-            drawLinePoint(pixelFromCoord(point[0]), pixelFromCoord(point[3]));
-            drawLinePoint(pixelFromCoord(point[1]), pixelFromCoord(point[2]));
+            // point between 1 edge and 2 edge
+            x = params.xi + dx;
+            y = params.yj + dy;
+            if (qFabs(value - f5) > EPS && qFabs(f5 - params.f4) > EPS){
+                x += dx*(qFabs(value - f5)/qFabs(f5 - params.f4  ));
+                y -= dy*(qFabs(value - f5)/qFabs(f5 - params.f4  ));
+            } else {
+                x += dx/2;
+                y -= dy/2;
+            }
+            x = x < params.xi + dx ? params.xi + dx : x > params.xi1 ? params.xi1 : x;
+            y = y < params.yj ? params.yj : y > params.yj + dy ? params.yj + dy : y;
+
+            Coordinate point12 = Coordinate(x, y);
+
+            // point between 0 edge and 3 edge
+            x = params.xi;
+            y = params.yj1;
+            if (qFabs(value - params.f1) > EPS && qFabs(params.f1 - f5) > EPS){
+                x += dx*(qFabs(value - params.f1)/qFabs(params.f1 - f5  ));
+                y -= dy*(qFabs(value - params.f1)/qFabs(params.f1 - f5  ));
+            } else {
+                x += dx/2;
+                y -= dy/2;
+            }
+            x = x < params.xi ? params.xi : x > params.xi + dx ? params.xi + dx : x;
+            y = y < params.yj + dy ? params.yj + dy : y > params.yj1 ? params.yj1 : y;
+
+            Coordinate point03 = Coordinate(x, y);
+
+            drawLinePoint(pixelFromCoord(point[0]), pixelFromCoord(point03));
+            drawLinePoint(pixelFromCoord(point03), pixelFromCoord(point[3]));
+            drawLinePoint(pixelFromCoord(point[1]), pixelFromCoord(point12));
+            drawLinePoint(pixelFromCoord(point12), pixelFromCoord(point[2]));
+
         }
     }
 }
@@ -398,6 +466,7 @@ void Zone::updateValues()
     this->maxValue = zMax;
     this->step = step;
     this->clearIsolines();
+    initLegend();
     reset();
 }
 
@@ -406,23 +475,21 @@ void Zone::initLegend()
     if (legend == nullptr){
         return;
     }
-    legend->setN(n);
-    legend->setColors(&colors);
-    legend->setValues(&values);
+    legend->init(n, colors, values);
 }
 
-QPoint Zone::pixelFromCoord(std::pair<double, double>& coord)
+QPoint Zone::pixelFromCoord(Coordinate& coord)
 {
     double x = coord.first;
     double y = coord.second;
     return QPoint((x - a)*(width-1)/(b - a), (height-1) - (y - c)*(height-1)/(d - c));
 }
 
-std::pair<double, double> Zone::coordFromPixel(int i, int j)
+Coordinate Zone::coordFromPixel(int i, int j)
 {
     double x = (double)(b-a)*i/(width-1) + a;
     double y = (double)(d-c)*(height-1 - j)/(height-1) + c;
-    return std::pair<double, double>(x,y);
+    return Coordinate(x,y);
 }
 
 void Zone::reset()

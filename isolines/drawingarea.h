@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QVector>
+#include <QStringList>
 #include "zone.h"
 #include "legend.h"
 #include "options.h"
