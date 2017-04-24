@@ -24,6 +24,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        view.cpp
+        view.cpp \
+    drawingarea.cpp \
+    viewmodel.cpp \
+    model.cpp
 
-HEADERS  += view.h
+HEADERS  += view.h \
+    drawingarea.h \
+    viewmodel.h \
+    model.h
