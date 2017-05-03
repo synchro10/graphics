@@ -27,9 +27,13 @@ SOURCES += main.cpp\
         view.cpp \
     drawingarea.cpp \
     viewmodel.cpp \
-    model.cpp
+    model.cpp \
+    optionsdialog.cpp \
+    engine/graphicengine.cpp
 
 HEADERS  += view.h \
     drawingarea.h \
     viewmodel.h \
-    model.h
+    model.h \
+    optionsdialog.h \
+    engine/graphicengine.h
