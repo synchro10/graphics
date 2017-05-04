@@ -29,11 +29,17 @@ SOURCES += main.cpp\
     viewmodel.cpp \
     model.cpp \
     optionsdialog.cpp \
-    engine/graphicengine.cpp
+    engine/graphicengine.cpp \
+    engine/scene.cpp \
+    engine/object.cpp \
+    engine/camera.cpp
 
 HEADERS  += view.h \
     drawingarea.h \
     viewmodel.h \
     model.h \
     optionsdialog.h \
-    engine/graphicengine.h
+    engine/graphicengine.h \
+    engine/scene.h \
+    engine/object.h \
+    engine/camera.h
