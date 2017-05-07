@@ -4,6 +4,7 @@
 #include <QVector3D>
 #include <QVector4D>
 #include <QMatrix4x4>
+#include <QtMath>
 
 class Camera
 {
@@ -16,7 +17,9 @@ public:
     QVector3D position;
     QVector3D rotation;
     QVector3D scale;
-    uint fov;
+    //fov in radians
+    float fovX;
+    float fovY;
     uint height;
     uint width;
     float nearPlane;
@@ -25,6 +28,8 @@ public:
     QMatrix4x4 projectionTransform;
 private:
     void update();
+    void calcViewTransform();
+    void calcProjectionTransform();
 };
 
 #endif // CAMERA_H

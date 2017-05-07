@@ -30,9 +30,10 @@ SOURCES += main.cpp\
     model.cpp \
     optionsdialog.cpp \
     engine/graphicengine.cpp \
-    engine/scene.cpp \
     engine/object.cpp \
-    engine/camera.cpp
+    engine/camera.cpp \
+    wire/wiremodel.cpp \
+    engine/graphics2d.cpp
 
 HEADERS  += view.h \
     drawingarea.h \
@@ -40,6 +41,7 @@ HEADERS  += view.h \
     model.h \
     optionsdialog.h \
     engine/graphicengine.h \
-    engine/scene.h \
     engine/object.h \
-    engine/camera.h
+    engine/camera.h \
+    wire/wiremodel.h \
+    engine/graphics2d.h

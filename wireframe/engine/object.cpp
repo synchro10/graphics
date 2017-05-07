@@ -15,6 +15,11 @@ void Object::defaultSettings()
 
 void Object::update()
 {
+    calcWorldTransform();
+}
+
+void Object::calcWorldTransform()
+{
     QMatrix4x4 scaleMatrix = QMatrix4x4(scale.x(), 0, 0, 0,
                                         0, scale.y(), 0, 0,
                                         0, 0, scale.z(), 0,
@@ -43,4 +48,9 @@ void Object::update()
 
     //todo test
     worldTransform = scaleMatrix * rotationMatrix * translationMatrix;
+}
+
+WireModel Object::getWireModel() const
+{
+    return wireModel;
 }
