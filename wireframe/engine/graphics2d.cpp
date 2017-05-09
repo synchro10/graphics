@@ -18,9 +18,11 @@ void Graphics2D::drawLine(QPoint& point1, QPoint& point2, QRgb color, QImage& im
     }
 }
 
-bool Graphics2D::clippingLine(QPoint& point1, QPoint& point2, QImage& image)
+bool Graphics2D::clippingLine(QPoint& p1, QPoint& p2, QImage& image)
 {
-    //todo
+    int height = image.height();
+    int width = image.width();
+
     return true;
 }
 

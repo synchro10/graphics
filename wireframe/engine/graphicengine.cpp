@@ -27,27 +27,45 @@ QImage &GraphicEngine::render()
             }
         }
     }
+
 }
 
+//todo test
 bool GraphicEngine::zClipping(QVector3D &p1, QVector3D &p2)
 {
     const float farPlane = camera.farPlane;
     const float nearPlane = camera.nearPlane;
-    if (p1.z > farPlane && p2.z > farPlane || p1.z < nearPlane && p2.z < nearPlane){
+    if ((p1.z() > farPlane && p2.z() > farPlane) || (p1.z() < nearPlane && p2.z() < nearPlane)){
         return false;
     } else {
         float x = 0.0f;
         float y = 0.0f;
         if (p1.z() < nearPlane){
-            //todo
+            x = (p2.x() - p1.x())*(nearPlane - p1.z())/(p2.z() - p1.z()) + p1.x();
+            y = (p2.y() - p1.y())*(nearPlane - p1.z())/(p2.z() - p1.z()) + p1.y();
+            p1.setX(x);
+            p1.setY(y);
+            p1.setZ(nearPlane);
         } else if(p1.z() > farPlane){
-
+            x = (p2.x() - p1.x())*(farPlane - p1.z())/(p2.z() - p1.z()) + p1.x();
+            y = (p2.y() - p1.y())*(farPlane - p1.z())/(p2.z() - p1.z()) + p1.y();
+            p1.setX(x);
+            p1.setY(y);
+            p1.setZ(farPlane);
         }
         if (p2.z() < nearPlane){
-
+            x = (p2.x() - p1.x())*(nearPlane - p1.z())/(p2.z() - p1.z()) + p1.x();
+            y = (p2.y() - p1.y())*(nearPlane - p1.z())/(p2.z() - p1.z()) + p1.y();
+            p2.setX(x);
+            p2.setY(y);
+            p2.setZ(nearPlane);
         } else if(p2.z() > farPlane){
-
+            x = (p2.x() - p1.x())*(farPlane - p1.z())/(p2.z() - p1.z()) + p1.x();
+            y = (p2.y() - p1.y())*(farPlane - p1.z())/(p2.z() - p1.z()) + p1.y();
+            p2.setX(x);
+            p2.setY(y);
+            p2.setZ(farPlane);
         }
-
+        return true;
     }
 }
