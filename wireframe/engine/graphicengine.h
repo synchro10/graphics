@@ -14,15 +14,23 @@ class GraphicEngine
 {
 public:
     GraphicEngine();
-    QImage& render();
+    QImage *render();
+    void setCamera(Camera& camera);
+    void addObject(Object& object);
 private:
     Camera camera;
     QVector<Object> objects;
-    QImage frame;
+    QImage* frame;
 
     int width = 800;
     int height = 600;
+    const QRgb defaultLineColor = qRgb(255,255,255);
+    const QRgb defaultFontColor = qRgb(0,0,0);
+
     bool zClipping(QVector3D &p1, QVector3D &p2);
+    void clearFrame();
 };
+
+
 
 #endif // GRAPHICENGINE_H

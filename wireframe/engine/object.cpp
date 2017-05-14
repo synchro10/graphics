@@ -50,6 +50,11 @@ void Object::calcWorldTransform()
     worldTransform = scaleMatrix * rotationMatrix * translationMatrix;
 }
 
+void Object::setWireModel(const WireModel &value)
+{
+    wireModel = value;
+}
+
 WireModel Object::getWireModel() const
 {
     return wireModel;

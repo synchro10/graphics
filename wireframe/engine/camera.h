@@ -20,10 +20,11 @@ public:
     //fov in radians
     float fovX;
     float fovY;
-    uint height;
-    uint width;
+    float height;
+    float width;
     float nearPlane;
     float farPlane;
+    float aspect;
     QMatrix4x4 viewTransform;
     QMatrix4x4 projectionTransform;
 private:

@@ -10,10 +10,11 @@ void Camera::defaultSettings()
     position = QVector3D(-10, 0, 0);
     rotation = QVector3D(0, 0, 0);
     scale = QVector3D(1, 1, 1);
-    height = 600;
-    width = 800;
     nearPlane = 0.1;
     farPlane = 50;
+    fovX = 2.0;
+    aspect = 4/3;
+    update();
 }
 
 QMatrix4x4 Camera::getViewTransform() const
@@ -28,6 +29,8 @@ QMatrix4x4 Camera::getProjectionTransform() const
 
 void Camera::update()
 {
+    width = 2 * nearPlane * qTan(fovX/2);
+    height = width / aspect;
     calcViewTransform();
     calcProjectionTransform();
 }

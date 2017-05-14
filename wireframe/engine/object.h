@@ -18,6 +18,7 @@ public:
     QVector3D scale;
     QMatrix4x4 worldTransform;
     WireModel getWireModel() const;
+    void setWireModel(const WireModel &value);
 
 private:
     void update();

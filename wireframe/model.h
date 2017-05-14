@@ -11,6 +11,7 @@ class Model : public QObject
     Q_OBJECT
 public:
     explicit Model(QObject *parent = 0);
+    void initEngine();
 public slots:
     void openFileHandle(const QString& fileName);
     void mouseMoveHandle(QMouseEvent e);
