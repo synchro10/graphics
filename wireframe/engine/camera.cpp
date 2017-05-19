@@ -7,13 +7,13 @@ Camera::Camera()
 
 void Camera::defaultSettings()
 {
-    position = QVector3D(-10, 0, 0);
+    position = QVector3D(0, 0, -15);
     rotation = QVector3D(0, 0, 0);
     scale = QVector3D(1, 1, 1);
     nearPlane = 0.1;
     farPlane = 50;
     fovX = 2.0;
-    aspect = 4/3;
+    aspect = (float)4/3;
     update();
 }
 
@@ -67,12 +67,12 @@ void Camera::calcViewTransform()
 
 void Camera::calcProjectionTransform()
 {
-    float w = (float)2*nearPlane/width;
-    float h = (float)2*nearPlane/height;
-    float Q = (float)farPlane/(farPlane - nearPlane);
+    float w = 2*nearPlane/width;
+    float h = 2*nearPlane/height;
+    float Q = farPlane/(farPlane - nearPlane);
 
     projectionTransform = QMatrix4x4(w, 0, 0, 0,
                                      0, h, 0, 0,
-                                     0, 0, Q, 1,
+                                     0, 0, Q, 1.0,
                                      0, 0, -Q*nearPlane, 0);
 }
