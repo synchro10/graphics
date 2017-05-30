@@ -19,4 +19,5 @@ void ViewModel::createConnects()
     connect(area, &DrawingArea::mouseMove, model, &Model::mouseMoveHandle);
     connect(area, &DrawingArea::wheelMove, model, &Model::wheelMoveHandle);
     connect(model, &Model::sendFrame, area, &DrawingArea::getFrame);
+    connect(area, &DrawingArea::mousePress, model, &Model::mousePressHandle);
 }

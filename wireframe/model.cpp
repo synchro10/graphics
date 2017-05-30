@@ -48,14 +48,21 @@ void Model::openFileHandle(const QString &fileName)
 
 void Model::mouseMoveHandle(QMouseEvent e)
 {
+    engine.rotate(e.pos().x() - startPos.x(), e.pos().y() - startPos.y());
     QImage* image = engine.render();
-    std::cout << e.pos().x() << " " << e.pos().y() << std::endl;
+    startPos = e.pos();
     emit sendFrame(QSharedPointer<QImage>(image));
 }
 
 void Model::wheelMoveHandle(QWheelEvent e)
 {
     std::cout << e.angleDelta().y() << std::endl;
-    int i = (int)rand()%400;
-    emit sendFrame(QSharedPointer<QImage>(new QImage(i, i, QImage::Format_RGB32)));
+    engine.scale(e.angleDelta().y());
+    QImage* image = engine.render();
+    emit sendFrame(QSharedPointer<QImage>(image));
+}
+
+void Model::mousePressHandle(QMouseEvent e)
+{
+    startPos = e.pos();
 }

@@ -16,10 +16,12 @@ public slots:
     void openFileHandle(const QString& fileName);
     void mouseMoveHandle(QMouseEvent e);
     void wheelMoveHandle(QWheelEvent e);
+    void mousePressHandle(QMouseEvent e);
 signals:
     void sendFrame(const QSharedPointer<QImage> &value);
 private:
     GraphicEngine engine;
+    QPoint startPos;
 };
 
 #endif // MODEL_H

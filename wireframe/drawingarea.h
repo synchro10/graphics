@@ -21,9 +21,11 @@ public:
 
     void mouseMoveEvent(QMouseEvent *e) override;
     void wheelEvent(QWheelEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
 signals:
     void mouseMove(QMouseEvent e);
     void wheelMove(QWheelEvent e);
+    void mousePress(QMouseEvent e);
 public slots:
     void getFrame(const QSharedPointer<QImage> &value);
 private:

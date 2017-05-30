@@ -101,3 +101,30 @@ void GraphicEngine::clearFrame()
         }
     }
 }
+
+void GraphicEngine::rotate(int dyPix, int dxPix)
+{
+    float dxVal = -1*dxPix*camera.width/width;
+    float dyVal = -1*dyPix*camera.height/height;
+    float angleX = dxVal*M_PI/camera.width;
+    float angleY = dyVal*M_PI/camera.height;
+    for(Object& obj: objects){
+        obj.rotation += QVector3D(angleX, angleY, 0);
+        obj.update();
+    }
+}
+
+void GraphicEngine::scale(int y)
+{
+    const float coef = 1.2f/120;
+    float scale = 1.0f;
+    if(y > 0){
+         scale = coef*qAbs(y);
+    } else {
+        scale = 1.0f / (coef*qAbs(y));
+    }
+    for(Object& obj: objects){
+        obj.globalScale *= scale;
+        obj.update();
+    }
+}

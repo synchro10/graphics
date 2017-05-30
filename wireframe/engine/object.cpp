@@ -20,9 +20,10 @@ void Object::update()
 
 void Object::calcWorldTransform()
 {
-    QMatrix4x4 scaleMatrix = QMatrix4x4(scale.x(), 0, 0, 0,
-                                        0, scale.y(), 0, 0,
-                                        0, 0, scale.z(), 0,
+    globalScale = globalScale > 5.0f ? 5.0f : globalScale < 0.2f ? 0.2f : globalScale;
+    QMatrix4x4 scaleMatrix = QMatrix4x4(scale.x()*globalScale, 0, 0, 0,
+                                        0, scale.y()*globalScale, 0, 0,
+                                        0, 0, scale.z()*globalScale, 0,
                                         0, 0, 0, 1);
     QMatrix4x4 translationMatrix = QMatrix4x4(1, 0, 0, 0,
                                               0, 1, 0, 0,

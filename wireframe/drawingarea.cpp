@@ -47,6 +47,13 @@ void DrawingArea::wheelEvent(QWheelEvent *event)
     emit(wheelMove(*event));
 }
 
+void DrawingArea::mousePressEvent(QMouseEvent *event)
+{
+    if (event->buttons() == Qt::RightButton){
+        emit(mousePress(*event));
+    }
+}
+
 int DrawingArea::getWidth() const
 {
     return width;

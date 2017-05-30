@@ -17,6 +17,8 @@ public:
     QImage *render();
     void setCamera(Camera& camera);
     void addObject(Object& object);
+    void rotate(int dyPix, int dxPix);
+    void scale(int y);
 private:
     Camera camera;
     QVector<Object> objects;
