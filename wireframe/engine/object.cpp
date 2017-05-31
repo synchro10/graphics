@@ -34,12 +34,30 @@ void Object::scale(float scale)
     newScale = newScale > 5.0f ? 5.0f : newScale < 0.2f ? 0.2f : newScale;
     scaling *= (newScale/globalScale);
     globalScale = newScale;
+    scaleMatrix = QMatrix4x4(scaling.x(), 0, 0, 0,
+                            0, scaling.y(), 0, 0,
+                            0, 0, scaling.z(), 0,
+                            0, 0, 0, 1);
     update();
 }
 
 void Object::move(float dx, float dy, float dz)
 {
     position -= QVector3D(dx, dy, dz);
+    translationMatrix = QMatrix4x4(1, 0, 0, 0,
+                                  0, 1, 0, 0,
+                                  0, 0, 1, 0,
+                                  position.x(), position.y(), position.z(), 1);
+    update();
+}
+
+void Object::moveTo(float x, float y, float z)
+{
+    position = QVector3D(x, y, z);
+    translationMatrix = QMatrix4x4(1, 0, 0, 0,
+                                  0, 1, 0, 0,
+                                  0, 0, 1, 0,
+                                  position.x(), position.y(), position.z(), 1);
     update();
 }
 
@@ -88,16 +106,22 @@ void Object::update()
 
 void Object::calcWorldTransform()
 {
-    scaleMatrix = QMatrix4x4(scaling.x(), 0, 0, 0,
-                                        0, scaling.y(), 0, 0,
-                                        0, 0, scaling.z(), 0,
-                                        0, 0, 0, 1);
-    translationMatrix = QMatrix4x4(1, 0, 0, 0,
-                                              0, 1, 0, 0,
-                                              0, 0, 1, 0,
-                                              position.x(), position.y(), position.z(), 1);
-    //todo test
     worldTransform = scaleMatrix * rotateMatrix * translationMatrix;
+}
+
+BSpline Object::getBSpline() const
+{
+    return bSpline;
+}
+
+void Object::setBSpline(const BSpline &value)
+{
+    bSpline = value;
+}
+
+QMatrix4x4 Object::getWorldTransform() const
+{
+    return worldTransform;
 }
 
 void Object::setWireModel(const WireModel &value)

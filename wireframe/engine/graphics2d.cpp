@@ -5,7 +5,7 @@ Graphics2D::Graphics2D()
 
 }
 
-void Graphics2D::drawLine(QPoint& point1, QPoint& point2, QRgb color, QImage& image)
+void Graphics2D::drawLine(QPoint point1, QPoint point2, QRgb color, QImage& image)
 {
     if (clippingLine(point1, point2, image) && clippingLine(point2, point1, image)){
         int dx = std::abs(point1.x() - point2.x());
@@ -16,6 +16,27 @@ void Graphics2D::drawLine(QPoint& point1, QPoint& point2, QRgb color, QImage& im
             drawLineY(point1, point2, color, image);
         }
     }
+}
+
+void Graphics2D::fill(QImage &image, QRgb color)
+{
+    QRgb* pixels = reinterpret_cast<QRgb*>(image.bits());
+    int pixPerLine = image.bytesPerLine() / sizeof(QRgb);
+    for(int i = 0; i < image.height(); i++){
+        for(int j = 0; j < image.width(); j++){
+            pixels[i*pixPerLine + j] = color;
+        }
+    }
+}
+
+void Graphics2D::drawPixel(QImage &image, QPoint point, QRgb color)
+{
+    const int d = 3;
+    drawLine(point + QPoint(-d,-d),  point + QPoint(-d,d), color, image);
+    drawLine(point + QPoint(-d,-d),  point + QPoint(d,-d), color, image);
+    drawLine(point + QPoint(d,d),  point + QPoint(-d,d), color, image);
+    drawLine(point + QPoint(d,d),  point + QPoint(d,-d), color, image);
+//    pixels[point.y()*pixPerLine + point.x()] = color;
 }
 
 bool Graphics2D::clippingLine(QPoint& point1, QPoint& point2, QImage& image)

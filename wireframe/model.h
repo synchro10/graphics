@@ -17,6 +17,7 @@ public slots:
     void mouseMoveHandle(QMouseEvent e);
     void wheelMoveHandle(QWheelEvent e);
     void mousePressHandle(QMouseEvent e);
+    void changeStateHandle();
 signals:
     void sendFrame(const QSharedPointer<QImage> &value);
 private:

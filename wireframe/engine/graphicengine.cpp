@@ -9,30 +9,34 @@ GraphicEngine::GraphicEngine()
 QImage *GraphicEngine::render()
 {
     frame = new QImage(width, height, QImage::Format_RGB32);
-    clearFrame();
-    const QMatrix4x4& Mv = camera.getViewTransform();
-    const QMatrix4x4& Mp = camera.getProjectionTransform();
-    const QMatrix4x4& MvMp = Mv*Mp;
-    for(const Object& object: objects){
-        const auto& edges = object.getWireModel().getModel();
-        const QMatrix4x4& Mw = object.worldTransform;
-        for(WireModel::Edge edge: edges){
-            QVector4D position1 = QVector4D(edge.first, 1.0);
-            const QVector4D& position2 = QVector4D(edge.second, 1.0);
-            QVector4D p1 = position1*Mw*MvMp;
-            QVector4D p2 = position2*Mw*MvMp;
-            float w = p1.w();
-            QVector3D positionScr1 = QVector3D(p1.x()/w, p1.y()/w, p1.z()/w);
-            w = p2.w();
-            QVector3D positionScr2 = QVector3D(p2.x()/w, p2.y()/w, p2.z()/w);
-            if (zClipping(positionScr1, positionScr2)){
-                int x = width/2 + positionScr1.x() * width / camera.width;
-                int y = height/2 - positionScr1.y() * height / camera.height;
-                QPoint p1 = QPoint(x, y);
-                x = width/2 + positionScr2.x() * width / camera.width;
-                y = height/2 - positionScr2.y() * height / camera.height;
-                QPoint p2 = QPoint(x,y);
-                Graphics2D::drawLine(p1, p2, defaultLineColor, *frame);
+    if (mode == SPLINE){
+        objects[currentObject].getBSpline().drawBSpine(frame);
+    } else if (mode == WORLD){
+        clearFrame();
+        const QMatrix4x4& Mv = camera.getViewTransform();
+        const QMatrix4x4& Mp = camera.getProjectionTransform();
+        const QMatrix4x4& MvMp = Mv*Mp;
+        for(const Object& object: objects){
+            const auto& edges = object.getWireModel().getModel();
+            const QMatrix4x4& Mw = object.getWorldTransform();
+            for(WireModel::Edge edge: edges){
+                QVector4D position1 = QVector4D(edge.first, 1.0);
+                const QVector4D& position2 = QVector4D(edge.second, 1.0);
+                QVector4D p1 = position1*Mw*MvMp;
+                QVector4D p2 = position2*Mw*MvMp;
+                float w = p1.w();
+                QVector3D positionScr1 = QVector3D(p1.x()/w, p1.y()/w, p1.z()/w);
+                w = p2.w();
+                QVector3D positionScr2 = QVector3D(p2.x()/w, p2.y()/w, p2.z()/w);
+                if (zClipping(positionScr1, positionScr2)){
+                    int x = width/2 + positionScr1.x() * width / camera.width;
+                    int y = height/2 - positionScr1.y() * height / camera.height;
+                    QPoint p1 = QPoint(x, y);
+                    x = width/2 + positionScr2.x() * width / camera.width;
+                    y = height/2 - positionScr2.y() * height / camera.height;
+                    QPoint p2 = QPoint(x,y);
+                    Graphics2D::drawLine(p1, p2, defaultLineColor, *frame);
+                }
             }
         }
     }
@@ -129,4 +133,18 @@ void GraphicEngine::scale(int y)
         obj.scale(scale);
 //        obj.update();
     }
+}
+
+void GraphicEngine::changeMode()
+{
+    if (mode == WORLD){
+        mode = SPLINE;
+    } else if (mode == SPLINE){
+        mode = WORLD;
+    }
+}
+
+bool GraphicEngine::isSplineMode()
+{
+    return mode == SPLINE;
 }

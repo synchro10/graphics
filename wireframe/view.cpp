@@ -28,7 +28,7 @@ void View::open()
 
 void View::spline()
 {
-
+    emit changeState();
 }
 
 void View::showOptions()

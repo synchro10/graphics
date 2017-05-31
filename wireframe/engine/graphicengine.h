@@ -13,12 +13,17 @@
 class GraphicEngine
 {
 public:
+    enum {
+        SPLINE, WORLD
+    };
     GraphicEngine();
     QImage *render();
     void setCamera(Camera& camera);
     void addObject(Object& object);
     void rotate(int dyPix, int dxPix);
     void scale(int y);
+    void changeMode();
+    bool isSplineMode();
 private:
     Camera camera;
     QVector<Object> objects;
@@ -31,6 +36,8 @@ private:
 
     bool zClipping(QVector3D &p1, QVector3D &p2);
     void clearFrame();
+    int mode = WORLD;
+    int currentObject = 0;
 };
 
 

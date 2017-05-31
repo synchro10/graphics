@@ -19,6 +19,7 @@ public:
 
 signals:
     void openFile(const QString& fileName);
+    void changeState();
 
 public slots:
     void open();

@@ -16,6 +16,7 @@ void ViewModel::init(View *view, Model *model)
 void ViewModel::createConnects()
 {
     connect(view, &View::openFile, model, &Model::openFileHandle);
+    connect(view, &View::changeState, model, &Model::changeStateHandle);
     connect(area, &DrawingArea::mouseMove, model, &Model::mouseMoveHandle);
     connect(area, &DrawingArea::wheelMove, model, &Model::wheelMoveHandle);
     connect(model, &Model::sendFrame, area, &DrawingArea::getFrame);
