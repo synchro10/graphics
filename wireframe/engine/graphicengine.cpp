@@ -109,7 +109,7 @@ void GraphicEngine::rotate(int dyPix, int dxPix)
     float angleX = dxVal*M_PI/camera.width;
     float angleY = dyVal*M_PI/camera.height;
     for(Object& obj: objects){
-        obj.rotation += QVector3D(angleX, angleY, 0);
+        obj.rotate(angleX, angleY, 0);
         obj.update();
     }
 }
@@ -120,11 +120,13 @@ void GraphicEngine::scale(int y)
     float scale = 1.0f;
     if(y > 0){
          scale = coef*qAbs(y);
-    } else {
+    } else if (y < 0){
         scale = 1.0f / (coef*qAbs(y));
+    } else {
+        return;
     }
     for(Object& obj: objects){
-        obj.globalScale *= scale;
-        obj.update();
+        obj.scale(scale);
+//        obj.update();
     }
 }

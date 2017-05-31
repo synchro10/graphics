@@ -12,12 +12,15 @@ class Object
 public:
     Object();
 
+    void rotate(float angleX, float angleY, float angleZ);
+    void scale(float scaleX, float scaleY, float scaleZ);
+    void scale(float scale);
+    void move(float dx, float dy, float dz);
     void update();
     void defaultSettings();
     QVector3D position;
     QVector3D rotation;
-    float globalScale = 1.0f;
-    QVector3D scale;
+    QVector3D scaling;
     QMatrix4x4 worldTransform;
     WireModel getWireModel() const;
     void setWireModel(const WireModel &value);
@@ -25,6 +28,10 @@ public:
 private:
     void calcWorldTransform();
     WireModel wireModel;
+    float globalScale = 1.0f;
+    QMatrix4x4 scaleMatrix;
+    QMatrix4x4 rotateMatrix;
+    QMatrix4x4 translationMatrix;
 };
 
 #endif // OBJECT_H
