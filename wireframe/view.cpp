@@ -31,6 +31,11 @@ void View::spline()
     emit changeState();
 }
 
+void View::init()
+{
+    emit reset();
+}
+
 void View::showOptions()
 {
     optionsDiagog->show();
@@ -55,6 +60,9 @@ void View::createActions()
     splineAct = new QAction(tr("&Spline"), this);
     connect(splineAct, SIGNAL(triggered()), this, SLOT(spline()));
 
+    initAct = new QAction(tr("&Init"), this);
+    connect(initAct, SIGNAL(triggered()), this, SLOT(init()));
+
 //    saveAct = new QAction(tr("&Save"), this);
 //    connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
@@ -71,6 +79,7 @@ void View::createMenus()
     fileMenu->addAction(openAct);
     fileMenu->addAction(optionAct);
     fileMenu->addAction(splineAct);
+    fileMenu->addAction(initAct);
 //    fileMenu->addAction(saveAct);
     fileMenu->addAction(exitAct);
 
@@ -89,6 +98,7 @@ void View::createToolbar()
 //    toolbar->addAction(saveAct);
     toolbar->addSeparator();
     toolbar->addAction(splineAct);
+    toolbar->addAction(initAct);
     toolbar->addAction(optionAct);
     toolbar->addSeparator();
     toolbar->addAction(aboutAct);

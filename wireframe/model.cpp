@@ -25,34 +25,9 @@ void Model::initEngine()
     simple.setBSpline(bspline);
 
     WireModel wireModel = WireModel(bspline, Settings());
-//    QVector3D p1 = QVector3D(-1,-1,-1);
-//    QVector3D p2 = QVector3D(-1,-1,1);
-//    QVector3D p3 = QVector3D(-1,1,-1);
-//    QVector3D p4 = QVector3D(-1,1,1);
-//    QVector3D p5 = QVector3D(1,-1,-1);
-//    QVector3D p6 = QVector3D(1,-1,1);
-//    QVector3D p7 = QVector3D(1,1,-1);
-//    QVector3D p8 = QVector3D(1,1,1);
-//    wireModel.addEdge(p1, p2);
-//    wireModel.addEdge(p2, p4);
-//    wireModel.addEdge(p4, p3);
-//    wireModel.addEdge(p3, p1);
 
-//    wireModel.addEdge(p5, p6);
-//    wireModel.addEdge(p6, p8);
-//    wireModel.addEdge(p8, p7);
-//    wireModel.addEdge(p7, p5);
-
-//    wireModel.addEdge(p1, p5);
-//    wireModel.addEdge(p3, p7);
-//    wireModel.addEdge(p4, p8);
-//    wireModel.addEdge(p2, p6);
     simple.setWireModel(wireModel);
-    simple.move(1,1,1);
-
-//    Object second = simple;
-//    second.move(-1,-1,-1);
-//    engine.addObject(second);
+    simple.move(-1,-1,-1);
 
     engine.addObject(simple);
     engine.setCamera(camera);
@@ -60,7 +35,15 @@ void Model::initEngine()
 
 void Model::openFileHandle(const QString &fileName)
 {
-    std::cout << "Model : Open" << std::endl;
+    engine.clear();
+    if (Parser::initEngine(fileName, engine)){
+        emit sendSettings(engine.getSettings());
+        std::cout << "sucsess init from file" << std::endl;
+    } else {
+        std::cout << "fail init from file" << std::endl;
+    }
+    QImage* image = engine.render();
+    emit sendFrame(QSharedPointer<QImage>(image));
 }
 
 void Model::mouseMoveHandle(QMouseEvent e)
@@ -68,7 +51,11 @@ void Model::mouseMoveHandle(QMouseEvent e)
     if (engine.isSplineMode()){
         return;
     }
-    engine.rotate(e.pos().x() - startPos.x(), e.pos().y() - startPos.y());
+    if (e.buttons() == Qt::RightButton){
+        engine.rotate(e.pos().x() - startPos.x(), e.pos().y() - startPos.y());
+    } else if (e.buttons() == Qt::LeftButton){
+        engine.rotateScene(e.pos().x() - startPos.x(), e.pos().y() - startPos.y());
+    }
     QImage* image = engine.render();
     startPos = e.pos();
     emit sendFrame(QSharedPointer<QImage>(image));
@@ -86,6 +73,7 @@ void Model::wheelMoveHandle(QWheelEvent e)
 
 void Model::mousePressHandle(QMouseEvent e)
 {
+
     if (engine.isSplineMode()){
         return;
     }
@@ -115,4 +103,11 @@ void Model::setSettingsHandle(Settings settings)
     } else {
         emit sendSettings(engine.getSettings());
     }
+}
+
+void Model::initHandle()
+{
+    engine.reset();
+    QImage* image = engine.render();
+    emit sendFrame(QSharedPointer<QImage>(image));
 }

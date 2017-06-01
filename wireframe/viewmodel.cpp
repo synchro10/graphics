@@ -23,4 +23,5 @@ void ViewModel::createConnects()
     connect(area, &DrawingArea::mousePress, model, &Model::mousePressHandle);
     connect(options, &OptionsDialog::changeSettings, model, &Model::setSettingsHandle);
     connect(model, &Model::sendSettings, options, &OptionsDialog::setSettings);
+    connect(view, &View::reset, model, &Model::initHandle);
 }

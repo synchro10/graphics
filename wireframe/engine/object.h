@@ -30,6 +30,11 @@ public:
     QRgb getColor() const;
     void setColor(const QRgb &value);
 
+    QMatrix4x4 getGlobalRotate() const;
+    void setGlobalRotate(const QMatrix4x4 &value);
+
+    void reset();
+
 private:
     void calcWorldTransform();
     WireModel wireModel;
@@ -39,6 +44,8 @@ private:
     QMatrix4x4 rotateMatrix;
     QMatrix4x4 translationMatrix;
     QMatrix4x4 worldTransform;
+    QMatrix4x4 globalRotate;
+    QMatrix4x4 defaultRotate;
     QVector3D position;
     QVector3D rotation;
     QVector3D scaling;

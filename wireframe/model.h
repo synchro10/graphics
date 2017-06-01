@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QtWidgets>
 #include "engine/graphicengine.h"
+#include "engine/parser.h"
 
 class Model : public QObject
 {
@@ -19,6 +20,7 @@ public slots:
     void mousePressHandle(QMouseEvent e);
     void changeStateHandle();
     void setSettingsHandle(Settings settings);
+    void initHandle();
 signals:
     void sendFrame(const QSharedPointer<QImage> &value);
     void sendSettings(Settings Settings);

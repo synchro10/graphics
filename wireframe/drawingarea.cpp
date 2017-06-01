@@ -37,9 +37,9 @@ void DrawingArea::setHeight(int value)
 
 void DrawingArea::mouseMoveEvent(QMouseEvent *e)
 {
-    if (e->buttons() == Qt::RightButton){
+//    if (e->buttons() == Qt::RightButton){
         emit(mouseMove(*e));
-    }
+//    }
 }
 
 void DrawingArea::wheelEvent(QWheelEvent *event)
@@ -49,9 +49,9 @@ void DrawingArea::wheelEvent(QWheelEvent *event)
 
 void DrawingArea::mousePressEvent(QMouseEvent *event)
 {
-    if (event->buttons() == Qt::RightButton){
+//    if (event->buttons() == Qt::RightButton){
         emit(mousePress(*event));
-    }
+//    }
 }
 
 int DrawingArea::getWidth() const

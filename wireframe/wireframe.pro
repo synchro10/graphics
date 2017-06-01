@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     engine/camera.cpp \
     wire/wiremodel.cpp \
     engine/graphics2d.cpp \
-    bspline/bspline.cpp
+    bspline/bspline.cpp \
+    engine/parser.cpp
 
 HEADERS  += view.h \
     drawingarea.h \
@@ -47,4 +48,5 @@ HEADERS  += view.h \
     wire/wiremodel.h \
     engine/graphics2d.h \
     bspline/bspline.h \
-    settings.h
+    settings.h \
+    engine/parser.h

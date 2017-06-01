@@ -19,7 +19,7 @@ void Object::rotate(float angleX, float angleY, float angleZ)
                                       -1*qSin(angleZ), qCos(angleZ), 0, 0,
                                       0, 0, 1, 0,
                                       0, 0, 0, 1);
-    QMatrix4x4 globalRotate = rotationY * rotationX * rotationZ;
+    globalRotate = rotationY * rotationX * rotationZ;
     rotateMatrix *= globalRotate;
     update();
 }
@@ -108,6 +108,27 @@ void Object::update()
 void Object::calcWorldTransform()
 {
     worldTransform = scaleMatrix * rotateMatrix * translationMatrix;
+}
+
+QMatrix4x4 Object::getGlobalRotate() const
+{
+    return globalRotate;
+}
+
+void Object::setGlobalRotate(const QMatrix4x4 &value)
+{
+    defaultRotate = value;
+    globalRotate = value;
+}
+
+void Object::reset()
+{
+    rotateMatrix = defaultRotate;
+    globalRotate = QMatrix4x4(1, 0, 0, 0,
+                              0, 1, 0, 0,
+                              0, 0, 1, 0,
+                              0, 0, 0, 1);
+    update();
 }
 
 QRgb Object::getColor() const

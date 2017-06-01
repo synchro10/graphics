@@ -20,10 +20,12 @@ public:
 signals:
     void openFile(const QString& fileName);
     void changeState();
+    void reset();
 
 public slots:
     void open();
     void spline();
+    void init();
     void showOptions();
     void about();
 private:
@@ -40,10 +42,12 @@ private:
 
     QAction *openAct;
     QAction *splineAct;
+    QAction *initAct;
 //    QAction *saveAct;
     QAction *optionAct;
     QAction *exitAct;
     QAction *aboutAct;
+
 
     OptionsDialog *optionsDiagog = nullptr;
     DrawingArea* area = nullptr;
