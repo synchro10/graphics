@@ -18,8 +18,10 @@ public slots:
     void wheelMoveHandle(QWheelEvent e);
     void mousePressHandle(QMouseEvent e);
     void changeStateHandle();
+    void setSettingsHandle(Settings settings);
 signals:
     void sendFrame(const QSharedPointer<QImage> &value);
+    void sendSettings(Settings Settings);
 private:
     GraphicEngine engine;
     QPoint startPos;

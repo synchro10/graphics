@@ -24,7 +24,7 @@ void Model::initEngine()
     bspline.createValues();
     simple.setBSpline(bspline);
 
-    WireModel wireModel = WireModel(bspline);
+    WireModel wireModel = WireModel(bspline, Settings());
 //    QVector3D p1 = QVector3D(-1,-1,-1);
 //    QVector3D p2 = QVector3D(-1,-1,1);
 //    QVector3D p3 = QVector3D(-1,1,-1);
@@ -48,8 +48,12 @@ void Model::initEngine()
 //    wireModel.addEdge(p4, p8);
 //    wireModel.addEdge(p2, p6);
     simple.setWireModel(wireModel);
+    simple.move(1,1,1);
 
-    QVector<QPointF> p = bspline.getPoints(10, 0.0f, 1.0f);
+//    Object second = simple;
+//    second.move(-1,-1,-1);
+//    engine.addObject(second);
+
     engine.addObject(simple);
     engine.setCamera(camera);
 }
@@ -75,7 +79,7 @@ void Model::wheelMoveHandle(QWheelEvent e)
     if (engine.isSplineMode()){
         return;
     }
-    engine.scale(e.angleDelta().y());
+    engine.zoom(e.angleDelta().y());
     QImage* image = engine.render();
     emit sendFrame(QSharedPointer<QImage>(image));
 }
@@ -93,4 +97,22 @@ void Model::changeStateHandle()
     engine.changeMode();
     QImage* image = engine.render();
     emit sendFrame(QSharedPointer<QImage>(image));
+}
+
+void Model::setSettingsHandle(Settings settings)
+{
+    int n = settings.n;
+    int m = settings.m;
+    int k = settings.k;
+    float a = settings.a;
+    float b = settings.b;
+    float c = settings.c;
+    float d = settings.d;
+    if (1 <= n && 1 <= m && 1 <= k && 0.0 <= a && a < b && b <= 1.0 && 0.0 <= c && c < d && d <= 6.31){
+        engine.setSettings(settings);
+        QImage* image = engine.render();
+        emit sendFrame(QSharedPointer<QImage>(image));
+    } else {
+        emit sendSettings(engine.getSettings());
+    }
 }

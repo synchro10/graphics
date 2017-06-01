@@ -46,4 +46,5 @@ HEADERS  += view.h \
     engine/camera.h \
     wire/wiremodel.h \
     engine/graphics2d.h \
-    bspline/bspline.h
+    bspline/bspline.h \
+    settings.h

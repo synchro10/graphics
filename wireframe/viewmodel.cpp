@@ -21,4 +21,6 @@ void ViewModel::createConnects()
     connect(area, &DrawingArea::wheelMove, model, &Model::wheelMoveHandle);
     connect(model, &Model::sendFrame, area, &DrawingArea::getFrame);
     connect(area, &DrawingArea::mousePress, model, &Model::mousePressHandle);
+    connect(options, &OptionsDialog::changeSettings, model, &Model::setSettingsHandle);
+    connect(model, &Model::sendSettings, options, &OptionsDialog::setSettings);
 }

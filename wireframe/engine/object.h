@@ -27,6 +27,9 @@ public:
     BSpline getBSpline() const;
     void setBSpline(const BSpline &value);
 
+    QRgb getColor() const;
+    void setColor(const QRgb &value);
+
 private:
     void calcWorldTransform();
     WireModel wireModel;
@@ -39,6 +42,7 @@ private:
     QVector3D position;
     QVector3D rotation;
     QVector3D scaling;
+    QRgb color = qRgb(rand()%256, rand()%256, rand()%256);
 };
 
 #endif // OBJECT_H

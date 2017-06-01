@@ -99,7 +99,7 @@ void View::createToolbar()
 
 void View::configureDialogs()
 {
-    optionsDiagog = new OptionsDialog();
+    optionsDiagog = new OptionsDialog(this);
 }
 
 OptionsDialog *View::getOptionsDiagog() const

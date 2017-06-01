@@ -11,7 +11,7 @@ class WireModel
 public:
     typedef std::pair<QVector3D, QVector3D> Edge;
     WireModel();
-    WireModel(BSpline& bspline);
+    WireModel(BSpline bspline, Settings settings);
     void addEdge(QVector3D &p1, QVector3D &p2);
     QVector<Edge> getModel() const;
 

@@ -27,8 +27,8 @@ public:
     float aspect;
     QMatrix4x4 viewTransform;
     QMatrix4x4 projectionTransform;
-private:
     void update();
+private:
     void calcViewTransform();
     void calcProjectionTransform();
 };

@@ -54,7 +54,7 @@ QVector<QPointF> BSpline::getPoints(const int count, const float a, const float 
     QVector<QPointF> points = QVector<QPointF>();
 
     //find first point equal to u0 = a
-    while(qAbs(lengthA - curLength) > qAbs(curLength + nextPartLength - lengthA)){
+    while(qAbs(lengthA - curLength) >= qAbs(curLength + nextPartLength - lengthA)){
         i++;
         curLength += nextPartLength;
         nextPartLength = countLength(values[i], values[i+1]);
@@ -79,7 +79,7 @@ QVector<QPointF> BSpline::getPoints(const int count, const float a, const float 
     i = values.size() - 1;
     curLength = 0.0f;
     nextPartLength = countLength(values[i], values[i-1]);
-    while(qAbs(lengthB - curLength) > qAbs(curLength + nextPartLength - lengthB)){
+    while(qAbs(lengthB - curLength) >= qAbs(curLength + nextPartLength - lengthB)){
         i--;
         curLength += nextPartLength;
         nextPartLength = countLength(values[i], values[i-1]);

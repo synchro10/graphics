@@ -21,6 +21,7 @@ void Object::rotate(float angleX, float angleY, float angleZ)
                                       0, 0, 0, 1);
     QMatrix4x4 globalRotate = rotationY * rotationX * rotationZ;
     rotateMatrix *= globalRotate;
+    update();
 }
 
 void Object::scale(float scaleX, float scaleY, float scaleZ)
@@ -107,6 +108,16 @@ void Object::update()
 void Object::calcWorldTransform()
 {
     worldTransform = scaleMatrix * rotateMatrix * translationMatrix;
+}
+
+QRgb Object::getColor() const
+{
+    return color;
+}
+
+void Object::setColor(const QRgb &value)
+{
+    color = value;
 }
 
 BSpline Object::getBSpline() const
