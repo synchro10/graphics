@@ -35,7 +35,8 @@ public:
     void setDefaultFontColor(const QRgb &value);
 
     void setGlobalRotate(const QMatrix4x4 &value);
-
+    void nextFigure();
+    void prevFigure();
 private:
     Camera camera;
     QVector<Object> objects;

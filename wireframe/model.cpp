@@ -111,3 +111,17 @@ void Model::initHandle()
     QImage* image = engine.render();
     emit sendFrame(QSharedPointer<QImage>(image));
 }
+
+void Model::nextHandle()
+{
+    engine.nextFigure();
+    QImage* image = engine.render();
+    emit sendFrame(QSharedPointer<QImage>(image));
+}
+
+void Model::prevHandle()
+{
+    engine.prevFigure();
+    QImage* image = engine.render();
+    emit sendFrame(QSharedPointer<QImage>(image));
+}

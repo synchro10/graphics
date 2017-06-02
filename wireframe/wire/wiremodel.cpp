@@ -21,7 +21,7 @@ WireModel::WireModel(BSpline bspline, Settings params)
 //        v[i] = i*2*M_PI/(m*k);
         v[i] = c + (d - c)*i/(m*k);
     }
-    for(int i = 1; i <= n*k; i++){
+    for(int i = 1; i < values.size(); i++){
         for(int j = 1; j <= m*k; j++){
             QVector3D Pij = QVector3D(values[i].y()*qCos(v[j]), values[i].y()*qSin(v[j]), values[i].x());
             QVector3D Pi1j = QVector3D(values[i-1].y()*qCos(v[j]), values[i-1].y()*qSin(v[j]), values[i-1].x());

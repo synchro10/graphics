@@ -30,6 +30,7 @@ void BSpline::createValues()
             values.push_back(v);
         }
     }
+    findMaxValue();
 }
 
 int BSpline::getN() const
@@ -146,12 +147,21 @@ void BSpline::drawBSpine(QImage *image)
     }
 }
 
+void BSpline::findMaxValue()
+{
+    float max = 0.0f;
+    for(QPointF& point: values){
+        max = std::max(max, float(std::max(qAbs(point.x()), qAbs(point.y()))));
+    }
+    maxValue = max;
+}
+
 QPoint BSpline::pointToPix(const QPointF& point, const int height, const int width)
 {
-    float a = -2;
-    float b = 3;
-    float c = -2;
-    float d = 2;
+    float a = -maxValue  * 1.3f;
+    float b = maxValue   * 1.3f;
+    float c = -maxValue  * 1.3f;
+    float d = maxValue   * 1.3f;
     float x = point.x();
     float y = point.y();
     return QPoint((x - a)*(width-1)/(b - a), (height-1) - (y - c)*(height-1)/(d - c));

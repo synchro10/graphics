@@ -24,6 +24,7 @@ public:
     QVector<QPointF> getReferencePoints() const;
     QVector<QPointF> getPoints(const int count, const float a, const float b);
     void drawBSpine(QImage* image);
+    void findMaxValue();
 
 private:
     QVector<QPointF> referencePoints = QVector<QPointF>();
@@ -40,6 +41,7 @@ private:
     QPointF value(const int segment, const float param);
     float countLength(const QPointF& p1, const QPointF& p2);
     QPoint pointToPix(const QPointF &point, const int height, const int width);
+    float maxValue = 0.0f;
 };
 
 #endif // BSPLINE_H

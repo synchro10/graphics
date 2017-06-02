@@ -24,4 +24,6 @@ void ViewModel::createConnects()
     connect(options, &OptionsDialog::changeSettings, model, &Model::setSettingsHandle);
     connect(model, &Model::sendSettings, options, &OptionsDialog::setSettings);
     connect(view, &View::reset, model, &Model::initHandle);
+    connect(view, &View::prevSig, model, &Model::prevHandle);
+    connect(view, &View::nextSig, model, &Model::nextHandle);
 }

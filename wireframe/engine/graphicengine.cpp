@@ -167,9 +167,10 @@ void GraphicEngine::rotate(int dyPix, int dxPix)
     float dyVal = -1*dyPix*camera.height/height;
     float angleX = dxVal*M_PI/camera.width;
     float angleY = dyVal*M_PI/camera.height;
-    for(Object& obj: objects){
-        obj.rotate(angleX, angleY, 0);
-    }
+//    for(Object& obj: objects){
+
+        objects[currentObject].rotate(angleX, angleY, 0);
+//    }
 }
 
 void GraphicEngine::scale(int y)
@@ -262,4 +263,18 @@ void GraphicEngine::setGlobalRotate(const QMatrix4x4 &value)
 {
     defaultRotate = value;
     globalRotate = value;
+}
+
+void GraphicEngine::nextFigure()
+{
+    if (currentObject < objects.size() - 1){
+        currentObject++;
+    }
+}
+
+void GraphicEngine::prevFigure()
+{
+    if (currentObject > 0){
+        currentObject--;
+    }
 }

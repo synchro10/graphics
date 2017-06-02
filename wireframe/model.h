@@ -21,6 +21,8 @@ public slots:
     void changeStateHandle();
     void setSettingsHandle(Settings settings);
     void initHandle();
+    void nextHandle();
+    void prevHandle();
 signals:
     void sendFrame(const QSharedPointer<QImage> &value);
     void sendSettings(Settings Settings);

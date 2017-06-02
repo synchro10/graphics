@@ -47,6 +47,16 @@ void View::about()
                        tr("Kondratyev 14202"));
 }
 
+void View::prev()
+{
+    emit prevSig();
+}
+
+void View::next()
+{
+    emit nextSig();
+}
+
 void View::createActions()
 {
     openAct = new QAction(tr("&Open..."), this);
@@ -71,6 +81,12 @@ void View::createActions()
 
     aboutAct = new QAction(tr("&About"), this);
     connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+
+    prevAct = new QAction(tr("&<-"), this);
+    connect(prevAct, SIGNAL(triggered()), this, SLOT(prev()));
+
+    nextAct = new QAction(tr("&->"), this);
+    connect(nextAct, SIGNAL(triggered()), this, SLOT(next()));
 }
 
 void View::createMenus()
@@ -79,6 +95,8 @@ void View::createMenus()
     fileMenu->addAction(openAct);
     fileMenu->addAction(optionAct);
     fileMenu->addAction(splineAct);
+    fileMenu->addAction(prevAct);
+    fileMenu->addAction(nextAct);
     fileMenu->addAction(initAct);
 //    fileMenu->addAction(saveAct);
     fileMenu->addAction(exitAct);
@@ -98,6 +116,8 @@ void View::createToolbar()
 //    toolbar->addAction(saveAct);
     toolbar->addSeparator();
     toolbar->addAction(splineAct);
+    toolbar->addAction(prevAct);
+    toolbar->addAction(nextAct);
     toolbar->addAction(initAct);
     toolbar->addAction(optionAct);
     toolbar->addSeparator();
