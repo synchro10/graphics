@@ -4,7 +4,6 @@
 
 WaterFilter::WaterFilter()
 {
-
 }
 
 void WaterFilter::processImage()

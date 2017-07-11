@@ -28,7 +28,16 @@ SOURCES += main.cpp\
     waterfilter.cpp \
     upscaledfilter.cpp \
     rotatewidget.cpp \
-    rotatefilter.cpp
+    rotatefilter.cpp \
+    gammawidget.cpp \
+    gammafilter.cpp \
+    embossfilter.cpp \
+    edgewidget.cpp \
+    edgerobertfilter.cpp \
+    edgesobelfilter.cpp \
+    ditheringfilter.cpp \
+    ditheringwidget.cpp \
+    dithringfloydfilter.cpp
 
 HEADERS  += view.h \
     executor.h \
@@ -45,4 +54,13 @@ HEADERS  += view.h \
     waterfilter.h \
     upscaledfilter.h \
     rotatewidget.h \
-    rotatefilter.h
+    rotatefilter.h \
+    gammawidget.h \
+    gammafilter.h \
+    embossfilter.h \
+    edgewidget.h \
+    edgerobertfilter.h \
+    edgesobelfilter.h \
+    ditheringfilter.h \
+    ditheringwidget.h \
+    dithringfloydfilter.h

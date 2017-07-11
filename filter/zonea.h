@@ -6,22 +6,25 @@
 
 class ZoneA : public Zone
 {
+    Q_OBJECT
 public:
     ZoneA(QWidget *parent);
 
     void paintEvent(QPaintEvent *event) override;
     void setImage(QImage* image_);
     QImage* getSelectedImage();
-    void mouseMoveEvent(QMouseEvent *e) override;//todo
-    void setSelect(){ isSelect = !isSelect; }
+    void mouseMoveEvent(QMouseEvent *e) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void setSelect();
 
     void setZoneB(ZoneB *value);
-
+signals:
+    void lastFilter();
 private:
     QSharedPointer<QImage> image;
     QSharedPointer<QImage> imagePrototype;
     ZoneB* zoneB = nullptr;
-    QImage* correctImage(QImage* image_);
+    QImage* scaleImage(QImage* image_);
     void updateSelector();
     int height = 0;
     int width = 0;

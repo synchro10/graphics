@@ -1,6 +1,6 @@
-#include "rotatewidget.h"
+#include "edgewidget.h"
 
-RotateWidget::RotateWidget(QWidget *parent) : QWidget(parent)
+EdgeWidget::EdgeWidget()
 {
     mainLayout = new QGridLayout;
 
@@ -17,15 +17,15 @@ RotateWidget::RotateWidget(QWidget *parent) : QWidget(parent)
     setLayout(mainLayout);
 }
 
-void RotateWidget::setup()
+void EdgeWidget::setup()
 {
     setFixedSize(350*3, 200);
-    labelA->setText("Angle");
-    spinBoxA->setRange(-180, 180);
-    sliderA->setRange(-180, 180);
+    labelA->setText("Threshold");
+    spinBoxA->setRange(0, 255);
+    sliderA->setRange(0, 255);
 
     connect(sliderA, SIGNAL(valueChanged(int)), spinBoxA, SLOT(setValue(int)));
     connect(spinBoxA, SIGNAL(valueChanged(int)), sliderA, SLOT(setValue(int)));
-    spinBoxA->setValue(0);
-    sliderA->setValue(0);
+    spinBoxA->setValue(20);
 }
+

@@ -27,10 +27,7 @@ void ZoneA::paintEvent(QPaintEvent *event)
 void ZoneA::setImage(QImage *image_)
 {
     imagePrototype = QSharedPointer<QImage>(image_);
-    QImage tmp = QImage(imagePrototype->scaled(size, size, Qt::KeepAspectRatio));
-    height = tmp.height();
-    width = tmp.width();
-    image = QSharedPointer<QImage>(correctImage(&tmp));
+    image = QSharedPointer<QImage>(scaleImage(image_));
     updateSelector();
 }
 
@@ -57,6 +54,14 @@ QImage *ZoneA::getSelectedImage()
         for(int j = 0; j < size; j++){
             for(int i = 0; i < size; i++){
                 pixels[i + (size - j - 1)*pixPerLine] = pixelsProt[startX + i + (startY - j)*pixPerLineProt];
+            }
+        }
+        return image_;
+    } else if (selectorPosX + selectorSize >= size){
+        startX = widthProt - 1;
+        for(int j = 0; j < size; j++){
+            for(int i = 0; i < size; i++){
+                pixels[size - i - 1 + j*pixPerLine] = pixelsProt[startX - i - 1 + (startY + j)*pixPerLineProt];
             }
         }
         return image_;
@@ -90,7 +95,23 @@ void ZoneA::mouseMoveEvent(QMouseEvent *e)
         selectorPosX = i;
         selectorPosY = j;
         zoneB->setImage(getSelectedImage());
-        update();
+        this->update();
+        zoneB->update();
+        emit lastFilter();
+    }
+}
+
+void ZoneA::mousePressEvent(QMouseEvent *e)
+{
+    mouseMoveEvent(e);
+}
+
+void ZoneA::setSelect()
+{
+    isSelect = !isSelect;
+    if (isSelect && imagePrototype != nullptr){
+        zoneB->setImage(getSelectedImage());
+        zoneB->update();
     }
 }
 
@@ -99,29 +120,39 @@ void ZoneA::setZoneB(ZoneB *value)
     zoneB = value;
 }
 
-QImage *ZoneA::correctImage(QImage *image2)
+QImage *ZoneA::scaleImage(QImage *image2)
 {
+
     if (image2->height() == size && image2->width() == size){
+        height = image2->height();
+        width = image2->width();
         return new QImage(*image2);
     }
+    int biggestSide = std::max<int>(imagePrototype->height(), imagePrototype->width());
+    biggestSide = std::max<int>(biggestSide, size);
+    height = (image2->height()*size) / biggestSide;
+    width = (image2->width()*size) / biggestSide;
     QImage* image1 = new QImage(size, size, QImage::Format_RGB32);
     QRgb* pixels1 = reinterpret_cast<QRgb*>(image1->bits());
-    int width1 = image1->bytesPerLine() / sizeof(QRgb);
+    int pizPerLine1 = image1->bytesPerLine() / sizeof(QRgb);
     QRgb* pixels2 = reinterpret_cast<QRgb*>(image2->bits());
-    int width2 = image2->bytesPerLine() / sizeof(QRgb);
+    int pixPerLine2 = image2->bytesPerLine() / sizeof(QRgb);
+    //create scale with white space
     int j = 0;
-    for(; j < image2->height(); j++){
+    for(; j < height; j++){
         int i = 0;
-        for(; i < image2->width(); i++){
-            pixels1[i + width1*j] = pixels2[i + width2*j];
+        for(; i < width; i++){
+            int i2 = (i*biggestSide)/size;
+            int j2 = (j*biggestSide)/size;
+            pixels1[i + pizPerLine1*j] = pixels2[i2 + pixPerLine2*j2];
         }
         for(; i < size; i++){
-            pixels1[i + width1*j] = fontColor;
+            pixels1[i + pizPerLine1*j] = fontColor;
         }
     }
     for(; j < size; j++){
         for(int i = 0; i < size; i++){
-            pixels1[i + width1*j] = fontColor;
+            pixels1[i + pizPerLine1*j] = fontColor;
         }
     }
     return image1;

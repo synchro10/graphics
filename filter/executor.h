@@ -14,6 +14,16 @@
 #include "rotatefilter.h"
 #include <iostream>
 #include "rotatewidget.h"
+#include "gammawidget.h"
+#include "gammafilter.h"
+#include "embossfilter.h"
+#include "edgewidget.h"
+#include "edgerobertfilter.h"
+#include "edgesobelfilter.h"
+#include "ditheringfilter.h"
+#include "ditheringwidget.h"
+#include "dithringfloydfilter.h"
+#include "zonea.h"
 
 class Executor : public QObject
 {
@@ -22,27 +32,40 @@ public:
     explicit Executor(QObject *parent = 0);
     void execute();
 
+    void setZoneA(ZoneA *value);
+
 signals:
 
 public slots:
     void blackWhiteFilter();
     void negativeFilter();
     void ditheringFilter     ();
-    void ditheringErrorFilter();
+    void ditheringFloydFilter();
+    void ditheringFloydButton();
     void upscaleFilter       ();
     void rotateButton        ();
     void rotateFilter        (int);
-    void gammaFilter         ();
-    void edgeRobertFilter    ();
-    void edgeSobelFilter     ();
-    void edgeSpecFilter      ();
+    void rotateFilter1       ();
+    void gammaButton         ();
+    void gammaFilter         (int);
+    void gammaFilter1        ();
+    void edgeRobertButton    ();
+    void edgeRobertFilter    (int);
+    void edgeRobertFilter1   ();
+    void edgeSobelButton     ();
+    void edgeSobelFilter     (int);
+    void edgeSobelFilter1    ();
     void embossFilter        ();
     void waterFilter         ();
     void blurFilter          ();
     void sharpenFilter       ();
+    void runLastFilter       ();
 private:
     QSharedPointer<View> view;
     QThreadPool* threadPool;
+    QWidget* controlWidget = nullptr;
+    void (Executor::*lastFilter)() = nullptr;
+    ZoneA *zoneA = nullptr;
 
     void setCImage(QImage* image);
     void setup();
